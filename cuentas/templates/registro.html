@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{ static 'style.css'}">
+{% endblock %}
+
+<!--
+{% block extra_js %}
+<script src="{% static 'registro.js' %}" ></script>
+{% endblock %}
+-->
+
+{% block title %}
+<div>
+    <h2>Crear cuenta en SportsNet</h2>
+    <form method = "POST">
+        {% csrf_token %}
+        {{form.as_p}}
+
+    </form>
+</div>
+{% block content %}
+
+{% endblock %}
