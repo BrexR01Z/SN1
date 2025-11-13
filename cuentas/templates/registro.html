@@ -1,25 +1,35 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{ static 'style.css'}">
 {% endblock %}
 
-<!--
-{% block extra_js %}
-<script src="{% static 'registro.js' %}" ></script>
-{% endblock %}
--->
 
-{% block title %}
+
+{% block extra_js %}
+<script src="{% static 'script.js' %}" ></script>
+{% endblock %}
+
+
+
+{% block titulo %} Registro {% endblock %}
+
+{% block contenido %}
+
+<!-- hace falta "toggle" del campo de rut, lo haré asap-->
 <div>
     <h2>Crear cuenta en SportsNet</h2>
-    <form method = "POST">
+    <form  method = "POST">
         {% csrf_token %}
         {{form.as_p}}
+        
 
+
+        <button type="submit" name = Registrar >Crear cuenta</button>
     </form>
+    <a href="">Iniciar Sesión</a>
 </div>
-{% block content %}
 
 {% endblock %}
+
