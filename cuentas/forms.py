@@ -30,7 +30,7 @@ class RegistroForm(UserCreationForm):
         fecha = self.cleaned_data["fecha_nacimiento"]
         edad_minima = date.today() - relativedelta(years=18)
 
-        if fecha < edad_minima:
+        if fecha > edad_minima:
             raise forms.ValidationError ("La edad minima es 18 años")
         return fecha
     

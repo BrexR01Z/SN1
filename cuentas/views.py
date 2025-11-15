@@ -34,7 +34,7 @@ def registro(request):
 
                     messages.success(request, f"Cuenta creada exitosamente, Bienvenido {usuario.username}!")
             except Exception as e :
-                messages.error(request, "Hubo un errror")
+                messages.error(request, f"Hubo un errror {str(e)} ")
 
     else:
         form = RegistroForm()
