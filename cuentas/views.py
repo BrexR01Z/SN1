@@ -13,7 +13,20 @@ def registro(request):
     template = loader.get_template("registro.html")
     if request.method == "POST":
         form = RegistroForm(request.POST)
-        if form.is_valid():       
+        if form.is_valid():    
+            usuario = form.save()
+            tipo_usuario = form.cleaned_data["tipo_usuario"]
+
+            if tipo_usuario == "dueno":
+
+                Dueno.objects.create(usuario = usuario, rut = form.cleaned_data["rut"])
+                
+                
+            else:                        
+                Cliente.objects.create(usuario=usuario)
+                #c.save()
+
+            """   
             try:
                 with transaction.atomic():
 
@@ -21,20 +34,32 @@ def registro(request):
                     tipo_usuario = form.cleaned_data["tipo_usuario"]
 
                     if tipo_usuario == "dueno":
+                        
                         Dueno.objects.create(
                             usuario=usuario,
                             rut=form.cleaned_data["rut"]
                         )
                         
+
+                        d = Dueno(usuario = usuario, rut = form.cleaned_data["rut"])
+                        d.save()
+                        
+                        
                     else:
+                        
                         Cliente.objects.create(
                             usuario=usuario,               
                         )
+                        
+                        c = Cliente(usuario=usuario)
+                        c.save()
+
                         
 
                     messages.success(request, f"Cuenta creada exitosamente, Bienvenido {usuario.username}!")
             except Exception as e :
                 messages.error(request, f"Hubo un errror {str(e)} ")
+            """
 
     else:
         form = RegistroForm()
@@ -43,8 +68,8 @@ def registro(request):
         "form" : form
     }
 
-    #return HttpResponse(template.render(context,request))
-    return render (request, "registro.html", {"form":form})
+    return HttpResponse(template.render(context,request))
+    #return render (request, "registro.html", {"form":form})
 
 def login(request):
 
