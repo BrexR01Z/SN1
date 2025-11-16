@@ -16,9 +16,9 @@ class RegistroForm(UserCreationForm):
         widget=forms.RadioSelect
     )
 
-    telefono = forms.CharField(max_length=20)
-    rut = forms.CharField(max_length=12)
-    fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={"type" : "date"}))
+    telefono = forms.CharField(max_length=20, required=False)
+    rut = forms.CharField(max_length=12, required=False)
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={"type" : "date"}), required=False)
 
     class Meta:
         model = Usuario
@@ -30,10 +30,10 @@ class RegistroForm(UserCreationForm):
         fecha = self.cleaned_data["fecha_nacimiento"]
         edad_minima = date.today() - relativedelta(years=18)
 
-        if fecha < edad_minima:
+        if fecha > edad_minima:
             raise forms.ValidationError ("La edad minima es 18 años")
         return fecha
-    
+ 
     def clean(self):
         data = super().clean()
         tipo_usuario = data.get("tipo_usuario")
@@ -44,3 +44,5 @@ class RegistroForm(UserCreationForm):
                 "rut" : "Los usuarios tipo dueño deben ingresar un rut"
             })
         return data
+
+    
