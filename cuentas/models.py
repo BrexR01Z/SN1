@@ -13,6 +13,8 @@ class Usuario (AbstractUser):
     telefono = models.CharField(max_length=20, blank=True, null=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
 
+
+    # cambiar validaciones a respectivo form
     def edad(self):
         if self.fecha_nacimiento:
             hoy = date.today()
