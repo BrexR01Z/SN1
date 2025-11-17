@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{ static 'style.css'}">
+{% endblock %}
+
+
+<!--
+{% block extra_js %}
+<script src="{% static 'registro.js' %}" ></script>
+{% endblock %}
+-->
+
+
+{% block titulo %} Inicio de Sesión {% endblock %}
+
+{% block contenido %}
+
+<div>
+    <h2>Iniciar Sesión en SportsNet</h2>
+    <form method = "POST">
+        {% csrf_token %}
+        <label for="">Usuario</label>
+        <input type="text" placeholder="Ingresa tu usuario">
+
+        <label for="">Contraseña</label>
+        <input type="password" placeholder="Ingresa tu contraseña">
+
+        <button type="submit" name = Login >Iniciar Sesión</button>
+    </form>
+</div>
+
+{% endblock %}
+

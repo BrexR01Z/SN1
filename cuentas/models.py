@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from datetime import date
+from dateutil.relativedelta import relativedelta
 # Create your models here.
 
 
@@ -20,6 +21,13 @@ class Usuario (AbstractUser):
     
     def es_mayor(self):
         return self.edad() >= 18
+    
+    def clean(self):
+        super().clean()
+        if self.fecha_nacimiento:
+            edad_minima = date.today() - relativedelta(years=18)
+            if self.fecha_nacimiento > edad_minima:
+                raise ValidationError ({ "fecha_nacimiento" : "Debes ser mayor de 18 para registrarte"})
 
 class Dueno (models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_dueno")
