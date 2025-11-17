@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{ static 'style.css'}">
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{% static 'script.js' %}" ></script>
+{% endblock %}
+
+
+
+{% block titulo %} Home {% endblock %}
+
+{% block contenido %}
+<div>
+    <!-- texto -->
+     <h1>
+        Bienvenido a SportsNet!
+     </h1>
+     <h2>
+        Tu plataforma de reservas deportivas
+     </h2>
+     
+     <p>
+        Contamos con una gran variedad de recintos en los cuales podras jugar tu deporte favorito.                                
+     </p>
+     <h3>
+        ¡Encuentra tu cancha ideal en segundos!
+     </h3>
+
+</div>
+
+<div>
+    <!--imagenes/ mapa podria ir aqui-->
+
+</div>
+
+<div>
+    <!--acciones , aplicar logica segun tipo_cuenta / authenticated-->
+    <a href="">Buscar recintos/canchas</a>
+
+    <a href="{% url 'cuentas:registro' %}">Registrarse</a>
+
+    <a href="{% url 'cuentas:login' %}">Ya tienes cuenta? Iniciar Sesion</a>
+
+</div>
+
+{% endblock %}
+

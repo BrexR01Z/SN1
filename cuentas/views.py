@@ -72,8 +72,6 @@ def registro(request):
     #return render (request, "registro.html", {"form":form})
 
 def login(request):
-
-
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -83,7 +81,11 @@ def login(request):
         if usuario is not None:
             login(request, usuario)
             messages.success(request, f"Sesión iniciada correctamente, Bienvenido {usuario.username}")
+            # redirect a dashboard segun tipo_cuenta
         else:
             messages.error(request, "Usuario o contraseña incorrectos")
 
     return render (request, "login.html")
+
+def home (request):
+    return render(request,"home.html")
