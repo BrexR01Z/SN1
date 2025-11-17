@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{ static 'style.css'}">
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{% static 'script.js' %}" ></script>
+{% endblock %}
+
+
+
+{% block titulo %} Buscar {% endblock %}
+
+{% block contenido %}
+<div>
+    <!-- filtros -->
+    <h3>
+        Filtrar por :
+    </h3>
+
+    <div>
+        <h4>Deporte</h4>
+        <label for="deportes">Elige un deporte</label>
+        <select name="" id="deportes">Deporte</select>
+    </div>
+
+    <div>
+        <h4>Ubicacion</h4>
+    </div>
+</div>
+
+<div>
+    <!--listado -->
+    
+
+</div>
+
+
+{% endblock %}

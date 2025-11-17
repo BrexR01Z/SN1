@@ -18,7 +18,7 @@ class RegistroForm(UserCreationForm):
 
     telefono = forms.CharField(max_length=20, required=False)
     rut = forms.CharField(max_length=12, required=False)
-    fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={"type" : "date"}), required=False)
+    fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={"type" : "date"}), required=True)
 
     class Meta:
         model = Usuario
