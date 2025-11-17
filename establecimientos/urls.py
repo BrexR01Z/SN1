@@ -5,5 +5,5 @@ app_name = "establecimientos"
 
 urlpatterns = [
     
-    
+
 ]
