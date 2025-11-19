@@ -72,9 +72,9 @@ def registro(request):
         "form" : form
     }
 
-    return HttpResponse(template.render(context,request))
+    #return HttpResponse(template.render(context,request))
     #return HttpResponseRedirect(reverse("cuentas:home"))
-    #return render (request, "registro.html", {"form":form})
+    return render (request, "registro.html", context)
 
 def login_cuenta(request):
     if request.method == "POST":

@@ -439,7 +439,7 @@ body {
 }
 
 .conditional-field.active {
-  display: flex;
+  display: block;
 }
 
 /* Botones CTA en el landing */
