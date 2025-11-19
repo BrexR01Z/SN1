@@ -5,4 +5,5 @@ from django.http import HttpResponse
 
 # Create your views here.
 
-
+def buscar(request):
+    return render (request,"buscar.html")

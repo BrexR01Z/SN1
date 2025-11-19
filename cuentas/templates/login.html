@@ -1,36 +1,33 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{ static 'style.css'}">
-{% endblock %}
+{% block title %}Iniciar Sesión - SportsNet{% endblock %}
 
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2 class="login-title">Iniciar Sesión</h2>
+        
+        {% if form.errors %}
+            <div style="color: #ef4444; margin-bottom: 1rem;">
+                Usuario o contraseña incorrectos
+            </div>
+        {% endif %}
+        
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            
+            <label for="id_username">Usuario</label>
+            <input type="text" name="username" id="id_username" placeholder="Ingresa tu usuario" required autofocus>
 
-<!--
-{% block extra_js %}
-<script src="{% static 'registro.js' %}" ></script>
-{% endblock %}
--->
+            <label for="id_password">Contraseña</label>
+            <input type="password" name="password" id="id_password" placeholder="Ingresa tu contraseña" required>
 
+            <button type="submit" class="login-button">Ingresar</button>
+        </form>
 
-{% block titulo %} Inicio de Sesión {% endblock %}
-
-{% block contenido %}
-
-<div>
-    <h2>Iniciar Sesión en SportsNet</h2>
-    <form method = "POST">
-        {% csrf_token %}
-        <label for="">Usuario</label>
-        <input type="text" placeholder="Ingresa tu usuario">
-
-        <label for="">Contraseña</label>
-        <input type="password" placeholder="Ingresa tu contraseña">
-
-        <button type="submit" name = Login >Iniciar Sesión</button>
-    </form>
-    <a href="{% url 'cuentas:registro' %}">No tienes cuenta? Registrase</a>
+        <p class="login-text">¿No tienes cuenta?
+            <a href="{% url 'cuentas:registro' %}">Regístrate aquí</a>
+        </p>
+    </div>
 </div>
-
 {% endblock %}
-

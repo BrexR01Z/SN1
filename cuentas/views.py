@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import RegistroForm
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Usuario,Cliente,Dueno
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.urls import reverse
 
 # Create your views here.
 
@@ -61,6 +63,8 @@ def registro(request):
                 messages.error(request, f"Hubo un errror {str(e)} ")
             """
 
+            return redirect("cuentas:home")
+
     else:
         form = RegistroForm()
 
@@ -69,23 +73,41 @@ def registro(request):
     }
 
     return HttpResponse(template.render(context,request))
+    #return HttpResponseRedirect(reverse("cuentas:home"))
     #return render (request, "registro.html", {"form":form})
 
-def login(request):
+def login_cuenta(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        usuario = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
+        
 
-        if usuario is not None:
-            login(request, usuario)
-            messages.success(request, f"Sesión iniciada correctamente, Bienvenido {usuario.username}")
+        if user is not None:
+            
+            login(request, user)
+            
+            messages.success(request, f"Sesión iniciada correctamente, Bienvenido {user.username}")
+            return redirect("cuentas:home")
+            
             # redirect a dashboard segun tipo_cuenta
         else:
             messages.error(request, "Usuario o contraseña incorrectos")
+            
+    """
+    context = {
+        "user":user,
+    }
+    """
 
     return render (request, "login.html")
 
 def home (request):
     return render(request,"home.html")
+
+@login_required
+def cerrar_sesion(request):
+    logout(request)
+    messages.info(request, 'Has cerrado sesión correctamente')
+    return redirect("cuentas:home")
