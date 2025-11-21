@@ -9,6 +9,7 @@
     {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
     {% endblock %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
     <header class="header">
@@ -27,9 +28,9 @@
                 <span style="color: #9ca3af;">Hola, {{ user.get_username }}</span>
                 
                 {% if user.perfil_dueno %}
-                    <a href="#" class="nav-button">Mis Establecimientos</a>
+                    <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
                 {% elif user.perfil_cliente %}
-                    <a href="#" class="nav-button">Mis Reservas</a>
+                    <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
                 {% endif %}
                 
                 <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>

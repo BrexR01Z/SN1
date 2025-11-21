@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.urls import reverse
 
+
 # Create your views here.
 
 def registro(request):
@@ -80,6 +81,9 @@ def login_cuenta(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
+        
+        
+        
 
         user = authenticate(request, username=username, password=password)
         
@@ -89,11 +93,17 @@ def login_cuenta(request):
             login(request, user)
             
             messages.success(request, f"Sesión iniciada correctamente, Bienvenido {user.username}")
-            return redirect("cuentas:home")
-            
-            # redirect a dashboard segun tipo_cuenta
+            try:
+                dueno = request.user.perfil_dueno
+                return redirect ("cuentas:SportsNet_dueno")
+            except:
+                messages.error (request, "Debe ser usuario dueno")
+                return redirect ("cuentas:home")
+
+
         else:
             messages.error(request, "Usuario o contraseña incorrectos")
+            return redirect ("cuentas:login_cuenta")
             
     """
     context = {
@@ -111,3 +121,39 @@ def cerrar_sesion(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión correctamente')
     return redirect("cuentas:home")
+
+# @login_required
+def bienvenida_dueno(request):
+    try:
+        dueno = request.user.perfil_dueno
+    except:
+        # messages.error (request, "Debe ser usuario dueno")
+        return redirect ("cuentas:home")
+    
+    establecimientos = dueno.establecimientos.all()
+    canchas = sum(est.canchas.count() for est in establecimientos)
+    
+    context = {
+        "dueno" : dueno,
+        "establecimientos" : establecimientos,
+        "canchas": canchas
+    }
+
+    return render(request,"bienvenida_dueno.html", context)
+
+def bienvenida_cliente(request):
+    try:
+        cliente = request.user.perfil_cliente
+    except:
+        return redirect ("cuentas:home")
+    
+    # reservas = cliente.reservas.all()
+    
+    
+    context = {
+        "cliente" : cliente,
+        # "reservas" : reservas,
+        
+    }
+
+    return render(request,"bienvenida_cliente.html", context)

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+
+
 {% block title %}Iniciar Sesión - SportsNet{% endblock %}
 
 {% block content %}
@@ -12,18 +14,26 @@
             <a href="{% url 'cuentas:home' %}" class="login-text">Menu principal</a>
         {% else %}
             <h2 class="login-title">Iniciar Sesión</h2>
-            
-            {% if form.errors %}
-                <div style="color: #ef4444; margin-bottom: 1rem;">
-                    Usuario o contraseña incorrectos
+
+            <div>
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
                 </div>
             {% endif %}
-            
+
+            </div>
+
             <form method="post" class="login-form">
                 {% csrf_token %}
                 
                 <label for="id_username">Usuario</label>
-                <input type="text" name="username" id="id_username" placeholder="Ingresa tu usuario" required autofocus>
+                <input type="text" name="username" id="id_username" placeholder="Ingresa tu usuario" required >
 
                 <label for="id_password">Contraseña</label>
                 <input type="password" name="password" id="id_password" placeholder="Ingresa tu contraseña" required>
