@@ -5,6 +5,7 @@ from cuentas.models import Dueno
 
 # Create your models here.
 
+"""
 class Deporte(models.Model):
     DEPORTES = [
         ("FUTBOL", "Futbol"),
@@ -20,9 +21,12 @@ class Deporte(models.Model):
         ("---","---"),        
     ]
     deporte = models.CharField(max_length=20, choices=DEPORTES)
+    deporte = models.CharField(max_length=20)
 
     def __str__(self):
         return f"Nombre deporte = {self.deporte}"
+
+"""
     
 class Establecimiento (models.Model):
     dueno = models.ForeignKey(Dueno, on_delete=models.CASCADE, related_name="establecimientos")
@@ -69,8 +73,24 @@ class Cancha (models.Model):
         ("VINILO","Vinilo"),
         ]
     
+    DEPORTES = [
+        ("FUTBOL", "Futbol"),
+        ("BASQUETBALL","Basquetball"),
+        ("VOLEYBALL","Voleyball"),
+        ("TENIS","Tenis"),
+        ("RUGBY","Rugby"),
+        ("HANDBALL","Handball"),
+        ("BOWLING","Bowling"),
+        ("SQUASH","Squash"),
+        ("PADEL","Padel"),
+        ("OTRO","Otro"),
+        ("---","---"),        
+    ]
+    
+    
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
-    deporte = models.ManyToManyField(Deporte, related_name="canchas")
+    deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
+    #deporte = models.ManyToManyField(Deporte, related_name="canchas")
     nombre = models.CharField(max_length=25, unique=True)
     superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES)
     iluminacion = models.CharField(max_length=20)
