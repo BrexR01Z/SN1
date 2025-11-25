@@ -4,6 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}SportsNet{% endblock %}</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    {% block extra_css %}{% endblock %}
     <title>{% block title %}SportsNet{% endblock %}</title>
     
     {% block extra_css %}
@@ -12,6 +24,22 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
+
+    <header>
+        <h1>SportsNet</h1>
+    </header>
+
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'script.js' %}"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
     <header class="header">
         <div class="logo">
             <a href="{% url 'cuentas:home' %}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
