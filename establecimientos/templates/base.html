@@ -1,16 +1,51 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block titulo %}Base{% endblock %}</title>
-</head>
-
-<!-- hacer header con respectivas acciones -->
-
-<body>
-    <marquee>SportsNet</marquee>
-    {% block contenido %}
+    <title>{% block title %}SportsNet{% endblock %}</title>
+    
+    {% block extra_css %}
+    
     {% endblock %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="{% url 'cuentas:home' %}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span class="logo-text">SportsNet</span>
+            </a>
+        </div>
+        <nav class="nav">
+            <a href="{% url 'establecimientos:buscar' %}" class="nav-button">Buscar Canchas</a>
+            
+            {% if user.is_authenticated %}
+                <span style="color: #9ca3af;">Hola, {{ user.get_username }}</span>
+                
+                {% if user.perfil_dueno %}
+                    <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
+                {% elif user.perfil_cliente %}
+                    <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
+                {% endif %}
+                
+                <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>
+            {% else %}
+                <a href="{% url 'cuentas:login_cuenta' %}" class="nav-button">Iniciar Sesión</a>
+                <a href="{% url 'cuentas:registro' %}" class="nav-button">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+
+   
+
+    {% block content %}
+    {% endblock %}
+
+    
 </body>
 </html>

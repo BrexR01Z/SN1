@@ -9,7 +9,7 @@ class RegistroForm(UserCreationForm):
     TIPO_USUARIO = [("cliente", "Cliente - Quiero reservar"),
                     ("dueno", "Dueno - Quiero gestionar")]
     
-    # luego usar required/blank
+    # luego cambiar a true  required/blank
 
     tipo_usuario = forms.ChoiceField(
         choices=TIPO_USUARIO,
