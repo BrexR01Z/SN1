@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 # Create your models here.
 
 
@@ -43,3 +44,22 @@ class Cliente (models.Model):
 
     def __str__(self):
         return f"Usuario Cliente : {self.usuario.get_username()}"
+    
+# Modelo para gestionar invitaciones entre usuarios
+class Invitation(models.Model): # Invitación
+    sender = models.ForeignKey( 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='sent_invitations'
+    )
+    receiver = models.ForeignKey( 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='received_invitations'
+    )
+    message = models.TextField(blank=True) # Mensaje opcional
+    created_at = models.DateTimeField(auto_now_add=True) # Fecha y hora de creación
+    accepted = models.BooleanField(default=False) # Estado de la invitación
+
+    def __str__(self):
+        return f"{self.sender} → {self.receiver}"

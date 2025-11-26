@@ -140,3 +140,11 @@ MESSAGES_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
 }
+# Configuración del correo electrónico para Gmail SMTP (Esto es para poder enviar las notificaciones de Invitaciones y/u otros correos)
+EMAIL_BACKEND = EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" # Usar el backend SMTP para enviar correos electrónicos
+EMAIL_HOST = "smtp.gmail.com" 
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = "antonioconstanzovicens@gmail.com" # Reemplaza con tu dirección de correo electrónico de Gmail
+EMAIL_HOST_PASSWORD = "cxtj ftnd cevk goif" # Reemplaza con tu contraseña de aplicación de Gmail
+DEFAULT_FROM_EMAIL = "notificaciones@sportsnet.cl" # Dirección de correo electrónico predeterminada para los correos salientes

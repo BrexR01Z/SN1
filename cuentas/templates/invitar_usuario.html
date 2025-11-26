@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invitar usuario</title>
+</head>
+<body>
+    <h1>Invitar a un usuario</h1>
+
+    {% if messages %}
+        <ul>
+        {% for m in messages %}
+            <li>{{ m }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar invitación</button>
+    </form>
+
+</body>
+</html>
