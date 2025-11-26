@@ -5,10 +5,13 @@
 {% block title %}Crear Establecimiento - SportsNet{% endblock %}
 
 {% block extra_css %}
-  
-{% endblock %}
 <link rel="stylesheet" href="{% static 'crear.css' %}">
+{% endblock %}
+
 {% block content %}
+
+
+
 <div class="establecimiento-container">
   <div class="establecimiento-box">
     
@@ -18,7 +21,7 @@
       <form method="POST" class="establecimiento-form" novalidate>
         {% csrf_token %}
 
-        <!-- Nombre del Establecimiento -->
+        
         <div class="form-group">
           <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
           {{ form.nombre }}
@@ -34,7 +37,7 @@
           {% endif %}
         </div>
 
-        <!-- Dirección -->
+        
         <div class="form-group">
           <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
           {{ form.direccion }}
@@ -50,7 +53,7 @@
           {% endif %}
         </div>
 
-        <!-- Teléfono de Contacto -->
+        
         <div class="form-group">
           <label for="{{ form.telefono_contacto.id_for_label }}">{{ form.telefono_contacto.label }}</label>
           {{ form.telefono_contacto }}
@@ -66,7 +69,7 @@
           {% endif %}
         </div>
 
-        <!-- Correo de Contacto -->
+        
         <div class="form-group">
           <label for="{{ form.correo_contacto.id_for_label }}">{{ form.correo_contacto.label }}</label>
           {{ form.correo_contacto }}
@@ -82,11 +85,11 @@
           {% endif %}
         </div>
 
-        <!-- Sección de Comodidades -->
+        
         <div class="comodidades-section">
           <h3 class="comodidades-title">Comodidades Disponibles</h3>
           
-          <!-- Estacionamiento -->
+          
           <div class="form-group checkbox-group">
             <input 
               type="checkbox" 
@@ -104,7 +107,7 @@
             {% endif %}
           </div>
 
-          <!-- Camarines -->
+          
           <div class="form-group checkbox-group">
             <input 
               type="checkbox" 
@@ -113,17 +116,11 @@
               {% if form.camarines_disponible.value %}checked{% endif %}
             >
             <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }}</label>
-            {% if form.camarines_disponible.errors %}
-              <ul class="errorlist">
-                {% for error in form.camarines_disponible.errors %}
-                  <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
+            
           </div>
         </div>
 
-        <!-- Errores generales del formulario
+        
         {% if form.non_field_errors %}
           <ul class="errorlist">
             {% for error in form.non_field_errors %}
@@ -131,7 +128,7 @@
             {% endfor %}
           </ul>
         {% endif %}
-        -->
+        
 
         <button type="submit" class="establecimiento-button">Crear Establecimiento</button>
       </form>

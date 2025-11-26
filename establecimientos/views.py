@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse
 from cuentas.models import Dueno
+from .models import Establecimiento, Cancha, Deporte
 from django.contrib import messages
 from .forms import CrearEstablecimientoForm
 
@@ -9,7 +10,17 @@ from .forms import CrearEstablecimientoForm
 # Create your views here.
 
 def buscar(request):
-    return render (request,"buscar.html")
+    
+
+    canchas = Cancha.objects.all
+    deportes = Deporte.objects.all
+
+    context = {
+        "canchas" : canchas,
+        "deportes" : deportes,
+    }
+
+    return render (request,"buscar.html", context)
 
 def crear_establecimiento(request):
 
@@ -27,6 +38,7 @@ def crear_establecimiento(request):
             establecimiento.save()
 
             messages.success(request, "Establecimiento creado")
+            return redirect ("cuentas:SportsNet_dueno")
         else:
             messages.error(request, "Formulario invalido")
 
@@ -40,3 +52,14 @@ def crear_establecimiento(request):
 
 
     return render (request,"crear_establecimiento.html",context)
+
+
+def ver_establecimiento(request, establecimiento):
+       
+    # establecimiento = get_object_or_404(Establecimiento, pk=establecimiento)
+    establecimiento = Establecimiento.objects.get(id=establecimiento)
+    context = {
+        'establecimiento': establecimiento,        
+    }
+
+    return render(request, 'ver_establecimiento.html', context)

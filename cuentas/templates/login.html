@@ -15,19 +15,7 @@
         {% else %}
             <h2 class="login-title">Iniciar Sesión</h2>
 
-            <div>
-            {% if messages %}
-                <div class="messages-container">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            </div>
+            
 
             <form method="post" class="login-form">
                 {% csrf_token %}

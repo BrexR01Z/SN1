@@ -32,14 +32,14 @@ class Usuario (AbstractUser):
                 raise ValidationError ({ "fecha_nacimiento" : "Debes ser mayor de 18 para registrarte"})
 
 class Dueno (models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_dueno")
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_dueno", unique=True)
     rut = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return f"Usuario Dueño : {self.usuario.get_username()}"
 
 class Cliente (models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_cliente")
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_cliente", unique=True)
 
     def __str__(self):
         return f"Usuario Cliente : {self.usuario.get_username()}"

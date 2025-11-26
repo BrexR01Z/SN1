@@ -3,6 +3,11 @@
 
 {% block title %}Buscar - SportsNet{% endblock %}
 
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'buscar.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1 class="search-title">Buscar Canchas Deportivas</h1>
@@ -12,7 +17,7 @@
         <div class="search-filters-buttons">
             {% for deporte in deportes %}
                 <button class="nav-button">
-                    {{ deporte.nombre }}
+                    {{ deporte.deporte }}
                 </button>
             {% endfor %}
         </div>
@@ -46,9 +51,43 @@
                 {% endif %}
             </div>
         {% empty %}
+            <p class="empty-message">No hay canchas disponibles.</p>
+        {% endfor %}
+    </div>
+   
+<!--
+    <div class="canchas-grid">
+        {% for est in establecimiento %}
+            <div class="cancha-card">
+                <h3>{{ est.nombre }}</h3>
+                <p class="cancha-card-subtitle">
+                    {{ est. }}
+                </p>
+                <p class="cancha-card-sports">
+                    <strong>Deportes:</strong> 
+                    {% for deporte in cancha.deportes.all %}
+                        {{ deporte.nombre }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p class="cancha-card-price">
+                    ${{ cancha.valor_por_bloque }} / 30 min
+                </p>
+                
+                {% if user.is_authenticated %}
+                    <a href="#" class="nav-button reserve-button">
+                        Ver
+                    </a>
+                {% else %}
+                    <p class="login-message">
+                        <a href="{% url 'cuentas:login' %}">Inicia sesión para reservar</a>
+                    </p>
+                {% endif %}
+            </div>
+        {% empty %}
             <p class="empty-message">No hay canchas disponibles aún.</p>
         {% endfor %}
     </div>
+ -->
 </div>
 
 {% block extra_js %}

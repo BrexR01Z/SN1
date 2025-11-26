@@ -6,6 +6,7 @@ from cuentas.models import Dueno
 # Create your models here.
 
 """
+"""
 class Deporte(models.Model):
     DEPORTES = [
         ("FUTBOL", "Futbol"),
@@ -20,24 +21,23 @@ class Deporte(models.Model):
         ("OTRO","Otro"),
         ("---","---"),        
     ]
-    deporte = models.CharField(max_length=20, choices=DEPORTES)
-    deporte = models.CharField(max_length=20)
+    nombre = models.CharField(max_length=20, choices=DEPORTES, unique=True, default="---")
+    # nombre = models.CharField(max_length=20)
 
     def __str__(self):
         return f"Nombre deporte = {self.deporte}"
 
-"""
+
     
 class Establecimiento (models.Model):
     dueno = models.ForeignKey(Dueno, on_delete=models.CASCADE, related_name="establecimientos")
-    nombre = models.CharField(max_length=50)
-    # editar a futuro para integrar mapa
+    nombre = models.CharField(max_length=50, unique=True)
     direccion = models.CharField(max_length=100)
     telefono_contacto = models.CharField(max_length=20)
     correo_contacto = models.EmailField()
     estacionamiento_disponible = models.BooleanField(default=False)
     camarines_disponible = models.BooleanField(default=False)
-
+    # editar a futuro para integrar mapa
     def __str__(self):
         return f"Nombre establecimietno = {self.nombre} , Dueno = {self.dueno}"
 
@@ -54,7 +54,7 @@ class HorarioEstablecimiento(models.Model):
     ]
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="horarios")
-    dia = models.CharField(max_length=20, choices=DIAS_SEMANA, unique=True)
+    dia = models.CharField(max_length=20, choices=DIAS_SEMANA)
     # hacer validacion para q hora_apertura<hora_cierre
     hora_apertura = models.TimeField()
     hora_cierre = models.TimeField()
@@ -89,8 +89,8 @@ class Cancha (models.Model):
     
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
-    deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
-    #deporte = models.ManyToManyField(Deporte, related_name="canchas")
+    #deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
+    deporte = models.ManyToManyField(Deporte, related_name="canchas")
     nombre = models.CharField(max_length=25, unique=True)
     superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES)
     iluminacion = models.CharField(max_length=20)

@@ -4,7 +4,7 @@ from .models import Establecimiento
 class CrearEstablecimientoForm(forms.ModelForm):
 
     # luego cambiar a true  required/blank
-    """
+    
     nombre = forms.CharField(max_length=50)   
     direccion = forms.CharField(max_length=100)
     telefono_contacto = forms.CharField(max_length=20)
@@ -12,7 +12,7 @@ class CrearEstablecimientoForm(forms.ModelForm):
     estacionamiento_disponible = forms.NullBooleanField()
     camarines_disponible = forms.NullBooleanField()
     # editar a futuro para integrar mapa
-    """
+    
     class Meta:
         model = Establecimiento
         fields = [
@@ -44,3 +44,4 @@ class CrearEstablecimientoForm(forms.ModelForm):
             'estacionamiento_disponible': forms.CheckboxInput(),
             'camarines_disponible': forms.CheckboxInput(),
         }
+
