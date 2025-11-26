@@ -8,26 +8,18 @@
 
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    {% block extra_css %}{% endblock %}
-    <title>{% block title %}SportsNet{% endblock %}</title>
     
+
+    
+
     {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
     {% endblock %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+<link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 
-    <header>
-        <h1>SportsNet</h1>
-    </header>
+    
 
     <main>
         {% block contenido %}
@@ -35,9 +27,10 @@
     </main>
 
     <script src="{% static 'script.js' %}"></script>
-
+    <!--
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    -->
     {% block extra_js %}{% endblock %}
 
     <header class="header">
@@ -49,6 +42,18 @@
                 <span class="logo-text">SportsNet</span>
             </a>
         </div>
+
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <nav class="nav">
             <a href="{% url 'establecimientos:buscar' %}" class="nav-button">Buscar Canchas</a>
             

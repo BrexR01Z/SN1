@@ -65,7 +65,7 @@
         <h2>Acciones Rápidas</h2>
         <div class="actions-grid">
             
-            <a href="{% url 'cuentas:home' %}" class="action-card">
+            <a href="{% url 'establecimientos:crear_establecimiento' %}" class="action-card">
                 <div class="action-card-content">
                     <svg class="action-card-icon blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -92,7 +92,7 @@
     <section class="establecimientos-section">
         <div class="establecimientos-header">
             <h2>Mis Establecimientos</h2>
-            <a href="{% url 'cuentas:home' %}" class="nav-button">
+            <a href="{% url 'establecimientos:crear_establecimiento' %}" class="nav-button">
                 Agregar Establecimiento
             </a>
         </div>
@@ -106,15 +106,20 @@
                                 <h3>{{ establecimiento.nombre }}</h3>
                                 <p>{{ establecimiento.direccion }}</p>
                                 <p class="details">
-                                    <strong>Canchas:</strong> {{ establecimiento.canchas.count }}
+                                    <strong>Canchas :</strong> {{ establecimiento.canchas.count }}
                                     {% if establecimiento.estacionamiento_disponible %}
-                                        Estacionamiento
+                                        Cuenta con estacionamiento
+                                    {% endif %}
+
+                                    {% if camarin.camarines.disponible %}
+                                        Cuenta con estacionamiento
                                     {% endif %}
                                 </p>
                             </div>
                             <div class="establecimiento-actions">
                                 <a href="#" class="nav-button">Ver Canchas</a>
-                                <a href="#" class="nav-button edit-button">Editar</a>
+                            <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button edit-button">Ver detalles</a>
+                              <!--  <a href="ver/{{establecimiento.id}}" class="nav-button">Ver detalles</a>-->
                             </div>
                         </div>
                     </div>
@@ -126,7 +131,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
                 <p>Aún no tienes establecimientos registrados</p>
-                <a href="{% url 'cuentas:home' %}" class="cta-button">
+                <a href="{% url 'establecimientos:crear_establecimiento' %}" class="cta-button">
                     Crear mi primer establecimiento
                 </a>
             </div>
