@@ -14,7 +14,8 @@
         </ul>
     {% endif %}
 
-    <form method="post">
+    <form method="post" action="{% url 'cuentas:invitar_usuario' %}">
+
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Enviar invitación</button>

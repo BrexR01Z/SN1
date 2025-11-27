@@ -141,7 +141,7 @@ MESSAGES_TAGS = {
     messages.ERROR: 'error',
 }
 # Configuración del correo electrónico para Gmail SMTP (Esto es para poder enviar las notificaciones de Invitaciones y/u otros correos)
-EMAIL_BACKEND = EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" # Usar el backend SMTP para enviar correos electrónicos
+EMAIL_BACKEND = EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" # Usar el backend SMTP para enviar correos electrónicos (Consola) -> "django.core.mail.backends.console.EmailBackend" #Esto para correos reales-> "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com" 
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 

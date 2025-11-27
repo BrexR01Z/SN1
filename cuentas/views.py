@@ -199,34 +199,54 @@ def invitar_usuario(request):
                 receiver = User.objects.get(username=username)
             except User.DoesNotExist:
                 messages.error(request, "Ese usuario no existe.")
-                return redirect("invitar_usuario")
+                return redirect("cuentas:invitar_usuario")
+
 
             # ¿Es él mismo?
             if receiver == request.user:
                 messages.error(request, "No puedes invitarte a ti mismo.")
-                return redirect("invitar_usuario")
+                return redirect("cuentas:invitar_usuario")
+
 
             # ¿Ya existe una invitación pendiente?
             existing = Invitation.objects.filter(
                 sender=request.user,
                 receiver=receiver,
-                status="pending"
+                accepted=False,
             ).exists()
 
             if existing:
                 messages.warning(request, "Ya enviaste una invitación pendiente a este usuario.")
-                return redirect("invitar_usuario")
+                return redirect("cuentas:invitar_usuario")
 
-            # Crear invitación
-            Invitation.objects.create(sender=request.user, receiver=receiver)
 
-            messages.success(request, "Invitación enviada correctamente.")
-            return redirect("invitar_usuario")
+           # Crear invitación
+            invitacion = Invitation.objects.create(
+                sender=request.user,
+                receiver=receiver
+            )
+
+            #  ENVIAR CORREO AQUÍ MISMO
+            send_mail(
+                subject="¡Tienes una nueva invitación en LifeSportsNet!",
+                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
+                        f"Para aceptarla o rechazarla, ingresa a alguno de los siguientes enlaces con la sesión iniciada:\n"
+                        f"Aceptar: {request.build_absolute_uri(reverse('cuentas:aceptar_invitacion', args=[invitacion.id]))}\n"
+                        f"Rechazar: {request.build_absolute_uri(reverse('cuentas:rechazar_invitacion', args=[invitacion.id]))}\n\n"
+                        f"¡Gracias por usar LifeSportsNet!",
+
+                from_email="noreply@sportsnet.cl",
+                recipient_list=[receiver.email],
+                fail_silently=False,
+            )
+
+            messages.success(request, "Invitación enviada y correo enviado correctamente.")
+            return redirect("cuentas:invitar_usuario")
+
     else:
         form = InvitationForm()
 
     return render(request, "invitar_usuario.html", {"form": form})
-
 def aceptar_invitacion(request, id):
     invitacion = get_object_or_404(Invitation, id=id)
 
@@ -249,8 +269,8 @@ def rechazar_invitacion(request, id):
 
 # VISTA DE PRUEBA PARA CREAR INVITACIÓN Y MOSTRAR LINKS
 def test_invite(request):
-    sender = User.objects.get(username="antonio")  # cámbialo por tu usuario real
-    receiver = User.objects.get(username="amigo")  # y este también
+    sender = User.objects.get(username="antonio")  
+    receiver = User.objects.get(username="amigo")  
 
     invitation = Invitation.objects.create(
         sender=sender,
