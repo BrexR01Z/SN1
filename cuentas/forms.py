@@ -35,7 +35,7 @@ class RegistroForm(UserCreationForm):
             raise forms.ValidationError ("La edad minima es 18 años")
         return fecha
  
-    def clean(self):
+    def clean(self): 
         data = super().clean()
         tipo_usuario = data.get("tipo_usuario")
         rut = data.get("rut")
@@ -46,4 +46,5 @@ class RegistroForm(UserCreationForm):
             })
         return data
 
-    
+class InvitationForm(forms.Form): #Formulario para invitar usuarios (Poner el nombre de usuario)
+    username = forms.CharField(label="Nombre de usuario a invitar", max_length=50)
