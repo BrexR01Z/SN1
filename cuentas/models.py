@@ -19,8 +19,12 @@ class Usuario (AbstractUser):
     def edad(self):
         if self.fecha_nacimiento:
             hoy = date.today()
-            return  hoy.year - self.fecha_nacimiento.year - (hoy.month, hoy.day) < (self.fecha_nacimiento.month,self.fecha_nacimiento.day)
+            edad = hoy.year - self.fecha_nacimiento.year
+            if (hoy.month, hoy.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day):
+                edad -= 1
+            return edad
         return 0
+
     
     def es_mayor(self):
         return self.edad() >= 18
