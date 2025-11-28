@@ -21,11 +21,11 @@ class Deporte(models.Model):
         ("OTRO","Otro"),
         ("---","---"),        
     ]
-    nombre = models.CharField(max_length=20, choices=DEPORTES, unique=True, default="---")
+    nombre = models.CharField(max_length=20,unique=True, choices=DEPORTES, default="---")
     # nombre = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"Nombre deporte = {self.deporte}"
+        return f"Nombre deporte = {self.nombre}"
 
 
     
@@ -90,7 +90,7 @@ class Cancha (models.Model):
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
     #deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
-    deporte = models.ManyToManyField(Deporte, related_name="canchas")
+    deporte = models.CharField(Deporte,choices=DEPORTES, default="---")
     nombre = models.CharField(max_length=25, unique=True)
     superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES)
     iluminacion = models.CharField(max_length=20)
@@ -105,4 +105,4 @@ class Cancha (models.Model):
     
 
 
-# integrar imagenes para canchas
+# integrar imagenes para canchas y establecimientos
