@@ -5,6 +5,7 @@ from cuentas.models import Dueno
 
 # Create your models here.
 
+
 """
 """
 class Deporte(models.Model):
@@ -73,6 +74,15 @@ class Cancha (models.Model):
         ("VINILO","Vinilo"),
         ]
     
+    TIPOS_ILUMINACION = {
+        ("LED","LED"),
+        ("NATURAL", "Natural"),
+        ("MIXTA","Mixta"),
+        ("HALOGENA","Halogena"),
+        ("FLUORECESENTE","Fluorecente"),
+
+    }
+    
     DEPORTES = [
         ("FUTBOL", "Futbol"),
         ("BASQUETBALL","Basquetball"),
@@ -89,14 +99,14 @@ class Cancha (models.Model):
     
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
-    #deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
-    deporte = models.CharField(Deporte,choices=DEPORTES, default="---")
-    nombre = models.CharField(max_length=25, unique=True)
+    deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
+    #deporte = models.ManyToManyField(Deporte,choices=DEPORTES, default="---")
+    nombre = models.CharField(max_length=25)
     superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES)
-    iluminacion = models.CharField(max_length=20)
+    iluminacion = models.CharField(max_length=20, choices=TIPOS_ILUMINACION)
     # true = interior , false = exterior
-    interior = models.BooleanField()
-    # validar 
+    interior = models.BooleanField(default=False)
+    # validar q sea un valor entero, positivo, 
     valor_por_bloque = models.DecimalField(max_digits=10, decimal_places=0)
 
     def __str__(self):

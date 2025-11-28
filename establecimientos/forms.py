@@ -1,5 +1,5 @@
 from django import forms
-from .models import Establecimiento
+from .models import Establecimiento, Cancha
 
 class CrearEstablecimientoForm(forms.ModelForm):
 
@@ -45,3 +45,51 @@ class CrearEstablecimientoForm(forms.ModelForm):
             'camarines_disponible': forms.CheckboxInput(),
         }
 
+class CrearCanchaForm(forms.ModelForm):
+
+    class Meta:
+        model = Cancha
+        fields = [
+            'nombre',
+            'deporte',
+            'superficie',
+            'iluminacion',
+            'interior',
+            'valor_por_bloque'
+        ]
+        
+        labels = {
+            'nombre': 'Nombre de la Cancha',
+            'deporte': 'Deporte',
+            'superficie': 'Tipo de Superficie',
+            'iluminacion': 'Tipo de Iluminación',
+            'interior': 'Cancha de interior',
+            'valor_por_bloque': 'Valor por Bloque',
+        }
+        
+        help_texts = {
+            'valor_por_bloque': 'Precio para una bloque de 30 minutos',
+        }
+        
+        widgets = {
+            'nombre': forms.TextInput(attrs={
+                'maxlength': '25'
+            }),
+            'deporte': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'superficie': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'iluminacion': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'interior': forms.CheckboxInput(attrs={
+                'class': 'form-checkbox'
+            }),
+            'valor_por_bloque': forms.NumberInput(attrs={
+                'placeholder': '$5000',
+                'min': '0',
+                'step': '1000'
+            }),
+        }

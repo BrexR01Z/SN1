@@ -117,7 +117,10 @@
                             </div>
                             <div class="establecimiento-actions">
                                 <a href="#" class="nav-button">Ver Canchas</a>
-                            <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button edit-button">Ver detalles</a>
+                                <!-- mover crear dentro de ver -->
+                                <a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="nav-button">Crear Cancha</a>
+                            <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button">Ver detalles</a>
+
                               <!--  <a href="ver/{{establecimiento.id}}" class="nav-button">Ver detalles</a>-->
                             </div>
                         </div>
