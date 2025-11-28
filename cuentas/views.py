@@ -12,6 +12,8 @@ from django.core.mail import send_mail # Importar la función para enviar correo
 from django.conf import settings # Importar la configuración de correo
 from .models import Invitation # Modelo de invitación
 from .forms import InvitationForm # Formulario de invitación
+from .forms import EditarPerfilForm # Formulario para editar el perfil de usuario
+
 # Create your views here.
 
 def registro(request):
@@ -303,9 +305,30 @@ def test_invite(request):
 #==============================PERFIL DE USUARIO==================================
 @login_required
 def perfil_usuario(request):
-    # Invitaciones recibidas
-    invitaciones = Invitation.objects.filter(receiver=request.user, accepted=False)
+    usuario = request.user
+    
+    # Invitaciones recibidas (pendientes)
+    invitaciones = Invitation.objects.filter(receiver=usuario, accepted=False)
 
     return render(request, "perfil_usuario.html", {
-        "invitaciones": invitaciones
+        "usuario": usuario,
+        "invitaciones": invitaciones,
     })
+
+@login_required
+def editar_perfil(request):
+    usuario = request.user
+
+    if request.method == "POST":
+        form = EditarPerfilForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado correctamente.")
+            return redirect("cuentas:perfil_usuario")
+    else:
+        form = EditarPerfilForm(instance=usuario)
+
+    return render(request, "editar_perfil.html", {"form": form})
+
+
+#==============================FIN PERFIL DE USUARIO==================================

@@ -13,6 +13,7 @@ urlpatterns = [
 
     #Acceso a la vista de perfil de usuario
     path("perfil/", views.perfil_usuario, name="perfil_usuario"), # Vista para ver y editar el perfil de usuario
+    path("perfil/editar/", views.editar_perfil, name="editar_perfil"), # Vista para editar el perfil de usuario
 
     
     #Acceso a las vistas de aceptar y rechazar invitaciones
@@ -23,5 +24,7 @@ urlpatterns = [
     #Vistas de prueba para testeo de correos e invitaciones
     path("test-email/", views.test_email, name="test_email"), # VISTA DE PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!]
     path('test-invite/', views.test_invite, name="test_invite"), # VISTA DE PRUEBA PARA INVITACIONES [SOLO PARA TESTEO!!!!]
+
+    
 
 ]
