@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'bienvenida.css' %}">
+<style>
+    /* Ajustes para el perfil */
+    .profile-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+
+    .profile-card {
+        background: #111827;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        color: #e5e7eb;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #60a5fa;
+    }
+
+    .edit-button {
+        background: #2563eb;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: white;
+        transition: 0.2s;
+    }
+    .edit-button:hover {
+        background: #1d4ed8;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-box {
+        background: #1f2937;
+        padding: 1rem;
+        border-radius: 0.75rem;
+    }
+
+    .info-title {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: white;
+    }
+
+    .invitations-section {
+        margin-top: 3rem;
+    }
+
+    .inv-card {
+        background: #1f2937;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .inv-actions a {
+        margin-right: 1rem;
+        text-decoration: none;
+        color: #93c5fd;
+    }
+
+    .inv-actions a:hover {
+        color: #60a5fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <!-- ENCABEZADO -->
+        <div class="profile-header">
+            <h1 class="profile-title">Estos son tus datos, {{ user.first_name }}  {{ user.last_name }}!</h1>
+            <a href="{% url 'cuentas:editar_perfil' %}" class="edit-button">Editar Perfil</a>
+        </div>
+        
+        <!-- INFORMACIÓN DEL USUARIO -->
+        <div class="info-grid">
+
+            <div class="info-box">
+                <p class="info-title">Nombre de Usuario</p>
+                <p class="info-value">{{ user.username }}</p>
+            </div>
+
+            <div class="info-box">
+                <p class="info-title">Nombre Completo</p>
+                <p class="info-value">{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+
+            <div class="info-box">
+                <p class="info-title">Fecha de Nacimiento</p>
+                <p class="info-value">
+                    {% if user.fecha_nacimiento %}
+                        {{ user.fecha_nacimiento }}
+                    {% else %}
+                        No registrada
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="info-box">
+                <p class="info-title">Edad</p>
+                <p class="info-value">{{ user.edad }}</p>
+            </div>
+
+        </div>
+
+        <!-- INVITACIONES RECIBIDAS -->
+        <div class="invitations-section">
+            <h2>Invitaciones Pendientes</h2>
+
+            {% if invitaciones %}
+                {% for inv in invitaciones %}
+                    <div class="inv-card">
+                        <p><strong>{{ inv.sender.username }}</strong> te ha enviado una invitación.</p>
+                        <p><small>Enviada el {{ inv.created_at }}</small></p>
+
+                        <div class="inv-actions">
+                            <a href="{% url 'cuentas:aceptar_invitacion' inv.id %}">Aceptar</a>
+                            <a href="{% url 'cuentas:rechazar_invitacion' inv.id %}">Rechazar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No tienes invitaciones pendientes.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

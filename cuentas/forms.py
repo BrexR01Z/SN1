@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Usuario, Dueno, Cliente
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from .models import Usuario
+from django.contrib.auth import get_user_model
 
 
 class RegistroForm(UserCreationForm):
@@ -48,3 +50,25 @@ class RegistroForm(UserCreationForm):
 
 class InvitationForm(forms.Form): #Formulario para invitar usuarios (Poner el nombre de usuario)
     username = forms.CharField(label="Nombre de usuario a invitar", max_length=50)
+
+class EditarPerfilForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ["first_name", "last_name", "email", "telefono", "fecha_nacimiento"]
+
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "telefono": forms.TextInput(attrs={"class": "form-control"}),
+            "fecha_nacimiento": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+        }
+        def clean_email(self):
+            email = self.cleaned_data["email"]
+            usuario_actual = self.instance  # El usuario que está editando
+
+            # Si un usuario con este correo ya existe y no es el usuario actual, lanzar error
+            if Usuario.objects.filter(email=email).exclude(id=usuario_actual.id).exists():
+                raise forms.ValidationError("Este correo ya está en uso por otro usuario.")
+
+            return email
