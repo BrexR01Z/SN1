@@ -17,7 +17,7 @@
         <div class="search-filters-buttons">
             {% for x in deportes %}
                 <button class="nav-button">
-                    {{ x.nombre }}
+                    {{ x }}
                 </button>
             {% endfor %}
         </div>
@@ -27,12 +27,16 @@
         {% for cancha in canchas %}
             <div class="cancha-card">
                 <h3>{{ cancha.nombre }}</h3>
-                <p class="cancha-card-subtitle">
-                    {{ cancha.establecimiento.nombre }}
-                </p>
+              
                 <p class="cancha-card-sports">
-                    <strong>Deportes:</strong> 
-                    
+                    <strong>Deporte : </strong> 
+                    {{ cancha.deporte }}
+                    <br>
+                    <strong>Establecimiento : </strong>
+                    {{ cancha.establecimiento.nombre }}
+                    <br>
+                    <strong>Direccion : </strong>
+                    {{cancha.establecimiento.direccion}}
                 </p>
                 <p class="cancha-card-price">
                     ${{ cancha.valor_por_bloque }} / 30 min
@@ -44,7 +48,7 @@
                     </a>
                 {% else %}
                     <p class="login-message">
-                        <a href="{% url 'cuentas:login' %}">Inicia sesión para reservar</a>
+                        <a href="{% url 'cuentas:login_cuenta' %}">Inicia sesión para reservar</a>
                     </p>
                 {% endif %}
             </div>
