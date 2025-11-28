@@ -64,7 +64,9 @@
                     <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
                 {% elif user.perfil_cliente %}
                     <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
+                    <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
                 {% endif %}
+                    
                 
                 <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>
             {% else %}

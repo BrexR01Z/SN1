@@ -243,25 +243,37 @@ def invitar_usuario(request):
         form = InvitationForm()
 
     return render(request, "invitar_usuario.html", {"form": form})
+
+
+@login_required
 def aceptar_invitacion(request, id):
-    invitacion = get_object_or_404(Invitation, id=id)
+    try:
+        invitacion = Invitation.objects.get(id=id, receiver=request.user)
+    except Invitation.DoesNotExist:
+        messages.error(request, "Invitación no encontrada.")
+        return redirect("cuentas:perfil_usuario")
 
-    invitacion.status = "ACCEPTED"
+    invitacion.accepted = True
     invitacion.save()
 
-    return render(request, "resultado_invitacion.html", {
-        "mensaje": "¡Invitación aceptada!"
-    })
+    messages.success(request, "Invitación aceptada.")
+    return redirect("cuentas:perfil_usuario")
 
+
+@login_required
 def rechazar_invitacion(request, id):
-    invitacion = get_object_or_404(Invitation, id=id)
+    try:
+        invitacion = Invitation.objects.get(id=id, receiver=request.user)
+    except Invitation.DoesNotExist:
+        messages.error(request, "Invitación no encontrada.")
+        return redirect("cuentas:perfil_usuario")
 
-    invitacion.status = "REJECTED"
+    invitacion.accepted = False
     invitacion.save()
 
-    return render(request, "resultado_invitacion.html", {
-        "mensaje": "Invitación rechazada."
-    })
+    messages.success(request, "Invitación rechazada.")
+    return redirect("cuentas:perfil_usuario")
+
 
 # VISTA DE PRUEBA PARA CREAR INVITACIÓN Y MOSTRAR LINKS
 def test_invite(request):
@@ -286,3 +298,14 @@ def test_invite(request):
         f"Aceptar: {accept_url}<br>"
         f"Rechazar: {reject_url}"
     )
+
+#==============================FIN INVITACIONES DE USUARIOS==================================
+#==============================PERFIL DE USUARIO==================================
+@login_required
+def perfil_usuario(request):
+    # Invitaciones recibidas
+    invitaciones = Invitation.objects.filter(receiver=request.user, accepted=False)
+
+    return render(request, "perfil_usuario.html", {
+        "invitaciones": invitaciones
+    })
