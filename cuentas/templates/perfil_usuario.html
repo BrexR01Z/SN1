@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'bienvenida.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- SECCIÓN DE BIENVENIDA (puedes personalizar el texto) -->
+    <section class="welcome-card">
+        <h1>
+            Mi Perfil — <span class="welcome-name">{{ user.get_full_name|default:user.username }}</span>
+        </h1>
+        <p>Aquí puedes administrar tus datos y ver tus invitaciones pendientes.</p>
+    </section>
+
+    <!-- SECCIÓN DE INVITACIONES -->
+    <section class="actions-section">
+        <h2 style="color: white; margin-bottom: 1rem;">Invitaciones Recibidas</h2>
+
+        {% if invitaciones %}
+            <div class="actions-grid">
+                {% for inv in invitaciones %}
+                    <div class="action-card">
+                        <div class="action-card-content">
+
+                            <svg class="action-card-icon yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M8 10h.01M12 10h.01M16 10h.01M21 16v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-1m18 0a3 3 0 00-3-3H6a3 3 0 00-3 3m18 0V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8" />
+                            </svg>
+
+                            <h3>De: {{ inv.sender.username }}</h3>
+                            <p>{{ inv.message|default:"Sin mensaje" }}</p>
+
+                            <div style="margin-top: 1rem; display: flex; gap: .5rem;">
+                                <a href="{% url 'cuentas:aceptar_invitacion' inv.id %}" 
+                                   class="nav-button" 
+                                   style="background-color: #16a34a;">
+                                    Aceptar
+                                </a>
+
+                                <a href="{% url 'cuentas:rechazar_invitacion' inv.id %}" 
+                                   class="nav-button" 
+                                   style="background-color: #dc2626;">
+                                    Rechazar
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p style="color: #ccc;">No tienes invitaciones pendientes.</p>
+        {% endif %}
+    </section>
+
+</div>
+
+{% endblock %}

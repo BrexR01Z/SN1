@@ -10,6 +10,10 @@ urlpatterns = [
     path("logout/",views.cerrar_sesion,name="cerrar_sesion"),
     path("SportsNet_Dueno/",views.bienvenida_dueno,name="SportsNet_dueno"),
     path("SportsNet_cliente/",views.bienvenida_cliente,name="SportsNet_cliente"),
+
+    #Acceso a la vista de perfil de usuario
+    path("perfil/", views.perfil_usuario, name="perfil_usuario"), # Vista para ver y editar el perfil de usuario
+
     
     #Acceso a las vistas de aceptar y rechazar invitaciones
     path("invitar/", views.invitar_usuario, name="invitar_usuario"), # Vista para enviar invitaciones
