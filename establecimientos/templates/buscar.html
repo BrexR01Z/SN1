@@ -15,9 +15,9 @@
     <div class="search-filters">
         <h3>Filtrar por deporte:</h3>
         <div class="search-filters-buttons">
-            {% for deporte in deportes %}
+            {% for x in deportes %}
                 <button class="nav-button">
-                    {{ deporte.deporte }}
+                    {{ x.nombre }}
                 </button>
             {% endfor %}
         </div>
@@ -32,9 +32,7 @@
                 </p>
                 <p class="cancha-card-sports">
                     <strong>Deportes:</strong> 
-                    {% for deporte in cancha.deportes.all %}
-                        {{ deporte.nombre }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
+                    
                 </p>
                 <p class="cancha-card-price">
                     ${{ cancha.valor_por_bloque }} / 30 min
