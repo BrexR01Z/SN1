@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ establecimiento.nombre }} - SportsNet{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'ver.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detalle-container">
+  
+
+  <div class="detalle-header">
+    <h1 class="detalle-titulo">{{ establecimiento.nombre }}</h1>
+    <div class="detalle-botones">
+      <a href="#" class="btn">Editar</a>
+      <a href="#" class="btn btn-secundario">Volver</a>
+    </div>
+  </div>
+
+
+  <div class="detalle-grid">
+
+    <div class="card">
+      <h2 class="card-titulo">Información General</h2>
+      
+      <div class="info-item">
+        <span class="info-label">Dirección:</span>
+        <span class="info-valor">{{ establecimiento.direccion }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Teléfono:</span>
+        <span class="info-valor">{{ establecimiento.telefono_contacto }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Email:</span>
+        <span class="info-valor">{{ establecimiento.correo_contacto }}</span>
+      </div>
+
+
+      <div class="card-titulo" style="margin-top: 1.5rem;">Comodidades</div>
+      <div class="comodidades-grid">
+        <div class="comodidad-item">
+          <div class="comodidad-nombre">Estacionamiento</div>
+          <div class="comodidad-estado {% if establecimiento.estacionamiento_disponible %}disponible{% else %}no-disponible{% endif %}">
+            {% if establecimiento.estacionamiento_disponible %}Disponible{% else %}No disponible{% endif %}
+          </div>
+        </div>
+        
+        <div class="comodidad-item">
+          <div class="comodidad-nombre">Camarines</div>
+          <div class="comodidad-estado {% if establecimiento.camarines_disponible %}disponible{% else %}no-disponible{% endif %}">
+            {% if establecimiento.camarines_disponible %}Disponible{% else %}No disponible{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="card card-mapa">
+      <h2 class="card-titulo">Ubicación</h2>
+      <div id="mapa"></div>
+    </div>
+  </div>
+
+
+  {% if establecimiento.horarios.all %}
+  <div class="seccion">
+    <h2 class="seccion-titulo">Horarios</h2>
+    <table class="horarios-table">
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Apertura</th>
+          <th>Cierre</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for horario in establecimiento.horarios.all %}
+        <tr>
+          <td>{{ horario.get_dia_display }}</td>
+          <td>{{ horario.hora_apertura|time:"H:i" }}</td>
+          <td>{{ horario.hora_cierre|time:"H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="seccion">
+    <h2 class="seccion-titulo">Horarios</h2>
+    <p class="texto-vacio">No hay horarios configurados</p>
+  </div>
+  {% endif %}
+
+
+  <div class="seccion">
+    <h2 class="seccion-titulo">Canchas Disponibles</h2>
+    {% if establecimiento.canchas.all %}
+    <div class="canchas-grid">
+      {% for cancha in establecimiento.canchas.all %}
+      <div class="cancha-card">
+        <div class="cancha-nombre">{{ cancha.nombre }}</div>
+        
+        <div class="cancha-detalle">
+          <strong>Deporte:</strong> {{ cancha.get_deporte_display }}
+        </div>
+        
+        <div class="cancha-detalle">
+          <strong>Superficie:</strong> {{ cancha.get_superficie_display }}
+        </div>
+        
+        <div class="cancha-detalle">
+          <strong>Iluminación:</strong> {{ cancha.iluminacion }}
+        </div>
+        
+        <div class="cancha-detalle">
+          <strong>Tipo:</strong> {% if cancha.interior %}Interior{% else %}Exterior{% endif %}
+        </div>
+        
+        <div class="cancha-detalle">
+          <strong>Precio/bloque:</strong> <span class="precio-bloque">${{ cancha.valor_por_bloque }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="texto-vacio">No hay canchas registradas</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- mapa  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+  // Coordenadas por defecto (Talcahuano, BioBío, Chile)
+  const direccion = "{{ establecimiento.direccion }}";
+  const latitud = {{ establecimiento.latitud|default:"-36.7272" }};
+  const longitud = {{ establecimiento.longitud|default:"-72.5917" }};
+
+  // Inicializar mapa
+  const mapa = L.map('mapa').setView([latitud, longitud], 15);
+
+  // Tiles OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(mapa);
+
+  // Marcador
+  L.marker([latitud, longitud])
+    .addTo(mapa)
+    .bindPopup("<strong>{{ establecimiento.nombre }}</strong><br>{{ establecimiento.direccion }}")
+    .openPopup();
+</script>
+
+-->
+
+{% endblock %}

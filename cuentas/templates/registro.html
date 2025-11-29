@@ -21,10 +21,11 @@
         <a href="{% url 'cuentas:home' %}" class="signup-title">Menu principal</a>
     {% else %}
         <h2 class="signup-title">Crear Cuenta en SportsNet</h2>
+        <h5 class="signup-subtitle">Su Username es unico y NO se puede cambiar.</h3>
         <form method="POST" class="signup-form" novalidate>
         {% csrf_token %}
 
-        <!-- Selector de tipo de usuario -->
+        
         <div class="form-group">
             <label>{{ form.tipo_usuario.label }}</label>
             <div class="radio-group">

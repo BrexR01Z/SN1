@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}Editar Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'bienvenida.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 2rem;">
+
+    <section class="welcome-card">
+        <h1>Editar Perfil</h1>
+        <p>Modifica tu información personal</p>
+    </section>
+
+    <section class="actions-section">
+        <div class="action-card" style="padding: 1.5rem;">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="nav-button" style="margin-top: 1rem;">
+                    Guardar cambios
+                </button>
+            </form>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
