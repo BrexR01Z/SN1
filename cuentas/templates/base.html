@@ -8,19 +8,13 @@
 
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
 
-    {% block extra_css %}{% endblock %}
     <title>{% block title %}SportsNet{% endblock %}</title>
-    
-    {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    {% endblock %}
+        
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
@@ -28,11 +22,6 @@
     <header>
         <h1>SportsNet</h1>
     </header>
-
-    <main>
-        {% block contenido %}
-        {% endblock %}
-    </main>
 
     <script src="{% static 'script.js' %}"></script>
 
@@ -74,6 +63,9 @@
     {% block content %}
     {% endblock %}
 
-    
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
 </body>
 </html>
