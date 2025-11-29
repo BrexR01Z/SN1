@@ -4,6 +4,6 @@ from . import views
 app_name = "establecimientos"
 
 urlpatterns = [
+    path("buscar/",views.buscar,name="buscar"),
     
-
 ]

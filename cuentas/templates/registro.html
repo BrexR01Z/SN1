@@ -1,35 +1,121 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Registrarse - SportsNet{% endblock %}
+
+
 {% block extra_css %}
-<link rel="stylesheet" href="{ static 'style.css'}">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 {% endblock %}
 
 
+{% block content %}
+<div class="signup-container">
+  <div class="signup-box">
+    
+
+    {% if user.is_authenticated %}
+        <h3 class="signup-title">Usted ya está registrado e inició sesión</h3>
+        <a href="{% url 'cuentas:cerrar_sesion' %}" class="signup-title">Cerrar Sesión</a>
+        <hr>
+        <a href="{% url 'cuentas:home' %}" class="signup-title">Menu principal</a>
+    {% else %}
+        <h2 class="signup-title">Crear Cuenta en SportsNet</h2>
+        <form method="POST" class="signup-form" novalidate>
+        {% csrf_token %}
+
+        <!-- Selector de tipo de usuario -->
+        <div class="form-group">
+            <label>{{ form.tipo_usuario.label }}</label>
+            <div class="radio-group">
+            {% for value, text in form.tipo_usuario.field.choices %}
+                <div class="radio-option">
+                <input 
+                    type="radio" 
+                    name="tipo_usuario" 
+                    value="{{ value }}" 
+                    id="id_tipo_usuario_{{ forloop.counter }}"
+                    {% if form.tipo_usuario.value == value %}checked{% endif %}
+                    
+                >
+                <label for="id_tipo_usuario_{{ forloop.counter }}">{{ text }}</label>
+                </div>
+            {% endfor %}
+            </div>
+            {% if form.tipo_usuario.errors %}
+            <ul class="errorlist">
+                {% for error in form.tipo_usuario.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <!-- Campos básicos -->
+        {% for field in form %}
+            {% if field.name not in 'tipo_usuario,rut' %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <span class="helptext">{{ field.help_text }}</span>
+                {% endif %}
+                {% if field.errors %}
+                <ul class="errorlist">
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Campo RUT (solo para dueños) -->
+        <div class="form-group conditional-field" id="rut-field">
+            <label for="{{ form.rut.id_for_label }}">{{ form.rut.label }}</label>
+            {{ form.rut }}
+            {% if form.rut.help_text %}
+            <span class="helptext">{{ form.rut.help_text }}</span>
+            {% endif %}
+            {% if form.rut.errors %}
+            <ul class="errorlist">
+                {% for error in form.rut.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+
+        <!-- Errores generales del formulario
+        {% if form.non_field_errors %}
+            <ul class="errorlist">
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        -->
+
+        <button type="submit" class="signup-button">Registrarse</button>
+        </form>
+        <p class="signup-text">
+        ¿Ya tienes cuenta?
+        <a href="{% url 'cuentas:login_cuenta' %}">Inicia sesión aquí</a>
+        </p>
+
+    {% endif %}
+
+    
+
+    
+  </div>
+</div>
 
 {% block extra_js %}
-<script src="{% static 'script.js' %}" ></script>
+<script src="{% static 'script.js' %}"></script>
 {% endblock %}
-
-
-
-{% block titulo %} Registro {% endblock %}
-
-{% block contenido %}
-
-<!-- hace falta "toggle" del campo de rut, lo haré asap-->
-<div>
-    <h2>Crear cuenta en SportsNet</h2>
-    <form  method = "POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        
-
-
-        <button type="submit" name = Registrar >Crear cuenta</button>
-    </form>
-    <a href="{% url 'cuentas:login' %}">Ya tienes cuenta? Iniciar Sesión</a>
-</div>
 
 {% endblock %}
 

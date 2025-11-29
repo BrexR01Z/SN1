@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
-{% endblock %}
+{% block title %}SportsNet - Reservas Deportivas{% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'script.js' %}"></script>
 
 <script>
-// Esperar cargue la página
+// Esperar cargar la página
 document.addEventListener("DOMContentLoaded", function () {
 
     // mapa centrado en Santiago
@@ -49,10 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
     <div id="map" style="height: 400px; width: 100%; margin-top:20px; border:1px solid #ccc;"></div>
 </div>
 
-<div style="margin-top: 25px;">
-    <a href="">Buscar recintos/canchas</a><br>
-    <a href="{% url 'cuentas:registro' %}">Registrarse</a><br>
-    <a href="{% url 'cuentas:login' %}">Ya tienes cuenta? Iniciar Sesión</a>
-</div>
+<div class="cta-buttons">
+                <a href="{% url 'establecimientos:buscar' %}" class="cta-button">Buscar Canchas</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'cuentas:registro' %}" class="cta-button cta-secondary">Registrarse Gratis</a>
+                {% endif %}
+            </div>
+
+
 {% endblock %}
 

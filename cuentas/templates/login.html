@@ -1,36 +1,52 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{ static 'style.css'}">
-{% endblock %}
 
 
-<!--
-{% block extra_js %}
-<script src="{% static 'registro.js' %}" ></script>
-{% endblock %}
--->
 
+{% block title %}Iniciar Sesión - SportsNet{% endblock %}
 
-{% block titulo %} Inicio de Sesión {% endblock %}
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        {% if user.is_authenticated %}
+            <h2 class="login-title">Usted ya ha iniciado sesion</h2>
+            <a href="{% url 'cuentas:cerrar_sesion' %}" class="login-text">Cerrar Sesión</a>
+            <hr>
+            <a href="{% url 'cuentas:home' %}" class="login-text">Menu principal</a>
+        {% else %}
+            <h2 class="login-title">Iniciar Sesión</h2>
 
-{% block contenido %}
+            <div>
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-<div>
-    <h2>Iniciar Sesión en SportsNet</h2>
-    <form method = "POST">
-        {% csrf_token %}
-        <label for="">Usuario</label>
-        <input type="text" placeholder="Ingresa tu usuario">
+            </div>
 
-        <label for="">Contraseña</label>
-        <input type="password" placeholder="Ingresa tu contraseña">
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                
+                <label for="id_username">Usuario</label>
+                <input type="text" name="username" id="id_username" placeholder="Ingresa tu usuario" required >
 
-        <button type="submit" name = Login >Iniciar Sesión</button>
-    </form>
-    <a href="{% url 'cuentas:registro' %}">No tienes cuenta? Registrase</a>
+                <label for="id_password">Contraseña</label>
+                <input type="password" name="password" id="id_password" placeholder="Ingresa tu contraseña" required>
+
+                <button type="submit" class="login-button">Ingresar</button>
+            </form>
+
+            <p class="login-text">¿No tienes cuenta?
+                <a href="{% url 'cuentas:registro' %}">Regístrate aquí</a>
+            </p>
+
+        {% endif %}
+        
+    </div>
 </div>
-
 {% endblock %}
-
