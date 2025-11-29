@@ -3,27 +3,54 @@
 
 {% block title %}SportsNet - Reservas Deportivas{% endblock %}
 
-{% block content %}
-<div class="container">
-    <main class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Bienvenido a SportsNet</h1>
-            <p class="hero-subtitle">Tu plataforma de reservas deportivas</p>
-            <p class="hero-description">
-                Contamos con una gran variedad de establecimientos deportivos para que puedas jugar tu deporte favorito. 
-                Servicios de búsqueda optimizados, mapas interactivos, perfiles personalizados y mucho más. 
-                ¡Encuentra tu cancha ideal en segundos!
-            </p>
-            
-            <div class="cta-buttons">
+{% block extra_js %}
+<script src="{% static 'script.js' %}"></script>
+
+<script>
+// Esperar cargar la página
+document.addEventListener("DOMContentLoaded", function () {
+
+    // mapa centrado en Santiago
+    const map = L.map('map').setView([-33.45, -70.66], 12);
+
+    // Capa de mapa (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Marcador de ejemplo
+    L.marker([-33.45, -70.66])
+        .addTo(map)
+        .bindPopup("¡Bienvenido a SportsNet!")
+        .openPopup();
+});
+</script>
+{% endblock %}
+
+{% block titulo %} Home {% endblock %}
+
+{% block contenido %}
+<div>
+    <h1>Bienvenido a SportsNet!</h1>
+    <h2>Tu plataforma de reservas deportivas</h2>
+     
+    <p>
+        Contamos con una gran variedad de recintos en los cuales podrás jugar tu deporte favorito.
+    </p>
+
+    <h3>¡Encuentra tu cancha ideal en segundos!</h3>
+</div>
+
+
+
+<div class="cta-buttons">
                 <a href="{% url 'establecimientos:buscar' %}" class="cta-button">Buscar Canchas</a>
                 {% if not user.is_authenticated %}
                     <a href="{% url 'cuentas:registro' %}" class="cta-button cta-secondary">Registrarse Gratis</a>
                 {% endif %}
             </div>
-        </div>
-
-
 
 
 {% endblock %}
+

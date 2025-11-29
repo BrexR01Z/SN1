@@ -21,11 +21,6 @@
 
     
 
-    <main>
-        {% block contenido %}
-        {% endblock %}
-    </main>
-
     <script src="{% static 'script.js' %}"></script>
     <!--
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -81,6 +76,9 @@
     {% block content %}
     {% endblock %}
 
-    
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
 </body>
 </html>
