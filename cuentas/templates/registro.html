@@ -72,7 +72,7 @@
             {% endif %}
         {% endfor %}
 
-        <!-- Campo RUT (solo para dueños) -->
+        <!-- rut, para usuarios dueño, validacion pendiente en models -->
         <div class="form-group conditional-field" id="rut-field">
             <label for="{{ form.rut.id_for_label }}">{{ form.rut.label }}</label>
             {{ form.rut }}

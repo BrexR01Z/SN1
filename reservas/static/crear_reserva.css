@@ -1,0 +1,161 @@
+/* reservas/static/reservas/crear_reserva.css */
+
+.reserva-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1f2937;
+  border-radius: 1rem;
+  border: 1px solid #374151;
+}
+
+.reserva-title {
+  color: #60a5fa;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.cancha-info {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #3b82f6;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #d1d5db;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.info-valor {
+  color: #60a5fa;
+}
+
+.precio-destaque {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #d1d5db;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 0.75rem;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.helptext {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.boton-reservar {
+  padding: 0.8rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 1rem;
+}
+
+.boton-reservar:hover {
+  background: #2563eb;
+}
+
+.resumen {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  border-left: 4px solid #10b981;
+}
+
+.resumen-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #d1d5db;
+  border-bottom: 1px solid #374151;
+}
+
+.resumen-item:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.volver {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.volver a {
+  color: #60a5fa;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.volver a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .reserva-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .reserva-title {
+    font-size: 1.5rem;
+  }
+}

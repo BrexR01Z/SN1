@@ -59,15 +59,17 @@
             
             {% if user.is_authenticated %}
                 <span style="color: #9ca3af;">Hola, {{ user.get_username }}</span>
-                
+                    
+
                 {% if user.perfil_dueno %}
+                    
                     <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
                 {% elif user.perfil_cliente %}
                     <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
-                    <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
-                {% endif %}
                     
-                
+                {% endif %}
+
+                <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
                 <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>
             {% else %}
                 <a href="{% url 'cuentas:login_cuenta' %}" class="nav-button">Iniciar Sesión</a>
