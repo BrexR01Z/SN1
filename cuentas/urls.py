@@ -14,6 +14,10 @@ urlpatterns = [
     #Acceso a la vista de perfil de usuario
     path("perfil/", views.perfil_usuario, name="perfil_usuario"), # Vista para ver y editar el perfil de usuario
     path("perfil/editar/", views.editar_perfil, name="editar_perfil"), # Vista para editar el perfil de usuario
+    path("buscar-perfiles/", views.buscar_perfiles, name="buscar_perfiles"), # Vista para buscar otros perfiles de usuario
+    path("perfil/<int:id>/", views.ver_perfil_publico, name="ver_perfil_publico"), 
+
+
 
     
     #Acceso a las vistas de aceptar y rechazar invitaciones
