@@ -24,6 +24,7 @@ def crear_reserva(request, cancha_id):
                 reserva.save()
                 messages.success(request,"Reserva creada exitosamente")
                 return redirect ("cuentas:home")
+                
             # sugerir mandar invitaciones luego de hacer reserva exitosa
                 # return redirect("MOSTRAR DETALLE RESERVA, HACER", id=reserva.id)
     else:

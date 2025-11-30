@@ -7,15 +7,11 @@
     <title>{% block titulo %}SportsNet{% endblock %}</title>
 
     {% load static %}
-
-    
-
-    
-
+<link rel="stylesheet" href="{% static 'style.css' %}">
     {% block extra_css %}
     
     {% endblock %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
+
 </head>
 <body>
 
@@ -24,6 +20,7 @@
     <main>
         {% block contenido %}
         {% endblock %}
+        
     </main>
 
     <script src="{% static 'script.js' %}"></script>

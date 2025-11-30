@@ -14,8 +14,15 @@
   <div class="detalle-header">
     <h1 class="detalle-titulo">{{ establecimiento.nombre }}</h1>
     <div class="detalle-botones">
-      <a href="#" class="btn">Editar</a>
-      <a href="#" class="btn btn-secundario">Volver</a>
+
+      {% if request.user == establecimiento.dueno.usuario %}
+      <a href="{% url 'establecimientos:editar_establecimiento' establecimiento.id %}" class="btn">Editar</a>
+      <a href="{% url 'cuentas:home' %}" class="btn">Volver</a>
+      {% else %}
+      <a href="{% url 'cuentas:home' %}" class="btn">Volver</a>
+      {% endif %}
+
+      
     </div>
   </div>
 
@@ -45,14 +52,14 @@
       <div class="comodidades-grid">
         <div class="comodidad-item">
           <div class="comodidad-nombre">Estacionamiento</div>
-          <div class="comodidad-estado {% if establecimiento.estacionamiento_disponible %}disponible{% else %}no-disponible{% endif %}">
+          <div class="comodidad-estado">
             {% if establecimiento.estacionamiento_disponible %}Disponible{% else %}No disponible{% endif %}
           </div>
         </div>
         
         <div class="comodidad-item">
           <div class="comodidad-nombre">Camarines</div>
-          <div class="comodidad-estado {% if establecimiento.camarines_disponible %}disponible{% else %}no-disponible{% endif %}">
+          <div class="comodidad-estado">
             {% if establecimiento.camarines_disponible %}Disponible{% else %}No disponible{% endif %}
           </div>
         </div>
@@ -99,6 +106,8 @@
 
   <div class="seccion">
     <h2 class="seccion-titulo">Canchas Disponibles</h2>
+    <div class="detalle-botones"><a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="btn">Crear Cancha</a></div>
+    
     {% if establecimiento.canchas.all %}
     <div class="canchas-grid">
       {% for cancha in establecimiento.canchas.all %}
@@ -124,6 +133,8 @@
         <div class="cancha-detalle">
           <strong>Precio/bloque:</strong> <span class="precio-bloque">${{ cancha.valor_por_bloque }}</span>
         </div>
+
+        <a href="{% url 'establecimientos:ver_cancha' cancha.id %}" class="btn">Ver detalles</a>
       </div>
       {% endfor %}
     </div>
@@ -134,7 +145,7 @@
 
 </div>
 
-<!-- mapa  
+<!-- mapa  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
@@ -160,6 +171,6 @@
     .openPopup();
 </script>
 
--->
+
 
 {% endblock %}

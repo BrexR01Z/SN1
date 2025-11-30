@@ -43,8 +43,8 @@
                 </p>
                 
                 {% if user.is_authenticated %}
-                    <a href="#" class="nav-button reserve-button">
-                        Ver
+                    <a href="{% url 'establecimientos:ver_cancha' cancha.id %}" class="nav-button reserve-button">
+                        Ver detalles
                     </a>
                 {% else %}
                     <p class="login-message">
