@@ -7,15 +7,11 @@
     <title>{% block titulo %}SportsNet{% endblock %}</title>
 
     {% load static %}
-
-    
-
-    
-
+<link rel="stylesheet" href="{% static 'style.css' %}">
     {% block extra_css %}
     
     {% endblock %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
+
 </head>
 <body>
 
@@ -58,15 +54,16 @@
             
             {% if user.is_authenticated %}
                 {% if user.perfil_dueno %}
+                    
                     <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
                     <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                 {% elif user.perfil_cliente %}
                     <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                     <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
-                    <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
-                {% endif %}
                     
-                
+                {% endif %}
+
+                <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
                 <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>
             {% else %}
                 <a href="{% url 'cuentas:login_cuenta' %}" class="nav-button">Iniciar Sesión</a>

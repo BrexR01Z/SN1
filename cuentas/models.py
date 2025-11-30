@@ -38,6 +38,7 @@ class Usuario (AbstractUser):
 
 class Dueno (models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="perfil_dueno", unique=True)
+    # validar rut
     rut = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
@@ -66,4 +67,4 @@ class Invitation(models.Model): # Invitación
     accepted = models.BooleanField(default=False) # Estado de la invitación
 
     def __str__(self):
-        return f"{self.sender} → {self.receiver}"
+        return f"{self.sender} -> {self.receiver}"

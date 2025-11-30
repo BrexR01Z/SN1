@@ -8,8 +8,8 @@
 
 # ESCRIBIR AQUI
 # ---------
+venv/
 .env
-
 # ---------
 
 # bd

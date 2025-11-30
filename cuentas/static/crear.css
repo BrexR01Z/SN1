@@ -1,94 +1,89 @@
-/* ===== CREAR ESTABLECIMIENTO PAGE ===== */
+/* establecimientos/static/establecimientos/crear_establecimiento.css */
 
 .establecimiento-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2rem 0;
-  background: radial-gradient(circle at top, #111827, #000000);
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
 }
 
-.establecimiento-box {
-  background-color: #1f2937;
-  padding: 2rem 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.establecimiento-title {
-  margin-bottom: 1.5rem;
+.titulo {
   color: #60a5fa;
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
-.establecimiento-form {
+.info {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid #3b82f6;
+  text-align: center;
+}
+
+.form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-column {
+  background: #1f2937;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid #374151;
+}
+
+.section-titulo {
+  color: #60a5fa;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #374151;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.establecimiento-form label {
-  text-align: left;
-  font-size: 0.9rem;
+.form-group label {
   color: #d1d5db;
-  margin-bottom: 0.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.establecimiento-form input[type="text"],
-.establecimiento-form input[type="email"],
-.establecimiento-form input[type="tel"],
-.establecimiento-form select {
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="time"],
+.form-group select {
   padding: 0.75rem;
+  background: #111827;
   border: 1px solid #374151;
   border-radius: 0.5rem;
-  background-color: #111827;
   color: #fff;
   font-size: 0.95rem;
-  outline: none;
-  transition: border 0.3s ease;
 }
 
-.establecimiento-form input[type="text"]:focus,
-.establecimiento-form input[type="email"]:focus,
-.establecimiento-form input[type="tel"]:focus,
-.establecimiento-form select:focus {
-  border: 1px solid #60a5fa;
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #60a5fa;
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
-/* Sección de Comodidades */
-.comodidades-section {
-  background-color: #111827;
-  padding: 1.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid #374151;
-  margin: 0.5rem 0;
-}
-
-.comodidades-title {
-  color: #d1d5db;
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-/* Checkbox Styling */
 .checkbox-group {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.checkbox-group:last-child {
-  margin-bottom: 0;
+  margin-bottom: 1rem;
 }
 
 .checkbox-group input[type="checkbox"] {
@@ -96,7 +91,6 @@
   height: 1rem;
   cursor: pointer;
   accent-color: #3b82f6;
-  margin: 0;
 }
 
 .checkbox-group label {
@@ -104,126 +98,170 @@
   cursor: pointer;
   color: #d1d5db;
   font-size: 0.9rem;
-  margin-bottom: 0;
+  font-weight: normal;
 }
 
-/* Buttons */
-.establecimiento-button {
-  background-color: #3b82f6;
-  color: #ffffff;
-  padding: 0.8rem;
-  border: none;
+.horarios-container {
+  background: #111827;
+  padding: 1rem;
   border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 1rem;
+  border: 1px solid #374151;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-.establecimiento-button:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
+.horario-form {
+  background: #000000;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border-left: 3px solid #3b82f6;
 }
 
-.establecimiento-button:active {
-  transform: translateY(0);
-}
-
-/* Text and Links */
-.establecimiento-text {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  color: #9ca3af;
-  text-align: center;
-}
-
-.establecimiento-text a {
-  color: #60a5fa;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.establecimiento-text a:hover {
-  text-decoration: underline;
-  color: #93c5fd;
-}
-
-/* Errors */
-.errorlist {
-  list-style: none;
-  padding: 0;
-  margin: 0.5rem 0 0 0;
-  color: #ef4444;
-  font-size: 0.85rem;
-}
-
-.errorlist li {
-  padding: 0.25rem 0;
-}
-
-/* Form Group */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.helptext {
-  font-size: 0.8rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
-}
-
-/* Responsive Design */
-@media (max-width: 640px) {
-  .establecimiento-box {
-    padding: 1.5rem 1.25rem;
-    border-radius: 0.75rem;
-    max-width: 90%;
-  }
-
-  .establecimiento-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .establecimiento-form {
-    gap: 0.9rem;
-  }
-
-  .comodidades-section {
-    padding: 1rem;
-  }
-
-  .establecimiento-button {
-    padding: 0.75rem;
-    font-size: 0.95rem;
-  }
-
-  .establecimiento-text {
-    font-size: 0.85rem;
-  }
-}
-
-/* Focus states para mejor accesibilidad */
-.establecimiento-button:focus {
-  outline: 2px solid #60a5fa;
-  outline-offset: 2px;
-}
-
-.establecimiento-form input:focus,
-.establecimiento-form select:focus {
-  outline: none;
-}
-
-/* Estado deshabilitado */
-.establecimiento-button:disabled {
-  background-color: #4b5563;
-  cursor: not-allowed;
+.horario-form.empty {
   opacity: 0.6;
 }
 
-.establecimiento-button:disabled:hover {
-  transform: none;
-  background-color: #4b5563;
+.horario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.horario-form.empty .horario-grid {
+  grid-template-columns: 1fr;
+}
+
+.horario-delete {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.horario-delete input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.horario-delete label {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.formset-management {
+  display: none;
+}
+
+.form-group-small {
+  margin-bottom: 0;
+}
+
+.form-group-small label {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.form-group-small input,
+.form-group-small select {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.botones-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.boton-crear {
+  flex: 1;
+  padding: 0.8rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.boton-crear:hover {
+  background: #2563eb;
+}
+
+.volver {
+  flex: 1;
+  text-align: center;
+  padding: 0.8rem;
+  background: #4b5563;
+  border-radius: 0.5rem;
+}
+
+.volver a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.volver a:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.error-list {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #2c1f1f;
+  border-left: 3px solid #ef4444;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 968px) {
+  .form-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .horario-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .horarios-container {
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .establecimiento-container {
+    padding: 1rem;
+  }
+
+  .form-wrapper {
+    gap: 1rem;
+  }
+
+  .form-column {
+    padding: 1rem;
+  }
+
+  .titulo {
+    font-size: 1.5rem;
+  }
+
+  .horario-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .botones-footer {
+    flex-direction: column;
+  }
 }
