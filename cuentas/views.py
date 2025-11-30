@@ -13,6 +13,10 @@ from django.conf import settings # Importar la configuración de correo
 from .models import Invitation # Modelo de invitación
 from .forms import InvitationForm # Formulario de invitación
 from .forms import EditarPerfilForm # Formulario para editar el perfil de usuario
+from django.db.models import Q
+from .models import Usuario
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -329,6 +333,28 @@ def editar_perfil(request):
         form = EditarPerfilForm(instance=usuario)
 
     return render(request, "editar_perfil.html", {"form": form})
+
+@login_required
+def buscar_perfiles(request): # Vista para buscar otros perfiles de usuario
+    query = request.GET.get("q", "")
+    resultados = []
+
+    if query:
+        resultados = Usuario.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(username__icontains=query)
+        )
+
+    return render(request, "buscar_perfiles.html", {
+        "query": query,
+        "resultados": resultados
+    })
+
+@login_required
+def ver_perfil_publico(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
+    return render(request, "ver_perfil_publico.html", {"usuario": usuario})
 
 
 #==============================FIN PERFIL DE USUARIO==================================
