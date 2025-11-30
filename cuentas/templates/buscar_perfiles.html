@@ -82,7 +82,6 @@
             <tr>
                 <th>Nombre completo</th>
                 <th>Usuario</th>
-                <th>Correo</th>
                 <th>Ver perfil</th>
             </tr>
         </thead>
@@ -91,7 +90,6 @@
             <tr>
                 <td>{{ u.first_name }} {{ u.last_name }}</td>
                 <td>{{ u.username }}</td>
-                <td>{{ u.email }}</td>
                 <td>
                     <a href="{% url 'cuentas:ver_perfil_publico' u.id %}" class="profile-link">
                         Ver perfil

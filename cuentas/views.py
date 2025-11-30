@@ -356,8 +356,9 @@ def buscar_perfiles(request): # Vista para buscar otros perfiles de usuario
     })
 
 @login_required
-def ver_perfil_publico(request, id): # Vista para ver el perfil público de otro usuario
-    usuario = Usuario.objects.get(id=id)
+def ver_perfil_publico(request, id):
+    usuario = get_object_or_404(Usuario, id=id)
     return render(request, "ver_perfil_publico.html", {"usuario": usuario})
+
 
 #==============================FIN PERFIL DE USUARIO==================================
