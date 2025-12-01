@@ -55,6 +55,11 @@
                 </span>
             </div>
 
+            <div class="reserva-info">
+                <span class="info-label">Comentario</span>
+                <span class="info-valor">{{ reserva.comentario }}</span>
+            </div>
+
             <div class="botones-acciones">
                 <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
                 <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Eliminar</a>

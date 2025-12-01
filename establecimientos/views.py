@@ -204,26 +204,29 @@ def ver_cancha(request, cancha_id):
 
 def buscar(request):
     
-    DEPORTES = ["FUTBOL",
-                "BASQUETBALL",
-                "VOLEYBALL", 
-                "TENIS", 
-                "RUGBY", 
-                "HANDBALL", 
-                "BOWLING", 
-                "SQUASH", 
-                "PADEL", 
-                "OTRO"
-                ]
-        
-
-    canchas = Cancha.objects.all
-    #deportes = Deporte.objects.all
-
+    DEPORTES = [
+        "Futbol",
+        "Basquetball",
+        "Voleyball",
+        "Tenis",
+        "Rugby",
+        "Handball",
+        "Bowling",
+        "Squash",
+        "Padel",
+        "Otro",
+    ]
+    
+    canchas = Cancha.objects.all()
+    deporte_seleccionado = request.GET.get('deporte', None)
+    
+    if deporte_seleccionado:
+        canchas = canchas.filter(deporte=deporte_seleccionado)
+    
     context = {
-        "canchas" : canchas,
-        "deportes" : DEPORTES,
-        #"deportes" : deportes,
+        "canchas": canchas,
+        "deportes": DEPORTES,
+        "deporte_seleccionado": deporte_seleccionado,
     }
-
-    return render (request,"buscar.html", context)
+    
+    return render(request, "buscar.html", context)

@@ -9,9 +9,14 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+from establecimientos.models import HorarioEstablecimiento
+from django.contrib import messages
+from establecimientos.models import Cancha
+
 # Create your views here.
 
-
+"""
 @login_required(login_url="cuentas:login_cuenta")
 @require_http_methods(["GET", "POST"])
 def crear_reserva(request, cancha_id):
@@ -50,6 +55,8 @@ def crear_reserva(request, cancha_id):
     })
 
 
+
+
 def conflicto_hora(reserva):
     
     inicio = datetime.combine(reserva.fecha, reserva.hora_inicio)
@@ -65,6 +72,111 @@ def conflicto_hora(reserva):
         if not (fin.time() <= x.hora_inicio or reserva.hora_inicio >= x_fin.time()):
             return True
     return False
+"""
+def conflicto_hora(reserva):
+    inicio = datetime.combine(reserva.fecha, reserva.hora_inicio)
+    fin = inicio + timedelta(minutes=reserva.duracion_bloques * 30)
+    
+    conflictos = Reserva.objects.filter(
+        cancha=reserva.cancha,
+        fecha=reserva.fecha,
+        estado__in=["PENDIENTE", "CONFIRMADA"]
+    ).exclude(id=reserva.id)
+    
+    for x in conflictos:
+        x_fin = datetime.combine(x.fecha, x.hora_fin())
+        if not (fin.time() <= x.hora_inicio or reserva.hora_inicio >= x_fin.time()):
+            return True
+    return False
+
+
+@login_required(login_url="cuentas:login_cuenta")
+@require_http_methods(["GET", "POST"])
+def crear_reserva(request, cancha_id):
+    cancha = get_object_or_404(Cancha, id=cancha_id)
+    
+    reservas_cancha = Reserva.objects.filter(
+        cancha=cancha,
+        estado__in=["PENDIENTE", "CONFIRMADA"]
+    ).select_related("usuario").order_by("fecha", "hora_inicio")
+    
+    # horarios
+    horarios = HorarioEstablecimiento.objects.filter(
+        establecimiento=cancha.establecimiento
+    ).order_by('dia')
+    
+    if request.method == "POST":
+        form = CrearReservaForm(request.POST)
+        if form.is_valid():
+            fecha = form.cleaned_data['fecha']
+            hora_inicio = form.cleaned_data['hora_inicio']
+            duracion_bloques = form.cleaned_data['duracion_bloques']
+            
+            dias_semana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO']
+            dia_semana = dias_semana[fecha.weekday()]
+            
+            horario = HorarioEstablecimiento.objects.filter(
+                establecimiento=cancha.establecimiento,
+                dia=dia_semana
+            ).first()
+            
+            if not horario:
+                messages.error(request, "No hay horario disponible para ese dia")
+                return render(request, "crear_reserva.html", {
+                    "form": form,
+                    "cancha": cancha,
+                    "reservas_cancha": reservas_cancha,
+                    "horarios": horarios,
+                })
+            
+            if hora_inicio < horario.hora_apertura or hora_inicio >= horario.hora_cierre:
+                messages.error(request,"La hora de inicio debe estar dentro del horario permitido")
+                return render(request, "crear_reserva.html", {
+                    "form": form,
+                    "cancha": cancha,
+                    "reservas_cancha": reservas_cancha,
+                    "horarios": horarios,
+                })
+            
+            fin = datetime.combine(fecha, hora_inicio) + timedelta(minutes=duracion_bloques * 30)
+            if fin.time() > horario.hora_cierre:
+                messages.error(request,"La reserva debe terminar antes del cierre del establecimiento")
+                return render(request, "crear_reserva.html", {
+                    "form": form,
+                    "cancha": cancha,
+                    "reservas_cancha": reservas_cancha,
+                    "horarios": horarios,
+                })
+                
+            
+            reserva = form.save(commit=False)
+            reserva.cancha = cancha
+            reserva.usuario = request.user
+            
+            if conflicto_hora(reserva):
+                messages.error(request, "Ya existe una reserva en ese horario")
+                return render(request, "crear_reserva.html", {
+                    "form": form,
+                    "cancha": cancha,
+                    "reservas_cancha": reservas_cancha,
+                    "horarios": horarios,
+                })
+            
+            reserva.save()
+            messages.success(request, "Reserva creada")
+            return redirect("cuentas:home")
+    else:
+        form = CrearReservaForm()
+    
+    for reserva in reservas_cancha:
+        reserva.hora_fin = reserva.hora_fin()
+    
+    return render(request, "crear_reserva.html", {
+        "form": form,
+        "cancha": cancha,
+        "reservas_cancha": reservas_cancha,
+        "horarios": horarios,
+    })
 
 
 @login_required(login_url="cuentas:login_cuenta")

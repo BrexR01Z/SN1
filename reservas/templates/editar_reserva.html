@@ -44,6 +44,12 @@
       {% if form.duracion_bloques.errors %}<span class="error">{{ form.duracion_bloques.errors.0 }}</span>{% endif %}
     </div>
 
+    <div class="form-group">
+      <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
+      {{ form.comentario }}
+      {% if form.comentario.errors %}<span class="error">{{ form.comentario.errors.0 }}</span>{% endif %}
+    </div>
+
     {% if es_dueno_cancha %}
       <div class="form-group">
         <label for="estado">Estado</label>
