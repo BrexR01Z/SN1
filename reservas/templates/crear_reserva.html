@@ -80,9 +80,9 @@
 
         <button type="submit" class="boton-reservar">Confirmar Reserva</button>
       </form>
-
-      <div class="volver">
-        <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}">← Volver</a>
+<br>
+      <div>
+        <a  class="boton-reservar" href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}" >Volver</a>
       </div>
     </div>
 
@@ -93,25 +93,25 @@
       {% if reservas_cancha %}
         <div class="reservas-lista">
           {% for reserva in reservas_cancha %}
-            <div class="reserva-container">
+            <div class="cancha-info">
               <div class="reserva-fecha">{{ reserva.fecha|date:"d/m/Y" }}</div>
               
-              <div class="reserva-detalle">
+              <div class="info-item">
                 <span>Hora:</span>
                 <strong>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</strong>
               </div>
               
-              <div class="reserva-detalle">
+              <div class="info-item">
                 <span>Duración:</span>
                 <strong>{{ reserva.duracion_bloques }} bloque{{ reserva.duracion_bloques|pluralize }}</strong>
               </div>
               
-              <div class="reserva-usuario">
+              <div class="info-item">
                 Usuario: <strong>{{ reserva.usuario.username }}</strong>
               </div>
               
-              <span class="estado-badge estado-{{ reserva.get_estado_display|lower }}">
-                {{ reserva.get_estado_display }}
+              <span class="info-item">
+                Estado : {{ reserva.get_estado_display }}
               </span>
             </div>
           {% endfor %}
@@ -126,7 +126,9 @@
   </div>
 </div>
 
-<script>
+<script defer>
+  console.log("precio total actualizado");
+document.addEventListener('DOMContentLoaded', function() {
   const duracionInput = document.querySelector('input[name="duracion_bloques"]');
   const precioBase = {{ cancha.valor_por_bloque }};
 
@@ -138,10 +140,12 @@
   function actualizarPrecio() {
     const duracion = parseInt(duracionInput.value) || 1;
     const total = precioBase * duracion;
-    document.getElementById('cantidad-label').textContent = `Cantidad (${duracion} bloque${duracion > 1 ? 's' : '}):`;
-    document.getElementById('cantidad-valor').textContent = `${duracion} × $${precioBase}`;
+    document.getElementById('cantidad-label').textContent = `Cantidad (${duracion} bloque):`;
+    document.getElementById('cantidad-valor').textContent = `${duracion} x $${precioBase}`;
     document.getElementById('total-precio').textContent = `$${total}`;
   }
+});
 </script>
 
 {% endblock %}
+

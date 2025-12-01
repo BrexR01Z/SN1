@@ -55,11 +55,11 @@
             {% if user.is_authenticated %}
                 {% if user.perfil_dueno %}
                     
-                    <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
+                    <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Menu</a>
                     <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                 {% elif user.perfil_cliente %}
                     <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
-                    <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
+                    <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Menu</a>
                     
                 {% endif %}
 
