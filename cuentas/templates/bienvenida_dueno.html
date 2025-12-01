@@ -17,10 +17,10 @@
         <p>Gestiona tus establecimientos, canchas y reservas desde aquí.</p>
     </section>
 
-    <!-- Cards de Estadísticas -->
+    
     <section class="stats-cards">
         
-        <!-- Card: Establecimientos -->
+        
         <div class="stat-card">
             <div class="stat-card-header">
                 <h3 class="stat-card-title">Establecimientos</h3>
@@ -34,7 +34,7 @@
             </a>
         </div>
 
-        <!-- Card: Canchas -->
+       
         <div class="stat-card">
             <div class="stat-card-header">
                 <h3 class="stat-card-title">Canchas Totales</h3>
@@ -46,7 +46,7 @@
             <p class="stat-card-description">En {{ total_establecimientos }} establecimiento{{ total_establecimientos }}</p>
         </div>
 
-        <!-- Card: Reservas (placeholder) -->
+        
         <div class="stat-card">
             <div class="stat-card-header">
                 <h3 class="stat-card-title">Reservas Activas</h3>
@@ -60,12 +60,11 @@
 
     </section>
 
-    <!-- Acciones Rápidas -->
+    
     <section class="actions-section">
-        <h2>Acciones Rápidas</h2>
         <div class="actions-grid">
             
-            <a href="{% url 'cuentas:home' %}" class="action-card">
+            <a href="{% url 'establecimientos:crear_establecimiento' %}" class="action-card">
                 <div class="action-card-content">
                     <svg class="action-card-icon blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -88,11 +87,11 @@
         </div>
     </section>
 
-    <!-- Lista de Establecimientos -->
+    
     <section class="establecimientos-section">
         <div class="establecimientos-header">
             <h2>Mis Establecimientos</h2>
-            <a href="{% url 'cuentas:home' %}" class="nav-button">
+            <a href="{% url 'establecimientos:crear_establecimiento' %}" class="nav-button">
                 Agregar Establecimiento
             </a>
         </div>
@@ -106,15 +105,23 @@
                                 <h3>{{ establecimiento.nombre }}</h3>
                                 <p>{{ establecimiento.direccion }}</p>
                                 <p class="details">
-                                    <strong>Canchas:</strong> {{ establecimiento.canchas.count }}
+                                    <strong>Canchas :</strong> {{ establecimiento.canchas.count }}
                                     {% if establecimiento.estacionamiento_disponible %}
-                                        Estacionamiento
+                                        Cuenta con estacionamiento
+                                    {% endif %}
+
+                                    {% if camarin.camarines.disponible %}
+                                        Cuenta con estacionamiento
                                     {% endif %}
                                 </p>
                             </div>
                             <div class="establecimiento-actions">
-                                <a href="#" class="nav-button">Ver Canchas</a>
-                                <a href="#" class="nav-button edit-button">Editar</a>
+                                <!-- <a href="#" class="nav-button">Ver Canchas</a> -->
+                                <!-- mover crear dentro de ver -->
+                                <a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="nav-button">Crear Cancha</a>
+                            <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button">Ver detalles</a>
+
+                              <!--  <a href="ver/{{establecimiento.id}}" class="nav-button">Ver detalles</a>-->
                             </div>
                         </div>
                     </div>
@@ -126,7 +133,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
                 <p>Aún no tienes establecimientos registrados</p>
-                <a href="{% url 'cuentas:home' %}" class="cta-button">
+                <a href="{% url 'establecimientos:crear_establecimiento' %}" class="cta-button">
                     Crear mi primer establecimiento
                 </a>
             </div>

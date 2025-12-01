@@ -89,10 +89,7 @@ def login_cuenta(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        
-        
-        
-
+     
         user = authenticate(request, username=username, password=password)
         
 
@@ -100,13 +97,12 @@ def login_cuenta(request):
             
             login(request, user)
             
-            messages.success(request, f"Sesión iniciada correctamente, Bienvenido {user.username}")
+            # messages.success(request, f"Sesión iniciada correctamente, Bienvenido {user.username}")
             try:
                 dueno = request.user.perfil_dueno
                 return redirect ("cuentas:SportsNet_dueno")
             except:
-                messages.error (request, "Debe ser usuario dueno")
-                return redirect ("cuentas:home")
+                return redirect ("cuentas:SportsNet_cliente")
 
 
         else:

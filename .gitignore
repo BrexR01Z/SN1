@@ -1,0 +1,33 @@
+#entorno virtual con paquetes para el proyecto
+
+# escriban el nombre de la carpeta 
+# de su ambiente virtual
+# ej : "nombre_carpeta" , 
+# por lo tanto deben escribir "nombre_carpeta/" 
+#(sin las comillas, con el slash)
+
+# ESCRIBIR AQUI
+# ---------
+venv/
+.env
+# ---------
+
+# bd
+*.sqlite3
+db.sqlite3
+
+# python
+__pycache__/
+*.pyc
+*.py[cod]
+*$py.class
+
+
+#django
+*.log
+
+# media
+
+media/
+
+db.sqlite3

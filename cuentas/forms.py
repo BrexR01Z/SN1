@@ -11,7 +11,7 @@ class RegistroForm(UserCreationForm):
     TIPO_USUARIO = [("cliente", "Cliente - Quiero reservar"),
                     ("dueno", "Dueno - Quiero gestionar")]
     
-    # luego usar required/blank
+    # luego cambiar a true  required/blank
 
     tipo_usuario = forms.ChoiceField(
         choices=TIPO_USUARIO,
@@ -20,13 +20,14 @@ class RegistroForm(UserCreationForm):
 
     telefono = forms.CharField(max_length=20, required=False)
     rut = forms.CharField(max_length=12, required=False)
+    # validacion rut
     fecha_nacimiento = forms.DateField(widget=forms.DateInput(attrs={"type" : "date"}), required=True)
 
     class Meta:
         model = Usuario
         fields = ["username", "email", "first_name", "last_name", 
                   "fecha_nacimiento", "telefono", "password1", "password2"]
-        widgets = {"fecha_nacimiento" : forms.DateInput(attrs={"type" : "date"})}
+       
 
     def clean_fecha_nacimiento(self):
         fecha = self.cleaned_data["fecha_nacimiento"]
