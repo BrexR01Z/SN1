@@ -11,8 +11,11 @@ from django.conf import settings
 # usuario abstracto, dueno y cliente herendan 
 
 class Usuario (AbstractUser):
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    fecha_nacimiento = models.DateField(null=True, blank=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    telefono = models.CharField(max_length=20, blank=False, null=False)
+    fecha_nacimiento = models.DateField(blank=False, null=False)
 
 
     # cambiar validaciones a respectivo form

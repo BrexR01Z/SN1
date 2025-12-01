@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Establecimiento, Cancha, HorarioEstablecimiento
+from django.contrib import messages
 
 class CrearEstablecimientoForm(forms.ModelForm):
 
@@ -121,6 +122,7 @@ class HorarioEstablecimientoForm(forms.ModelForm):
 
         if hora_apertura and hora_cierre:
             if hora_apertura>= cleaned_data.get("hora_cierre"):
+                
                 raise forms.ValidationError("La hora de apertura debe ser antes que la hora de cierre ")
 
         return cleaned_data

@@ -45,14 +45,14 @@ def crear_establecimiento(request):
                 return redirect ("establecimientos:ver_establecimiento", establecimiento= establecimiento.id)
                     
             else:
-                messages.error(request, "Corriga los errores del formulario.")
-                establecimiento.delete()
+                messages.error(request, "Todos los campos deben estar llenos y el horario de apertura debe ser antes que el horario de cierre")
+                
 
             # messages.success(request, "Establecimiento creado")
 
             # return redirect ("cuentas:SportsNet_dueno")
-        else:
-            messages.error(request, "Corriga los errores del formulario.")
+        
+            
 
     else:
         form = CrearEstablecimientoForm()
@@ -99,6 +99,9 @@ def editar_establecimiento(request, establecimiento_id):
             formset.save()
             messages.success(request, "Actualizado correctamente")
             return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento.id)
+        else:
+            messages.error(request,"Todos los campos deben estar llenos y el horario de apertura debe ser antes del horario de cierre")
+
     else:
         form = CrearEstablecimientoForm(instance=establecimiento)
         formset = HorarioFormSet(instance=establecimiento)
@@ -203,7 +206,7 @@ def ver_cancha(request, cancha_id):
 
 
 def buscar(request):
-    
+
     DEPORTES = [
         "Futbol",
         "Basquetball",
