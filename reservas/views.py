@@ -39,7 +39,7 @@ def crear_reserva(request, cancha_id):
             else:
                 reserva.save()
                 messages.success(request, "Reserva creada")
-                return redirect("cuentas:home")
+                return redirect('cuentas:invitar_a_reserva', reserva.id)
                 # redirigir a detalles reserva
                 #return redirect('reservas:ver_reserva', id=reserva.id)
     else:

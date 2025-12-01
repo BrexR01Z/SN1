@@ -17,6 +17,7 @@ from django.db.models import Q
 from .models import Usuario
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from reservas.models import Reserva
 
 # Create your views here.
 
@@ -253,6 +254,58 @@ def invitar_usuario(request):
 
     return render(request, "invitar_usuario.html", {"form": form})
 
+User = get_user_model()
+
+@login_required(login_url='cuentas:login_cuenta')
+def invitar_a_reserva(request, reserva_id):
+    reserva = get_object_or_404(Reserva, id=reserva_id)
+
+    # Sólo el creador de la reserva puede invitar (mínimo check de seguridad)
+    if reserva.usuario != request.user:
+        messages.error(request, "No puedes invitar a esta reserva (no eres el creador).")
+        return redirect("cuentas:perfil_usuario")
+
+    if request.method == "POST":
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            # buscar receptor
+            try:
+                receiver = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(request, "Ese usuario no existe.")
+                return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
+
+            if receiver == request.user:
+                messages.error(request, "No puedes invitarte a ti mismo.")
+                return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
+
+            # chequeo duplicado (misma reserva, misma invitación pendiente)
+            existing = Invitation.objects.filter(
+                sender=request.user,
+                receiver=receiver,
+                reserva=reserva,
+                accepted=False
+            ).exists()
+
+            if existing:
+                messages.warning(request, "Ya enviaste una invitación pendiente a este usuario para esta reserva.")
+                return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
+
+            # crear invitación vinculada a reserva
+            Invitation.objects.create(
+                sender=request.user,
+                receiver=receiver,
+                reserva=reserva
+            )
+
+            # (Opcional) enviar correo similar al flujo actual — omito el envío para mantenerlo simple
+            messages.success(request, f"Invitación enviada a {receiver.username} para la reserva.")
+            return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
+    else:
+        form = InvitationForm()
+
+    return render(request, "invitar_a_reserva.html", {"form": form, "reserva": reserva})
 
 @login_required
 def aceptar_invitacion(request, id):

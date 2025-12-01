@@ -24,6 +24,7 @@ urlpatterns = [
     path("invitar/", views.invitar_usuario, name="invitar_usuario"), # Vista para enviar invitaciones
     path('invitar/aceptar/<int:id>/', views.aceptar_invitacion, name='aceptar_invitacion'), # Vista para aceptar invitaciones
     path('invitar/rechazar/<int:id>/', views.rechazar_invitacion, name='rechazar_invitacion'), # Vista para rechazar invitaciones
+    path('invitar/reserva/<int:reserva_id>/', views.invitar_a_reserva, name='invitar_a_reserva'), # Vista para invitar a una reserva específica
 
     #Vistas de prueba para testeo de correos e invitaciones
     path("test-email/", views.test_email, name="test_email"), # VISTA DE PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!]
