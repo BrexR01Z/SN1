@@ -14,14 +14,14 @@
         <h1>
             Bienvenido, <span class="welcome-name">{{ cliente.usuario.get_full_name|default:cliente.usuario.username }}</span>!
         </h1>
-        <p>Gestiona tus reservas y busca canchas desde aquí.</p>
+        <p>Ve tus reservas y busca canchas</p>
     </section>
 
    
     <section class="actions-section">
         <div class="actions-grid">
             
-            <a href="{% url 'cuentas:home' %}" class="action-card">
+            <a href="{% url 'establecimientos:buscar'%}" class="action-card">
                 <div class="action-card-content">
                     <svg class="action-card-icon blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -31,7 +31,7 @@
                 </div>
             </a>
 
-            <a href="{% url 'cuentas:home' %}" class="action-card">
+            <a href="{% url 'reservas:listar_reservas' %}" class="action-card">
                 <div class="action-card-content">
                     <svg class="action-card-icon green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>

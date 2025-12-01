@@ -106,7 +106,10 @@
 
   <div class="seccion">
     <h2 class="seccion-titulo">Canchas Disponibles</h2>
-    <div class="detalle-botones"><a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="btn">Crear Cancha</a></div>
+    {% if request.user == establecimiento.dueno.usuario %}
+      <div class="detalle-botones"><a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="btn">Crear Cancha</a></div>
+    {% endif %}
+    
     
     {% if establecimiento.canchas.all %}
     <div class="canchas-grid">

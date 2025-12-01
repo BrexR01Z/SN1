@@ -11,7 +11,7 @@ from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 
-# ----------------- ESTABLECIMIENTO
+# ----------------- ESTABLECIMIENTO--------------------
 
 def crear_establecimiento(request):
 
@@ -70,7 +70,7 @@ def crear_establecimiento(request):
 
 def ver_establecimiento(request, establecimiento):
        
-    # establecimiento = get_object_or_404(Establecimiento, pk=establecimiento)
+    # establecimiento = get_object_or_404(Establecimiento, id=establecimiento)
     establecimiento = Establecimiento.objects.get(id=establecimiento)
     context = {
         'establecimiento': establecimiento,        
@@ -80,33 +80,34 @@ def ver_establecimiento(request, establecimiento):
 
 @login_required(login_url='cuentas:login_cuenta')
 def editar_establecimiento(request, establecimiento_id):
-
-    establecimiento = get_object_or_404(Establecimiento, id = establecimiento_id)
-
+    establecimiento = get_object_or_404(Establecimiento, id=establecimiento_id)
+    
     try:
         dueno = Dueno.objects.get(usuario=request.user)
     except Dueno.DoesNotExist:
-        return HttpResponseForbidden("Solo los usuarios dueno pueden acceder")
-
+        return HttpResponseForbidden("Solo los usuarios dueno pueden modificar sus establecimientos")
+    
     if establecimiento.dueno != dueno:
-        return HttpResponseForbidden("Solo los respectivos duenos tienen acceso a sus establecimientos")
+        return HttpResponseForbidden("Debes ser dueno del establecimiento para modificarlo")
     
     if request.method == "POST":
         form = CrearEstablecimientoForm(request.POST, instance=establecimiento)
+        formset = HorarioFormSet(request.POST, instance=establecimiento)
         
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
-            messages.success(request, f"Establecimiento actualizado exitosamente")
-            return redirect ("establecimientos:ver_establecimiento", establecimiento = establecimiento.id)
+            formset.save()
+            messages.success(request, "Actualizado correctamente")
+            return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento.id)
     else:
-        form= CrearEstablecimientoForm(instance=establecimiento)
-
-    context = {
-        "form":form,
-        "establecimiento":establecimiento,
-    }
-
-    return render (request, "editar_establecimiento.html", context)
+        form = CrearEstablecimientoForm(instance=establecimiento)
+        formset = HorarioFormSet(instance=establecimiento)
+    
+    return render(request, 'editar_establecimiento.html', {
+        'form': form,
+        'formset': formset,
+        'establecimiento': establecimiento,
+    })
 
 @login_required(login_url='cuentas:login_cuenta')
 @require_http_methods(["GET", "POST"])
