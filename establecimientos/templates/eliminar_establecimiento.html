@@ -4,7 +4,7 @@
 {% block title %}Eliminar {{ establecimiento.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'establecimientos/eliminar_establecimiento.css' %}">
+  <link rel="stylesheet" href="{% static 'eliminar_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -30,8 +30,8 @@
 
   <form method="POST" class="botones">
     {% csrf_token %}
-    <button type="submit" class="btn btn-eliminar" onclick="return confirm('¿Realmente deseas eliminar {{establecimiento.nombre}}? Esta acción no se puede deshacer.')">
-      Sí, Eliminar Establecimiento
+    <button type="submit" class="btn btn-eliminar">
+      Eliminar Establecimiento
     </button>
     <a href="{% url 'establecimientos:editar_establecimiento' establecimiento.pk %}" class="btn btn-cancelar">
       Cancelar
