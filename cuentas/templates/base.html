@@ -17,12 +17,6 @@
 
     
 
-    <main>
-        {% block contenido %}
-        {% endblock %}
-        
-    </main>
-
     <script src="{% static 'script.js' %}"></script>
     <!--
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -50,18 +44,21 @@
                 {% endfor %}
             </div>
         {% endif %}
+        
 
         <nav class="nav">
+            {% if user.is_authenticated %}
+                <span style="color: #9ca3af;">Hola, {{ user.get_username }}!  </span>
+        {% endif %}
             <a href="{% url 'establecimientos:buscar' %}" class="nav-button">Buscar Canchas</a>
             
             {% if user.is_authenticated %}
-                <span style="color: #9ca3af;">Hola, {{ user.get_username }}</span>
-                    
-
                 {% if user.perfil_dueno %}
                     
                     <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Mis Establecimientos</a>
+                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                 {% elif user.perfil_cliente %}
+                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                     <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Mis Reservas</a>
                     
                 {% endif %}
@@ -80,6 +77,9 @@
     {% block content %}
     {% endblock %}
 
-    
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
 </body>
 </html>
