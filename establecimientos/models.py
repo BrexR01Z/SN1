@@ -45,13 +45,13 @@ class Establecimiento (models.Model):
 
 class HorarioEstablecimiento(models.Model):
     DIAS_SEMANA = [
-        ("LUNES","Lunes"),
-        ("MARTES","Martes"),
-        ("MIERCOLES","Miercoles"),
-        ("JUEVES","Jueves"),
-        ("VIERNES","Viernes"),
-        ("SABADO","Sabado"),
-        ("DOMINGO","Domingo")
+        ("Lunes","Lunes"),
+        ("Martes","Martes"),
+        ("Miercoles","Miercoles"),
+        ("Jueves","Jueves"),
+        ("Viernes","Viernes"),
+        ("Sabado","Sabado"),
+        ("Domingo","Domingo")
     ]
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="horarios")
@@ -65,35 +65,35 @@ class HorarioEstablecimiento(models.Model):
     
 class Cancha (models.Model):
     TIPOS_SUPERFICIES = [
-        ("PASTO_NATURAL", "Pasto Natural"),
-        ("PASTO_SINTETICO","Pasto Sintético"),
-        ("CEMENTO","Cemento"),
-        ("ARCILLA","Arcilla"),
-        ("MADERA","Madera"),
-        ("CAUCHO","Caucho"),
-        ("VINILO","Vinilo"),
+        ("Pasto_Natural", "Pasto Natural"),
+        ("Pasto_Sintético","Pasto Sintético"),
+        ("Cemento","Cemento"),
+        ("Arcilla","Arcilla"),
+        ("Madera","Madera"),
+        ("Caucho","Caucho"),
+        ("Vinilo","Vinilo"),
         ]
     
     TIPOS_ILUMINACION = {
         ("LED","LED"),
-        ("NATURAL", "Natural"),
-        ("MIXTA","Mixta"),
-        ("HALOGENA","Halogena"),
-        ("FLUORECESENTE","Fluorecente"),
+        ("Natural", "Natural"),
+        ("Mixta","Mixta"),
+        ("Halogena","Halogena"),
+        ("Fluorecente","Fluorecente"),
 
     }
     
     DEPORTES = [
-        ("FUTBOL", "Futbol"),
-        ("BASQUETBALL","Basquetball"),
-        ("VOLEYBALL","Voleyball"),
-        ("TENIS","Tenis"),
-        ("RUGBY","Rugby"),
-        ("HANDBALL","Handball"),
-        ("BOWLING","Bowling"),
-        ("SQUASH","Squash"),
-        ("PADEL","Padel"),
-        ("OTRO","Otro"),
+        ("Futbol", "Futbol"),
+        ("Basquetball","Basquetball"),
+        ("Voleyball","Voleyball"),
+        ("Tenis","Tenis"),
+        ("Rugby","Rugby"),
+        ("Handball","Handball"),
+        ("Bowling","Bowling"),
+        ("Squash","Squash"),
+        ("Padel","Padel"),
+        ("Otro","Otro"),
         ("---","---"),        
     ]
     
