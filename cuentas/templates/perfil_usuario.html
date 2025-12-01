@@ -140,21 +140,21 @@
         <div class="invitations-section">
             <h2>Invitaciones Pendientes</h2>
 
-            {% if invitaciones %}
-                {% for inv in invitaciones %}
-                    <div class="inv-card">
-                        <p><strong>{{ inv.sender.username }}</strong> te ha enviado una invitación.</p>
-                        <p><small>Enviada el {{ inv.created_at }}</small></p>
+            {% for inv in invitaciones %}
+                <div class="inv-card">
+                    <p><strong>{{ inv.sender.username }}</strong> te ha enviado una invitación.</p>
+                    {% if inv.reserva %}
+                        <p>Invitación para la reserva en <strong>{{ inv.reserva.cancha.nombre }}</strong> — {{ inv.reserva.fecha }} {{ inv.reserva.hora_inicio }}</p>
+                        <p><small>Reserva ID: {{ inv.reserva.id }}</small></p>
+                    {% endif %}
+                    <p><small>Enviada el {{ inv.created_at }}</small></p>
 
-                        <div class="inv-actions">
-                            <a href="{% url 'cuentas:aceptar_invitacion' inv.id %}">Aceptar</a>
-                            <a href="{% url 'cuentas:rechazar_invitacion' inv.id %}">Rechazar</a>
-                        </div>
+                    <div class="inv-actions">
+                        <a href="{% url 'cuentas:aceptar_invitacion' inv.id %}">Aceptar</a>
+                        <a href="{% url 'cuentas:rechazar_invitacion' inv.id %}">Rechazar</a>
                     </div>
-                {% endfor %}
-            {% else %}
-                <p>No tienes invitaciones pendientes.</p>
-            {% endif %}
+                </div>
+            {% endfor %}
         </div>
 
     </div>

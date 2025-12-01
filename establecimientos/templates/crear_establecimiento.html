@@ -1,154 +1,131 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}Crear Establecimiento - SportsNet{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'crear.css' %}">
+  <link rel="stylesheet" href="{% static 'crear.css' %}">
 {% endblock %}
 
 {% block content %}
 
-
-
 <div class="establecimiento-container">
-  <div class="establecimiento-box">
-    
-    {% if user.is_authenticated %}
-      <h2 class="establecimiento-title">Crear Nuevo Establecimiento</h2>
-      
-      <form method="POST" class="establecimiento-form" novalidate>
-        {% csrf_token %}
+  <h1 class="titulo">Crear Establecimiento</h1>
 
-        
+
+  <form method="POST" novalidate>
+    {% csrf_token %}
+
+    <div class="form-wrapper">
+      
+      <!-- form establecimiento -->
+      <div class="form-column">
+        <h2 class="section-titulo">Datos Establecimiento</h2>
+
         <div class="form-group">
           <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
           {{ form.nombre }}
-          {% if form.nombre.help_text %}
-            <span class="helptext">{{ form.nombre.help_text }}</span>
-          {% endif %}
-          {% if form.nombre.errors %}
-            <ul class="errorlist">
-              {% for error in form.nombre.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+          {% if form.nombre.errors %}<span class="error">{{ form.nombre.errors.0 }}</span>{% endif %}
         </div>
 
-        
         <div class="form-group">
           <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
           {{ form.direccion }}
-          {% if form.direccion.help_text %}
-            <span class="helptext">{{ form.direccion.help_text }}</span>
-          {% endif %}
-          {% if form.direccion.errors %}
-            <ul class="errorlist">
-              {% for error in form.direccion.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+          {% if form.direccion.errors %}<span class="error">{{ form.direccion.errors.0 }}</span>{% endif %}
         </div>
 
-        
         <div class="form-group">
           <label for="{{ form.telefono_contacto.id_for_label }}">{{ form.telefono_contacto.label }}</label>
           {{ form.telefono_contacto }}
-          {% if form.telefono_contacto.help_text %}
-            <span class="helptext">{{ form.telefono_contacto.help_text }}</span>
-          {% endif %}
-          {% if form.telefono_contacto.errors %}
-            <ul class="errorlist">
-              {% for error in form.telefono_contacto.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+          {% if form.telefono_contacto.errors %}<span class="error">{{ form.telefono_contacto.errors.0 }}</span>{% endif %}
         </div>
 
-        
         <div class="form-group">
           <label for="{{ form.correo_contacto.id_for_label }}">{{ form.correo_contacto.label }}</label>
           {{ form.correo_contacto }}
-          {% if form.correo_contacto.help_text %}
-            <span class="helptext">{{ form.correo_contacto.help_text }}</span>
-          {% endif %}
-          {% if form.correo_contacto.errors %}
-            <ul class="errorlist">
-              {% for error in form.correo_contacto.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+          {% if form.correo_contacto.errors %}<span class="error">{{ form.correo_contacto.errors.0 }}</span>{% endif %}
         </div>
 
-        
-        <div class="comodidades-section">
-          <h3 class="comodidades-title">Comodidades Disponibles</h3>
-          
-          
-          <div class="form-group checkbox-group">
-            <input 
-              type="checkbox" 
-              id="{{ form.estacionamiento_disponible.id_for_label }}" 
-              name="estacionamiento_disponible"
-              {% if form.estacionamiento_disponible.value %}checked{% endif %}
-            >
-            <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
-            {% if form.estacionamiento_disponible.errors %}
-              <ul class="errorlist">
-                {% for error in form.estacionamiento_disponible.errors %}
-                  <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-
-          
-          <div class="form-group checkbox-group">
-            <input 
-              type="checkbox" 
-              id="{{ form.camarines_disponible.id_for_label }}" 
-              name="camarines_disponible"
-              {% if form.camarines_disponible.value %}checked{% endif %}
-            >
-            <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }}</label>
-            
-          </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="{{ form.estacionamiento_disponible.id_for_label }}" 
+                 name="estacionamiento_disponible" 
+                 {% if form.estacionamiento_disponible.value %}checked{% endif %}>
+          <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
         </div>
 
-        
-        {% if form.non_field_errors %}
-          <ul class="errorlist">
-            {% for error in form.non_field_errors %}
-              <li>{{ error }}</li>
+        <div class="checkbox-group">
+          <input type="checkbox" id="{{ form.camarines_disponible.id_for_label }}" 
+                 name="camarines_disponible"
+                 {% if form.camarines_disponible.value %}checked{% endif %}>
+          <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }}</label>
+        </div>
+      </div>
+
+      <!-- form horarios -->
+      <div class="form-column">
+        <h2 class="section-titulo">Horarios</h2>
+        <p style="color: #9ca3af; margin-bottom: 1.25rem; font-size: 0.85rem;">
+          Deja en blanco los dias cerrados, no repitas los dias.
+        </p>
+
+        <div class="horarios-container">
+          {% for horario_form in formset %}
+            <div class="horario-form ">
+              
+              <div class="horario-grid">
+
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.dia.id_for_label }}">Día</label>
+                  {{ horario_form.dia }}
+                  {% if horario_form.dia.errors %}<span class="error">{{ horario_form.dia.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.hora_apertura.id_for_label }}">Apertura</label>
+                  {{ horario_form.hora_apertura }}
+                  {% if horario_form.hora_apertura.errors %}<span class="error">{{ horario_form.hora_apertura.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.hora_cierre.id_for_label }}">Cierre</label>
+                  {{ horario_form.hora_cierre }}
+                  {% if horario_form.hora_cierre.errors %}<span class="error">{{ horario_form.hora_cierre.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="horario-delete">
+                  {{ horario_form.DELETE }}
+                  <label for="{{ horario_form.DELETE.id_for_label }}">X</label>
+                </div>
+              </div>
+
+              <div class="formset-management">
+                {{ horario_form.id }}
+              </div>
+            </div>
+          {% endfor %}
+
+          {{ formset.management_form }}
+        </div>
+
+        {% if formset.non_form_errors %}
+          <div class="error-list">
+            {% for error in formset.non_form_errors %}
+              {{ error }}<br>
             {% endfor %}
-          </ul>
+          </div>
         {% endif %}
-        
+      </div>
 
-        <button type="submit" class="establecimiento-button">Crear Establecimiento</button>
-      </form>
+    </div>
 
-      <p class="establecimiento-text">
-        <a href="{% url 'cuentas:SportsNet_dueno' %}">Volver al inicio</a>
-      </p>
+    <div class="botones-footer">
+      <button type="submit" class="boton-crear">Crear Establecimiento</button>
+      <div class="volver">
+        <a href="{% url 'cuentas:SportsNet_dueno' %}">Cancelar</a>
+      </div>
+    </div>
+  </form>
 
-    {% else %}
-      <h3 class="establecimiento-title">Acceso Denegado</h3>
-      <p class="establecimiento-text">
-        Debes <a href="{% url 'cuentas:login_cuenta' %}">iniciar sesión</a> como propietario para crear un establecimiento.
-      </p>
-    {% endif %}
-
-  </div>
 </div>
-
-{% block extra_js %}
-  <script src="{% static 'script.js' %}"></script>
-{% endblock %}
 
 {% endblock %}

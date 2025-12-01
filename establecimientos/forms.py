@@ -1,5 +1,6 @@
 from django import forms
-from .models import Establecimiento, Cancha
+from django.forms import inlineformset_factory
+from .models import Establecimiento, Cancha, HorarioEstablecimiento
 
 class CrearEstablecimientoForm(forms.ModelForm):
 
@@ -93,3 +94,41 @@ class CrearCanchaForm(forms.ModelForm):
                 'step': '1000'
             }),
         }
+
+class HorarioEstablecimientoForm(forms.ModelForm):
+
+    class Meta:
+
+        model = HorarioEstablecimiento
+        fields = ["dia", "hora_apertura", "hora_cierre"]
+
+        labels = {
+            "dia" : "Día",
+            "hora_apertura" : "Apertura",
+            "hora_cierre" : "Cierre",
+        }
+
+        widgets = {
+            "dia" : forms.Select(),
+            "hora_apertura" : forms.TimeInput(attrs={"type" : "time"}),
+            "hora_cierre" : forms.TimeInput(attrs={"type" : "time"}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        hora_apertura = cleaned_data.get("hora_apertura")
+        hora_cierre = cleaned_data.get("hora_cierre")
+
+        if hora_apertura and hora_cierre:
+            if hora_apertura>= cleaned_data.get("hora_cierre"):
+                raise forms.ValidationError("La hora de apertura debe ser antes que la hora de cierre ")
+
+        return cleaned_data
+    
+HorarioFormSet = inlineformset_factory(
+    Establecimiento,
+    HorarioEstablecimiento,
+    form=HorarioEstablecimientoForm,
+    extra=7,  
+    can_delete=True
+)

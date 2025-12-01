@@ -3,7 +3,6 @@
 
 {% block title %}Buscar - SportsNet{% endblock %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'buscar.css' %}">
 {% endblock %}
@@ -15,10 +14,14 @@
     <div class="search-filters">
         <h3>Filtrar por deporte:</h3>
         <div class="search-filters-buttons">
-            {% for x in deportes %}
-                <button class="nav-button">
-                    {{ x }}
-                </button>
+            <a href="{% url 'establecimientos:buscar' %}" class="nav-button {% if not deporte_seleccionado %}active{% endif %}">
+                Todos
+            </a>
+            {% for deporte in deportes %}
+                <a href="{% url 'establecimientos:buscar' %}?deporte={{ deporte }}" 
+                   class="nav-button {% if deporte_seleccionado == deporte %}active{% endif %}">
+                    {{ deporte }}
+                </a>
             {% endfor %}
         </div>
     </div>
@@ -43,8 +46,8 @@
                 </p>
                 
                 {% if user.is_authenticated %}
-                    <a href="#" class="nav-button reserve-button">
-                        Ver
+                    <a href="{% url 'establecimientos:ver_cancha' cancha.id %}" class="nav-button reserve-button">
+                        Ver detalles
                     </a>
                 {% else %}
                     <p class="login-message">
