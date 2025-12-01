@@ -15,11 +15,11 @@ class Reserva (models.Model):
 
     cancha = models.ForeignKey(Cancha, on_delete=models.CASCADE, related_name="reservas")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="reservas")
-    fecha = models.DateField()
-    hora_inicio = models.TimeField()
+    fecha = models.DateField(blank=False, null=False)
+    hora_inicio = models.TimeField(blank=False, null=False)
     # prueba 
     # hora_y_fecha = models.DateTimeField()
-    duracion_bloques = models.PositiveIntegerField(default=2 )
+    duracion_bloques = models.PositiveIntegerField(default=1,blank=False, null=False )
     estado = models.CharField(max_length=20, choices=ESTADOS, default="PENDIENTE")
     precio_total = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank = True)
     comentario = models.CharField(max_length=100, blank=True, null =True)

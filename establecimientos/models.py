@@ -32,10 +32,10 @@ class Deporte(models.Model):
     
 class Establecimiento (models.Model):
     dueno = models.ForeignKey(Dueno, on_delete=models.CASCADE, related_name="establecimientos")
-    nombre = models.CharField(max_length=50, unique=True)
-    direccion = models.CharField(max_length=100)
-    telefono_contacto = models.CharField(max_length=20)
-    correo_contacto = models.EmailField()
+    nombre = models.CharField(max_length=50, unique=True,blank=False, null=False)
+    direccion = models.CharField(max_length=100,blank=False, null=False)
+    telefono_contacto = models.CharField(max_length=20,blank=False, null=False)
+    correo_contacto = models.EmailField(blank=False, null=False)
     estacionamiento_disponible = models.BooleanField(default=False)
     camarines_disponible = models.BooleanField(default=False)
     # editar a futuro para integrar mapa
@@ -99,15 +99,15 @@ class Cancha (models.Model):
     
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
-    deporte = models.CharField(max_length=20, choices=DEPORTES, default="---")    
+    deporte = models.CharField(max_length=20, choices=DEPORTES, default="---",blank=False, null=False)    
     #deporte = models.ManyToManyField(Deporte,choices=DEPORTES, default="---")
-    nombre = models.CharField(max_length=25)
-    superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES)
-    iluminacion = models.CharField(max_length=20, choices=TIPOS_ILUMINACION)
+    nombre = models.CharField(max_length=25,blank=False, null=False)
+    superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES,blank=False, null=False)
+    iluminacion = models.CharField(max_length=20, choices=TIPOS_ILUMINACION,blank=False, null=False)
     # true = interior , false = exterior
     interior = models.BooleanField(default=False)
     # validar q sea un valor entero, positivo, 
-    valor_por_bloque = models.DecimalField(max_digits=10, decimal_places=0)
+    valor_por_bloque = models.DecimalField(max_digits=10, decimal_places=0,blank=False, null=False)
 
     def __str__(self):
         return f"Cancha = {self.nombre}, Deporte = {self.deporte}, Establecimiento {self.establecimiento} "

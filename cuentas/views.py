@@ -29,12 +29,15 @@ def registro(request):
             tipo_usuario = form.cleaned_data["tipo_usuario"]
 
             if tipo_usuario == "dueno":
-
                 Dueno.objects.create(usuario = usuario, rut = form.cleaned_data["rut"])
+                login(request, usuario)
+                return redirect ("cuentas:SportsNet_dueno")
                 
                 
             else:                        
                 Cliente.objects.create(usuario=usuario)
+                login(request, usuario)
+                return redirect ("cuentas:SportsNet_cliente")
                 #c.save()
 
             """   
