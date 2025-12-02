@@ -4,12 +4,12 @@
 {% block title %}SportsNet{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'bienvenida.css' %}">
+<link rel="stylesheet" href="{% static 'css/bienvenida.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <!-- Sección de Bienvenida -->
+
     <section class="welcome-card">
         <h1>
             Bienvenido, <span class="welcome-name">{{ dueno.usuario.get_full_name|default:dueno.usuario.username }}</span>!

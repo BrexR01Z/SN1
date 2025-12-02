@@ -4,7 +4,7 @@
 {% block title %}Reservar - {{ cancha.nombre }}{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'crear_reserva.css' %}">
+  <link rel="stylesheet" href="{% static 'css/crear_reserva.css' %}">
 {% endblock %}
 
 {% block contenido %}
@@ -106,6 +106,7 @@
       {% if reservas_cancha %}
         <div class="reservas-lista">
           {% for reserva in reservas_cancha %}
+
             <div class="cancha-info">
               <div class="reserva-fecha">{{ reserva.fecha|date:"d/m/Y" }}</div>
               
@@ -114,13 +115,18 @@
                 <strong>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</strong>
               </div>
               
+              <div class="reserva-detalle">
+                <span>Usuario:</span>
+                <strong>{{ reserva.usuario}}</strong>
+              </div>
+              
 
             </div>
           {% endfor %}
         </div>
       {% else %}
         <div class="sin-reservas">
-          <p>No hay reservas para esta cancha</p>
+          <p>No se han hecho reservas en esta cancha</p>
         </div>
       {% endif %}
     </div>

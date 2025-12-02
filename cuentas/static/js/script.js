@@ -33,19 +33,3 @@ document.addEventListener('DOMContentLoaded', function() {
     radio.addEventListener('change', toggleConditionalFields);
   });
 });
-
-// Mapa 
-
-
-    // Inicializar el mapa
-    var map = L.map('map').setView([-33.45, -70.66], 13); // Santiago
-
-    // Capa base (OpenStreetMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-
-    // Marcador de ejemplo
-    L.marker([-33.45, -70.66]).addTo(map)
-        .bindPopup("Estás viendo Santiago")
-        .openPopup();

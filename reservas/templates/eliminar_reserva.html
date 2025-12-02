@@ -4,16 +4,16 @@
 {% block title %}Eliminar Reserva - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'eliminar_reserva.css' %}">
+  <link rel="stylesheet" href="{% static 'css/eliminar_reserva.css' %}">
 {% endblock %}
 
 {% block contenido %}
 
 <div class="eliminar-reserva-container">
-  <h1 class="titulo">Eliminar Reserva</h1>
+  <h1 class="titulo">Cancelar Reserva</h1>
 
   <div class="advertencia">
-    <p>Eliminar esta reserva</p>
+    <p>Desea cancelar esta reserva?</p>
   </div>
 
   <div class="reserva-detalle">
@@ -39,7 +39,7 @@
   <form method="POST" class="botones">
     {% csrf_token %}
     <button type="submit" class="btn btn-eliminar">
-        Eliminar Reserva
+        Cancelar Reserva
     </button>
     <a href="{% url 'reservas:listar_reservas' %}" class="btn btn-cancelar">
       Cancelar

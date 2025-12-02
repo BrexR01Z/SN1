@@ -112,16 +112,26 @@ def crear_reserva(request, cancha_id):
             hora_inicio = form.cleaned_data['hora_inicio']
             duracion_bloques = form.cleaned_data['duracion_bloques']
             
-            dias_semana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO']
+            dias_semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
             dia_semana = dias_semana[fecha.weekday()]
             
             horario = HorarioEstablecimiento.objects.filter(
                 establecimiento=cancha.establecimiento,
                 dia=dia_semana
             ).first()
+
+            if fecha == datetime.now().date():
+                if hora_inicio <= datetime.now().time():
+                    messages.error(request, "Ha seleccionado una hora ya pasada")
+                    return render(request, "crear_reserva.html", {
+                        "form": form,
+                        "cancha": cancha,
+                        "reservas_cancha": reservas_cancha,
+                        "horarios": horarios,
+                    })
             
             if not horario:
-                messages.error(request, "No hay horario disponible para ese dia")
+                messages.error(request, "Ha seleccionado un día en el que el establecimiento se encuentra cerrado")
                 return render(request, "crear_reserva.html", {
                     "form": form,
                     "cancha": cancha,
@@ -230,12 +240,18 @@ def editar_reserva(request, reserva_id):
         if form.is_valid():
             form.save()
             
-            # Si es dueño, actualizar estado
-            if es_dueno_cancha and 'estado' in request.POST:
+            if es_propietario and not es_dueno_cancha:
+                reserva.estado = 'PENDIENTE'
+                reserva.save()
+                messages.success(request, 'Reserva actualizada, espera confirmación')
+
+            elif es_dueno_cancha and 'estado' in request.POST:
                 reserva.estado = request.POST['estado']
                 reserva.save()
+                messages.success(request, 'Reserva actualizada')
+            else:
+                messages.success(request, 'Reserva actualizada')
             
-            messages.success(request, 'Reserva actualizada')
             return redirect('reservas:listar_reservas')
     else:
         form = CrearReservaForm(instance=reserva)
@@ -262,13 +278,13 @@ def eliminar_reserva(request, reserva_id):
         pass
     
     if not (es_propietario or es_dueno_cancha):
-        return HttpResponseForbidden("Solamente el dueno del establecimiento o reserva puede editarla")
+        return HttpResponseForbidden("Solamente el dueno del establecimiento o reserva puede cancelarla")
     
     if request.method == "POST":
-        fecha = reserva.fecha
-        hora = reserva.hora_inicio
-        reserva.delete()
-        messages.success(request, "Reserva eliminada")
+
+        reserva.estado = 'CANCELADA'
+        reserva.save()
+        messages.success(request, "Reserva cancelada correctamente")
         return redirect("reservas:listar_reservas")
     
     return render(request, "eliminar_reserva.html", {

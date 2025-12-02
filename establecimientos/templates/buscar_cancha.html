@@ -4,7 +4,7 @@
 {% block title %}Buscar - SportsNet{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'buscar.css' %}">
+<link rel="stylesheet" href="{% static 'css/buscar_canchas.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,11 +14,11 @@
     <div class="search-filters">
         <h3>Filtrar por deporte:</h3>
         <div class="search-filters-buttons">
-            <a href="{% url 'establecimientos:buscar' %}" class="nav-button {% if not deporte_seleccionado %}active{% endif %}">
+            <a href="{% url 'establecimientos:buscar_canchas' %}" class="nav-button {% if not deporte_seleccionado %}active{% endif %}">
                 Todos
             </a>
             {% for deporte in deportes %}
-                <a href="{% url 'establecimientos:buscar' %}?deporte={{ deporte }}" 
+                <a href="{% url 'establecimientos:buscar_canchas' %}?deporte={{ deporte }}" 
                    class="nav-button {% if deporte_seleccionado == deporte %}active{% endif %}">
                     {{ deporte }}
                 </a>
@@ -88,14 +88,12 @@
                 {% endif %}
             </div>
         {% empty %}
-            <p class="empty-message">No hay canchas disponibles aún.</p>
+            <p class="empty-message">No existen canchas</p>
         {% endfor %}
     </div>
  
 </div>
 
-{% block extra_js %}
-<script src="{% static 'script.js' %}"></script>
-{% endblock %}
+
 
 {% endblock %}

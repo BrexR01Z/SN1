@@ -185,6 +185,15 @@ def ver_cancha(request, cancha_id):
     cancha = get_object_or_404(Cancha, id=cancha_id)
     est = cancha.establecimiento
 
+    es_dueno = False
+    if request.user.is_authenticated:
+        try:
+            dueno = Dueno.objects.get(usuario=request.user)
+            es_dueno = (est.dueno == dueno)
+        except Dueno.DoesNotExist:
+            pass
+
+
     horarios = HorarioEstablecimiento.objects.filter(establecimiento=est).order_by("dia")
 
     dias_semana = ["Lunes","Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
@@ -199,13 +208,14 @@ def ver_cancha(request, cancha_id):
     context = {
         "cancha" : cancha,
         "horarios" : horarios,
+        "es_dueno" : es_dueno,
         # "horarios_est" : horarios_est,
     }
 
     return render(request, "ver_cancha.html",context)
 
 
-def buscar(request):
+def buscar_canchas(request):
 
     DEPORTES = [
         "Futbol",
@@ -232,4 +242,56 @@ def buscar(request):
         "deporte_seleccionado": deporte_seleccionado,
     }
     
-    return render(request, "buscar.html", context)
+    return render(request, "buscar_cancha.html", context)
+
+
+@login_required(login_url='cuentas:login_cuenta')
+@require_http_methods(["GET", "POST"])
+def editar_cancha(request, cancha_id):
+    cancha = get_object_or_404(Cancha, id=cancha_id)
+    
+    try:
+        dueno = Dueno.objects.get(usuario=request.user)
+    except Dueno.DoesNotExist:
+        return HttpResponseForbidden('Solo los dueños pueden editar canchas.')
+    
+    if cancha.establecimiento.dueno != dueno:
+        return HttpResponseForbidden('Solo el dueño del establecimiento puede editar sus canchas')
+    
+    if request.method == 'POST':
+        form = CrearCanchaForm(request.POST, instance=cancha)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cancha actualizada correctamente')
+            return redirect('establecimientos:ver_establecimiento', establecimiento=cancha.establecimiento.id)
+        else:
+            messages.error(request, 'Revisa los errores del formulario')
+    else:
+        form = CrearCanchaForm(instance=cancha)
+    
+    return render(request, 'editar_cancha.html', {
+        'form': form,
+        'cancha': cancha,
+        'establecimiento': cancha.establecimiento,
+    })
+
+@login_required(login_url='cuentas:login_cuenta')
+@require_http_methods(["GET", "POST"])
+def eliminar_cancha(request, cancha_id):
+    cancha = get_object_or_404(Cancha, id=cancha_id)
+    
+    try:
+        dueno = Dueno.objects.get(usuario=request.user)
+    except Dueno.DoesNotExist:
+        return HttpResponseForbidden('Solo los dueños pueden eliminar canchas.')
+    
+    if cancha.establecimiento.dueno != dueno:
+        return HttpResponseForbidden('Solo el dueño puede eliminar sus canchas')
+    
+    if request.method == 'POST':
+        establecimiento_id = cancha.establecimiento.id
+        cancha.delete()
+        messages.success(request, 'Cancha eliminada correctamente')
+        return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento_id)
+    
+    return render(request, 'eliminar_cancha.html', {'cancha': cancha})

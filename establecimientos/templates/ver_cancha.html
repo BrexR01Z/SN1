@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
+
 {% load static %}
+
 
 {% block title %}{{ cancha.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'ver_cancha.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ver_cancha.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,11 +16,8 @@
   <div class="cancha-header">
     <div class="cancha-info">
       <h1 class="cancha-titulo">{{ cancha.nombre }}</h1>
-      <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}" class="establecimiento-link">
-        {{ cancha.establecimiento.nombre }}
-      </a>
-
-      
+      <p class="cancha-subtitulo">Pertenece al establecimiento ->{{ cancha.establecimiento.nombre }}</p>
+             
       <div class="info-grid">
         <div class="info-item">
           <div class="info-label">Deporte</div>
@@ -39,12 +38,13 @@
           <div class="info-label">Tipo</div>
           <div class="info-valor">
             {% if cancha.interior %}
-              Interior (Cubierta)
+              Interior 
             {% else %}
-              Exterior
+              Exterior - Aire libre
             {% endif %}
           </div>
         </div>
+
       </div>
 
       
@@ -52,13 +52,22 @@
         <div class="info-label">Precio por bloque (30 min)</div>
         <div class="precio-destaque">${{ cancha.valor_por_bloque }}</div>
       </div>
+<br>
+      
+        {% if es_dueno %}
+          <div class="botones-dueno">
+            <a href="{% url 'establecimientos:editar_cancha' cancha.id %}" class="btn-editar-cancha">Editar</a>
+            <a href="{% url 'establecimientos:eliminar_cancha' cancha.id %}" class="btn-eliminar-cancha">Eliminar</a>
+          </div>
+        {% endif %}
     </div>
 
     
     <div class="comodidades">
       <div class="comodidades-titulo">Información del establecimiento</div>
+      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #374151; font-size: 0.9rem; color: #9ca3af;"></div>
       
-      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #374151; font-size: 0.9rem; color: #9ca3af;" class="comodidad-item">
+      <div class="comodidad-item">
         <span class="comodidad-icon">
           {% if cancha.establecimiento.estacionamiento_disponible %}Estacionamiento disponible{% else %}Sin estacionamiento{% endif %}
         </span>
