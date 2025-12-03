@@ -1,8 +1,7 @@
 from django.db import models
-
 from cuentas.models import Dueno
-
-
+from geopy.geocoders import Nominatim
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 
@@ -38,9 +37,43 @@ class Establecimiento (models.Model):
     correo_contacto = models.EmailField(blank=False, null=False)
     estacionamiento_disponible = models.BooleanField(default=False)
     camarines_disponible = models.BooleanField(default=False)
-    # editar a futuro para integrar mapa
+    latitud = models.FloatField(null=True, blank=True)
+    longitud = models.FloatField(null=True, blank=True)
+
+    def obtener_coordenadas(self):
+        if not self.direccion:
+            return None
+        
+        try:
+            geolocator = Nominatim(user_agent="sportsnet_app")
+            location = geolocator.geocode(self.direccion, timeout=10)
+            
+            if location:
+                self.latitud = location.latitude
+                self.longitud = location.longitude
+                return (location.latitude, location.longitude)
+            else: 
+                
+                self.latitud = 57.0092  
+                self.longitud = -135.3208
+                return (57.0092, -135.3208)
+        except Exception:
+            print("1")
+            self.latitud = 57.0092
+            self.longitud = -135.3208
+            return (57.0092, -135.3208)
+    
+    def save(self, *args, **kwargs):
+        if self.direccion:
+            self.obtener_coordenadas()
+        super().save(*args, **kwargs)
+
+
+
     def __str__(self):
         return f"Nombre establecimietno = {self.nombre} , Dueno = {self.dueno}"
+    
+
 
 
 class HorarioEstablecimiento(models.Model):
@@ -100,19 +133,12 @@ class Cancha (models.Model):
     
     establecimiento = models.ForeignKey(Establecimiento, on_delete=models.CASCADE, related_name="canchas")
     deporte = models.CharField(max_length=20, choices=DEPORTES, default="---",blank=False, null=False)    
-    #deporte = models.ManyToManyField(Deporte,choices=DEPORTES, default="---")
     nombre = models.CharField(max_length=25,blank=False, null=False)
     superficie = models.CharField(max_length=25, choices=TIPOS_SUPERFICIES,blank=False, null=False)
     iluminacion = models.CharField(max_length=20, choices=TIPOS_ILUMINACION,blank=False, null=False)
-    # true = interior , false = exterior
     interior = models.BooleanField(default=False)
-    # validar q sea un valor entero, positivo, 
     valor_por_bloque = models.DecimalField(max_digits=10, decimal_places=0,blank=False, null=False)
 
     def __str__(self):
         return f"Cancha = {self.nombre}, Deporte = {self.deporte}, Establecimiento {self.establecimiento} "
 
-    
-
-
-# integrar imagenes para canchas y establecimientos

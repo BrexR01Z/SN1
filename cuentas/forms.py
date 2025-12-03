@@ -7,6 +7,7 @@ from .models import Usuario
 from django.contrib.auth import get_user_model
 
 
+
 class RegistroForm(UserCreationForm):
     TIPO_USUARIO = [("cliente", "Cliente - Quiero reservar"),
                     ("dueno", "Dueno - Quiero gestionar")]

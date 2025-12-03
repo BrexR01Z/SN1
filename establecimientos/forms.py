@@ -2,6 +2,8 @@ from django import forms
 from django.forms import inlineformset_factory
 from .models import Establecimiento, Cancha, HorarioEstablecimiento
 from django.contrib import messages
+from geopy.geocoders import Nominatim
+from django.core.exceptions import ValidationError
 
 class CrearEstablecimientoForm(forms.ModelForm):
 
@@ -13,6 +15,8 @@ class CrearEstablecimientoForm(forms.ModelForm):
     correo_contacto = forms.EmailField()
     estacionamiento_disponible = forms.NullBooleanField()
     camarines_disponible = forms.NullBooleanField()
+
+
     # editar a futuro para integrar mapa
     
     class Meta:
@@ -46,6 +50,7 @@ class CrearEstablecimientoForm(forms.ModelForm):
             'estacionamiento_disponible': forms.CheckboxInput(),
             'camarines_disponible': forms.CheckboxInput(),
         }
+
 
 class CrearCanchaForm(forms.ModelForm):
 

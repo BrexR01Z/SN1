@@ -3,8 +3,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from datetime import date
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+
 # Create your models here.
 
 
@@ -15,7 +17,7 @@ class Usuario (AbstractUser):
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
     telefono = models.CharField(max_length=20, blank=False, null=False)
-    fecha_nacimiento = models.DateField(blank=False, null=False)
+    fecha_nacimiento = models.DateField(default=timezone.now,blank=False, null=False)
 
 
     # cambiar validaciones a respectivo form
