@@ -120,6 +120,16 @@ def crear_reserva(request, cancha_id):
                 dia=dia_semana
             ).first()
 
+            if duracion_bloques<=0:
+                messages.error(request, "La reserva debe durar como minimo 1 bloque")
+                return render(request, "crear_reserva.html", {
+                    "form": form,
+                    "cancha": cancha,
+                    "reservas_cancha": reservas_cancha,
+                    "horarios": horarios,
+                })
+                
+
             if fecha == datetime.now().date():
                 if hora_inicio <= datetime.now().time():
                     messages.error(request, "Ha seleccionado una hora ya pasada")

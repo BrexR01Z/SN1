@@ -39,44 +39,7 @@ def registro(request):
                 Cliente.objects.create(usuario=usuario)
                 login(request, usuario)
                 return redirect ("cuentas:SportsNet_cliente")
-                #c.save()
-
-            """   
-            try:
-                with transaction.atomic():
-
-                    usuario = form.save()
-                    tipo_usuario = form.cleaned_data["tipo_usuario"]
-
-                    if tipo_usuario == "dueno":
-                        
-                        Dueno.objects.create(
-                            usuario=usuario,
-                            rut=form.cleaned_data["rut"]
-                        )
-                        
-
-                        d = Dueno(usuario = usuario, rut = form.cleaned_data["rut"])
-                        d.save()
-                        
-                        
-                    else:
-                        
-                        Cliente.objects.create(
-                            usuario=usuario,               
-                        )
-                        
-                        c = Cliente(usuario=usuario)
-                        c.save()
-
-                        
-
-                    messages.success(request, f"Cuenta creada exitosamente, Bienvenido {usuario.username}!")
-            except Exception as e :
-                messages.error(request, f"Hubo un errror {str(e)} ")
-            """
-
-            return redirect("cuentas:home")
+   
 
     else:
         form = RegistroForm()
@@ -85,8 +48,6 @@ def registro(request):
         "form" : form
     }
 
-    #return HttpResponse(template.render(context,request))
-    #return HttpResponseRedirect(reverse("cuentas:home"))
     return render (request, "registro.html", context)
 
 def login_cuenta(request):
@@ -124,13 +85,13 @@ def login_cuenta(request):
 def home (request):
     return render(request,"home.html")
 
-@login_required
+@login_required(login_url='cuentas:login_cuenta')
 def cerrar_sesion(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión correctamente')
     return redirect("cuentas:home")
 
-# @login_required
+@login_required(login_url='cuentas:login_cuenta')
 def bienvenida_dueno(request):
     try:
         dueno = request.user.perfil_dueno
@@ -149,6 +110,7 @@ def bienvenida_dueno(request):
 
     return render(request,"bienvenida_dueno.html", context)
 
+@login_required(login_url='cuentas:login_cuenta')
 def bienvenida_cliente(request):
     try:
         cliente = request.user.perfil_cliente

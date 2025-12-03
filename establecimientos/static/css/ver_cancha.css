@@ -26,6 +26,12 @@
   font-weight: 700;
   margin-bottom: 1rem;
 }
+.cancha-subtitulo {
+  color: #60a5fa;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
 
 .establecimiento-link {
   color: #9ca3af;

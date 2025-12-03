@@ -4,6 +4,7 @@ from django.db import models
 from cuentas.models import Usuario
 from establecimientos.models import Cancha
 from datetime import timedelta, datetime
+from django.utils import timezone
 # Create your models here.
 
 class Reserva (models.Model):
@@ -15,7 +16,7 @@ class Reserva (models.Model):
 
     cancha = models.ForeignKey(Cancha, on_delete=models.CASCADE, related_name="reservas")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="reservas")
-    fecha = models.DateField(blank=False, null=False)
+    fecha = models.DateField(default=timezone.now,blank=False, null=False)
     hora_inicio = models.TimeField(blank=False, null=False)
     # prueba 
     # hora_y_fecha = models.DateTimeField()

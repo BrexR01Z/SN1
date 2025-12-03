@@ -7,12 +7,14 @@ from django.contrib import messages
 from .forms import CrearEstablecimientoForm, CrearCanchaForm, HorarioEstablecimientoForm, HorarioFormSet
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from geopy.geocoders import Nominatim
+from django.core.exceptions import ValidationError
 
 
 # Create your views here.
 
 # ----------------- ESTABLECIMIENTO--------------------
-
+@login_required(login_url='cuentas:login_cuenta')
 def crear_establecimiento(request):
 
     try: 
@@ -68,6 +70,7 @@ def crear_establecimiento(request):
     return render (request,"crear_establecimiento.html",context)
 
 
+
 def ver_establecimiento(request, establecimiento):
        
     # establecimiento = get_object_or_404(Establecimiento, id=establecimiento)
@@ -95,6 +98,7 @@ def editar_establecimiento(request, establecimiento_id):
         formset = HorarioFormSet(request.POST, instance=establecimiento)
         
         if form.is_valid() and formset.is_valid():
+
             form.save()
             formset.save()
             messages.success(request, "Actualizado correctamente")
@@ -105,12 +109,14 @@ def editar_establecimiento(request, establecimiento_id):
     else:
         form = CrearEstablecimientoForm(instance=establecimiento)
         formset = HorarioFormSet(instance=establecimiento)
-    
+
+
     return render(request, 'editar_establecimiento.html', {
         'form': form,
         'formset': formset,
         'establecimiento': establecimiento,
     })
+
 
 @login_required(login_url='cuentas:login_cuenta')
 @require_http_methods(["GET", "POST"])
@@ -232,14 +238,20 @@ def buscar_canchas(request):
     
     canchas = Cancha.objects.all()
     deporte_seleccionado = request.GET.get('deporte', None)
+
+    establecimientos = Establecimiento.objects.all()
     
     if deporte_seleccionado:
         canchas = canchas.filter(deporte=deporte_seleccionado)
+
+    for est in establecimientos:
+        est.deportes = est.canchas.values_list('deporte',flat=True).distinct()
     
     context = {
         "canchas": canchas,
         "deportes": DEPORTES,
         "deporte_seleccionado": deporte_seleccionado,
+        "establecimientos" :establecimientos,
     }
     
     return render(request, "buscar_cancha.html", context)
