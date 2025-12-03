@@ -74,33 +74,49 @@
   </div>
 
 
-  {% if establecimiento.horarios.all %}
-  <div class="seccion">
+  {% if horarios_completos %}
+    <div class="seccion">
     <h2 class="seccion-titulo">Horarios</h2>
     <table class="horarios-table">
-      <thead>
-        <tr>
-          <th>Día</th>
-          <th>Apertura</th>
-          <th>Cierre</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for horario in establecimiento.horarios.all %}
-        <tr>
-          <td>{{ horario.get_dia_display }}</td>
-          <td>{{ horario.hora_apertura|time:"H:i" }}</td>
-          <td>{{ horario.hora_cierre|time:"H:i" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+    <thead>
+    <tr>
+    <th>Día</th>
+    <th>Apertura</th>
+    <th>Cierre</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in horarios_completos %}
+    <tr>
+    <td>
+    <strong>{{ item.dia }}</strong>
+    {% if not item.horario %}
+    {% endif %}
+    </td>
+    <td>
+    {% if item.horario %}
+    {{ item.horario.hora_apertura|time:"H:i" }}
+    {% else %}
+    <span>Cerrado</span>
+    {% endif %}
+    </td>
+    <td>
+    {% if item.horario %}
+    {{ item.horario.hora_cierre|time:"H:i" }}
+    {% else %}
+    <span>Cerrado</span>
+    {% endif %}
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
     </table>
-  </div>
-  {% else %}
-  <div class="seccion">
+    </div>
+    {% else %}
+    <div class="seccion">
     <h2 class="seccion-titulo">Horarios</h2>
     <p class="texto-vacio">No hay horarios configurados</p>
-  </div>
+    </div>
   {% endif %}
 
 
@@ -155,13 +171,13 @@
 <script>
   // valores por defecto
   const direccion = "{{ establecimiento.direccion }}";
-  const latitud = {{ establecimiento.latitud}};
-  const longitud = {{ establecimiento.longitud}};
+  const lat = {{ establecimiento.latitud}};
+  const lon = {{ establecimiento.longitud}};
 
-  const esUbicacionDefecto = (latitud === 57.0092 && longitud === -135.3208);
+  const esUbicacionDefecto = (lat === 57.0092 && lon === -135.3208);
 
   // Inicializar mapa
-  const mapa = L.map('mapa').setView([latitud, longitud], 15);
+  const mapa = L.map('mapa').setView([lat, lon], 15);
 
   // Tiles OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -169,9 +185,8 @@
     maxZoom: 19
   }).addTo(mapa);
 
-  // Crear marker con contenido diferente según si la dirección fue encontrada
   if (esUbicacionDefecto) {
-    L.marker([latitud, longitud], {
+    L.marker([lat, lon], {
       icon: L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -189,7 +204,7 @@
     )
     .openPopup();
   } else {
-    L.marker([latitud, longitud])
+    L.marker([lat, lon])
       .addTo(mapa)
       .bindPopup(
         "<strong>{{ establecimiento.nombre }}</strong><br>" +

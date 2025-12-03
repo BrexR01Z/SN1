@@ -72,11 +72,28 @@ def crear_establecimiento(request):
 
 
 def ver_establecimiento(request, establecimiento):
-       
-    # establecimiento = get_object_or_404(Establecimiento, id=establecimiento)
     establecimiento = Establecimiento.objects.get(id=establecimiento)
+    
+    horarios = HorarioEstablecimiento.objects.filter(
+        establecimiento=establecimiento
+    ).order_by("dia")
+    
+    dias_semana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    horarios_dict = {dia: None for dia in dias_semana}
+    
+    for horario in horarios:
+        horarios_dict[horario.dia] = horario
+
+    horarios_completos = []
+    for dia in dias_semana:
+        horarios_completos.append({
+            'dia': dia,
+            'horario': horarios_dict[dia]
+        })
+    
     context = {
-        'establecimiento': establecimiento,        
+        'establecimiento': establecimiento,
+        'horarios_completos': horarios_completos,
     }
 
     return render(request, 'ver_establecimiento.html', context)
@@ -199,26 +216,28 @@ def ver_cancha(request, cancha_id):
         except Dueno.DoesNotExist:
             pass
 
-
     horarios = HorarioEstablecimiento.objects.filter(establecimiento=est).order_by("dia")
 
-    dias_semana = ["Lunes","Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-    horarios_est = {}
-
-    for x in dias_semana:
-        horarios_est[x] = None
-
-    for x in horarios:
-        horarios_est[x.dia] = x
+    dias_semana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    horarios_dict = {dia: None for dia in dias_semana}
+    
+    for horario in horarios:
+        horarios_dict[horario.dia] = horario
+    
+    horarios_completos = []
+    for dia in dias_semana:
+        horarios_completos.append({
+            'dia': dia,
+            'horario': horarios_dict[dia]
+        })
 
     context = {
-        "cancha" : cancha,
-        "horarios" : horarios,
-        "es_dueno" : es_dueno,
-        # "horarios_est" : horarios_est,
+        "cancha": cancha,
+        "horarios": horarios_completos,  
+        "es_dueno": es_dueno,
     }
 
-    return render(request, "ver_cancha.html",context)
+    return render(request, "ver_cancha.html", context)
 
 
 def buscar_canchas(request):
