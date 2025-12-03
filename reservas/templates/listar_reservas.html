@@ -4,7 +4,7 @@
 {% block title %}Mis Reservas - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'listar_reservas.css' %}">
+  <link rel="stylesheet" href="{% static 'css/listar_reservas.css' %}">
 {% endblock %}
 
 {% block contenido %}
@@ -59,11 +59,14 @@
                 <span class="info-label">Comentario</span>
                 <span class="info-valor">{{ reserva.comentario }}</span>
             </div>
+            {% if reserva.estado != 'CANCELADA' %}
+              <div class="botones-acciones">
+                  <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                  <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
+              </div>
+            {% endif %}
 
-            <div class="botones-acciones">
-                <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
-                <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Eliminar</a>
-            </div>
+
 
             </div>
       {% endfor %}
