@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from geopy.geocoders import Nominatim
 from django.core.exceptions import ValidationError
+from reservas.models import actualizar_reservas_por_cambio_horario
 
 
 # Create your views here.
@@ -118,7 +119,8 @@ def editar_establecimiento(request, establecimiento_id):
 
             form.save()
             formset.save()
-            messages.success(request, "Actualizado correctamente")
+            actualizar_reservas_por_cambio_horario(establecimiento)
+            messages.success(request, "Actualizado correctamente, todas las reservas asociadas con este establecimiento han vuelto a estado pendiente ")
             return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento.id)
         else:
             messages.error(request,"Todos los campos deben estar llenos y el horario de apertura debe ser antes del horario de cierre")

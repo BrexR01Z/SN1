@@ -164,15 +164,22 @@
 
 </div>
 
-<!-- mapa  -->
+<!-- mapa  
+ cdnjs
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+-->
 
-<script>
+<!-- cdn -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script defer>
+  console.log("js cargado")
   // valores por defecto
   const direccion = "{{ establecimiento.direccion }}";
-  const lat = {{ establecimiento.latitud}};
-  const lon = {{ establecimiento.longitud}};
+  const lat = parseFloat("{{ establecimiento.latitud|floatformat:7 }}".replace(",", "."));
+  const lon = parseFloat("{{ establecimiento.longitud|floatformat:7 }}".replace(",", "."));
 
   const esUbicacionDefecto = (lat === 57.0092 && lon === -135.3208);
 
