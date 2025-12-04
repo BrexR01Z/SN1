@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reservar - {{ cancha.nombre }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/crear_reserva.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="reserva-container">
+  <h1 class="reserva-title">Reservar {{ cancha.nombre }}</h1>
+
+  <div class="contenedor-dos-columnas">
+    
+    <div class="columna-formulario">
+      <h2 class="seccion-titulo">Crear Reserva</h2>
+
+      <div class="cancha-info">
+        <div class="info-item">
+          <span class="info-label">Cancha:</span>
+          <span class="info-valor">{{ cancha.nombre }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Establecimiento:</span>
+          <span class="info-valor">{{ cancha.establecimiento.nombre }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Deporte:</span>
+          <span class="info-valor">{{ cancha.get_deporte_display }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Precio por bloque:</span>
+          <span class="precio-destaque">${{ cancha.valor_por_bloque }}</span>
+        </div>
+      </div>
+
+      {% if horarios %}
+        <div class="horarios-disponibles">
+          <h3 style="color: #60a5fa; font-size: 1rem; margin-bottom: 1rem;">Horarios</h3>
+          <div class="horarios-grid">
+            {% for horario in horarios %}
+              <div class="horario-card">
+                <div class="horario-dia">{{ horario.get_dia_display }}</div>
+                <div class="horario-horas">{{ horario.hora_apertura|time:"H:i" }} - {{ horario.hora_cierre|time:"H:i" }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <form method="POST" class="formulario">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="{{ form.fecha.id_for_label }}">{{ form.fecha.label }}</label>
+          {{ form.fecha }}
+          {% if form.fecha.help_text %}<span class="helptext">{{ form.fecha.help_text }}</span>{% endif %}
+          {% if form.fecha.errors %}<span class="error-message">{{ form.fecha.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.hora_inicio.id_for_label }}">{{ form.hora_inicio.label }}</label>
+          {{ form.hora_inicio }}
+          {% if form.hora_inicio.errors %}<span class="error-message">{{ form.hora_inicio.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.duracion_bloques.id_for_label }}">{{ form.duracion_bloques.label }}</label>
+          {{ form.duracion_bloques }}
+          {% if form.duracion_bloques.help_text %}<span class="helptext">{{ form.duracion_bloques.help_text }}</span>{% endif %}
+          {% if form.duracion_bloques.errors %}<span class="error-message">{{ form.duracion_bloques.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
+          {{ form.comentario }}
+        </div>
+
+        <div class="resumen">
+          <div class="resumen-item">
+            <span>Bloque de 30 min:</span>
+            <span>${{ cancha.valor_por_bloque }}</span>
+          </div>
+          <div class="resumen-item">
+            <span id="cantidad-label">Cantidad (1 bloque):</span>
+            <span id="cantidad-valor">1 x ${{ cancha.valor_por_bloque }}</span>
+          </div>
+          <div class="resumen-item">
+            <span>Total:</span>
+            <span id="total-precio">${{ cancha.valor_por_bloque }}</span>
+          </div>
+        </div>
+
+        <button type="submit" class="boton-reservar">Confirmar Reserva</button>
+      </form>
+<br>
+      <div class="volver">
+        <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}">Volver</a>
+      </div>
+    </div>
+
+    <div class="columna-reservas">
+      <h2 class="seccion-titulo">Reservas Existentes</h2>
+
+      {% if reservas_cancha %}
+        <div class="reservas-lista">
+          {% for reserva in reservas_cancha %}
+
+            <div class="cancha-info">
+              <div class="reserva-fecha">{{ reserva.fecha|date:"d/m/Y" }}</div>
+              
+              <div class="reserva-detalle">
+                <span>Hora:</span>
+                <strong>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</strong>
+              </div>
+              
+              <div class="reserva-detalle">
+                <span>Usuario:</span>
+                <strong>{{ reserva.usuario}}</strong>
+              </div>
+
+              <div class="reserva-detalle">
+                <span>Estado:</span>
+                <strong>{{ reserva.get_estado_display}}</strong>
+              </div>
+              
+
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="sin-reservas">
+          <p>No se han hecho reservas en esta cancha</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script defer>
+  console.log("precio total actualizado");
+document.addEventListener('DOMContentLoaded', function() {
+  const duracionInput = document.querySelector('input[name="duracion_bloques"]');
+  const precioBase = {{ cancha.valor_por_bloque }};
+
+  if (duracionInput) {
+    duracionInput.addEventListener('change', actualizarPrecio);
+    duracionInput.addEventListener('input', actualizarPrecio);
+  }
+
+  function actualizarPrecio() {
+    const duracion = parseInt(duracionInput.value) || 1;
+    const total = precioBase * duracion;
+    document.getElementById('cantidad-label').textContent = `Cantidad (${duracion} bloques):`;
+    document.getElementById('cantidad-valor').textContent = `${duracion} x $${precioBase}`;
+    document.getElementById('total-precio').textContent = `$${total}`;
+  }
+});
+</script>
+
+{% endblock %}

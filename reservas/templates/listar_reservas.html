@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Reservas - SportsNet{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/listar_reservas.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="listar-container">
+  <h1 class="titulo-principal">Mis Reservas</h1>
+
+  {% if es_dueno %}
+    <div class="filtro-info">
+        Reservas personales y de tus establecimientos
+    </div>
+  {% endif %}
+
+  {% if reservas %}
+    <div class="reservas-tabla">
+      {% for reserva in reservas %}
+        <div class="reserva-fila">
+
+            <div class="reserva-info">
+                <span class="info-label">Establecimiento</span>
+                <span class="cancha-nombre">{{ reserva.cancha.establecimiento.nombre }}</span>
+            </div>
+  
+            <div class="reserva-info">
+                <span class="info-label">Cancha</span>
+                <span class="cancha-nombre">{{ reserva.cancha.nombre }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Usuario</span>
+                <span class="info-valor">{{ reserva.usuario.username }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Teléfono</span>
+                <span class="info-valor">{{ reserva.usuario.telefono }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Correo</span>
+                <span class="info-valor">{{ reserva.usuario.email }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Fecha</span>
+                <span class="info-valor">{{ reserva.fecha|date:"d/m/Y" }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Hora</span>
+                <span class="info-valor">{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Estado</span>
+                <span class="estado-badge {% if reserva.estado == 'PENDIENTE' %}estado-pendiente{% elif reserva.estado == 'CONFIRMADA' %}estado-confirmada{% elif reserva.estado == 'EN_CURSO' %}estado-en-curso{% elif reserva.estado == 'TERMINADA' %}estado-terminada{% else %}estado-cancelada{% endif %}">
+                    {{ reserva.get_estado_display }}
+                </span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Comentario</span>
+                <span class="info-valor">{{ reserva.comentario|default:"No hay comentario" }}</span>
+            </div>
+
+            {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
+              <div class="botones-acciones">
+                  <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                  <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
+                  <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
+              </div>
+            {% else %}
+              <div class="botones-acciones" style="opacity: 0.5;">
+                <span style="color: #9ca3af; font-size: 0.75rem;">No se puede editar/cancelar reservas ya terminadas/canceladas</span>
+              </div>
+            {% endif %}
+
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="sin-reservas">
+      <p>No tienes reservas</p>
+      <a href="{% url 'establecimientos:buscar_canchas' %}" style="background-color: #60a5fa; color: rgb(255, 255, 255);" class="btn-pequeño">Buscar canchas</a>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar Reserva - SportsNet{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/eliminar_reserva.css' %}">
+{% endblock %}
+
+{% block contenido %}
+
+<div class="eliminar-reserva-container">
+  <h1 class="titulo">Cancelar Reserva</h1>
+
+  <div class="advertencia">
+    <p>Desea cancelar esta reserva?</p>
+  </div>
+
+  <div class="reserva-detalle">
+
+    <div class="detalle-item">
+      <span>Usuario:</span>
+      <strong>{{ reserva.usuario.username }}</strong>
+    </div>
+    <div class="detalle-item">
+      <span>Cancha:</span>
+      <strong>{{ reserva.cancha.nombre }}</strong>
+    </div>
+    <div class="detalle-item">
+      <span>Fecha:</span>
+      <strong>{{ reserva.fecha|date:"d/m/Y" }}</strong>
+    </div>
+    <div class="detalle-item">
+      <span>Hora:</span>
+      <strong>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</strong>
+    </div>
+  </div>
+
+  <form method="POST" class="botones">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-eliminar">
+        Cancelar Reserva
+    </button>
+    <a href="{% url 'reservas:listar_reservas' %}" class="btn btn-cancelar">
+      Cancelar
+    </a>
+  </form>
+</div>
+
+{% endblock %}
