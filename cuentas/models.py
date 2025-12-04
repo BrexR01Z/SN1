@@ -3,16 +3,21 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from datetime import date
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+
 # Create your models here.
 
 
 # usuario abstracto, dueno y cliente herendan 
 
 class Usuario (AbstractUser):
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    fecha_nacimiento = models.DateField(null=True, blank=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    telefono = models.CharField(max_length=20, blank=False, null=False)
+    fecha_nacimiento = models.DateField(default=timezone.now,blank=False, null=False)
 
 
     # cambiar validaciones a respectivo form
@@ -51,20 +56,14 @@ class Cliente (models.Model):
         return f"Usuario Cliente : {self.usuario.get_username()}"
     
 # Modelo para gestionar invitaciones entre usuarios
-class Invitation(models.Model): # Invitación
-    sender = models.ForeignKey( 
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='sent_invitations'
-    )
-    receiver = models.ForeignKey( 
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='received_invitations'
-    )
-    message = models.TextField(blank=True) # Mensaje opcional
-    created_at = models.DateTimeField(auto_now_add=True) # Fecha y hora de creación
-    accepted = models.BooleanField(default=False) # Estado de la invitación
+class Invitation(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_invitations')
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_invitations')
+    reserva = models.ForeignKey("reservas.Reserva", on_delete=models.CASCADE, null=True, blank=True, related_name='invitaciones')
+    message = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"{self.sender} -> {self.receiver}"

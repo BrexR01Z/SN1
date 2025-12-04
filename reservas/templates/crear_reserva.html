@@ -4,10 +4,10 @@
 {% block title %}Reservar - {{ cancha.nombre }}{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'crear_reserva.css' %}">
+  <link rel="stylesheet" href="{% static 'css/crear_reserva.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block contenido %}
 <div class="reserva-container">
   <h1 class="reserva-title">Reservar {{ cancha.nombre }}</h1>
 
@@ -34,6 +34,20 @@
           <span class="precio-destaque">${{ cancha.valor_por_bloque }}</span>
         </div>
       </div>
+
+      {% if horarios %}
+        <div class="horarios-disponibles">
+          <h3 style="color: #60a5fa; font-size: 1rem; margin-bottom: 1rem;">Horarios</h3>
+          <div class="horarios-grid">
+            {% for horario in horarios %}
+              <div class="horario-card">
+                <div class="horario-dia">{{ horario.get_dia_display }}</div>
+                <div class="horario-horas">{{ horario.hora_apertura|time:"H:i" }} - {{ horario.hora_cierre|time:"H:i" }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
       <form method="POST" class="formulario">
         {% csrf_token %}
@@ -70,7 +84,7 @@
           </div>
           <div class="resumen-item">
             <span id="cantidad-label">Cantidad (1 bloque):</span>
-            <span id="cantidad-valor">1 × ${{ cancha.valor_por_bloque }}</span>
+            <span id="cantidad-valor">1 x ${{ cancha.valor_por_bloque }}</span>
           </div>
           <div class="resumen-item">
             <span>Total:</span>
@@ -80,12 +94,11 @@
 
         <button type="submit" class="boton-reservar">Confirmar Reserva</button>
       </form>
-
+<br>
       <div class="volver">
-        <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}">← Volver</a>
+        <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}">Volver</a>
       </div>
     </div>
-
 
     <div class="columna-reservas">
       <h2 class="seccion-titulo">Reservas Existentes</h2>
@@ -93,7 +106,8 @@
       {% if reservas_cancha %}
         <div class="reservas-lista">
           {% for reserva in reservas_cancha %}
-            <div class="reserva-container">
+
+            <div class="cancha-info">
               <div class="reserva-fecha">{{ reserva.fecha|date:"d/m/Y" }}</div>
               
               <div class="reserva-detalle">
@@ -102,23 +116,22 @@
               </div>
               
               <div class="reserva-detalle">
-                <span>Duración:</span>
-                <strong>{{ reserva.duracion_bloques }} bloque{{ reserva.duracion_bloques|pluralize }}</strong>
+                <span>Usuario:</span>
+                <strong>{{ reserva.usuario}}</strong>
+              </div>
+
+              <div class="reserva-detalle">
+                <span>Estado:</span>
+                <strong>{{ reserva.get_estado_display}}</strong>
               </div>
               
-              <div class="reserva-usuario">
-                Usuario: <strong>{{ reserva.usuario.username }}</strong>
-              </div>
-              
-              <span class="estado-badge estado-{{ reserva.get_estado_display|lower }}">
-                {{ reserva.get_estado_display }}
-              </span>
+
             </div>
           {% endfor %}
         </div>
       {% else %}
         <div class="sin-reservas">
-          <p>No hay reservas para esta cancha</p>
+          <p>No se han hecho reservas en esta cancha</p>
         </div>
       {% endif %}
     </div>
@@ -126,7 +139,9 @@
   </div>
 </div>
 
-<script>
+<script defer>
+  console.log("precio total actualizado");
+document.addEventListener('DOMContentLoaded', function() {
   const duracionInput = document.querySelector('input[name="duracion_bloques"]');
   const precioBase = {{ cancha.valor_por_bloque }};
 
@@ -138,10 +153,11 @@
   function actualizarPrecio() {
     const duracion = parseInt(duracionInput.value) || 1;
     const total = precioBase * duracion;
-    document.getElementById('cantidad-label').textContent = `Cantidad (${duracion} bloque${duracion > 1 ? 's' : '}):`;
-    document.getElementById('cantidad-valor').textContent = `${duracion} × $${precioBase}`;
+    document.getElementById('cantidad-label').textContent = `Cantidad (${duracion} bloques):`;
+    document.getElementById('cantidad-valor').textContent = `${duracion} x $${precioBase}`;
     document.getElementById('total-precio').textContent = `$${total}`;
   }
+});
 </script>
 
 {% endblock %}

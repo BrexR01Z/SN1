@@ -4,7 +4,7 @@
 {% block title %}Eliminar {{ establecimiento.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'eliminar_establecimiento.css' %}">
+  <link rel="stylesheet" href="{% static 'css/eliminar_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,17 +14,16 @@
 
   <div class="advertencia">
     <div class="icono-advertencia"></div>
-    <p>¿Estás seguro de que deseas eliminar este establecimiento?</p>
+    <p>Eliminar este establecimiento</p>
     <p class="establecimiento-nombre">{{ establecimiento.nombre }}</p>
   </div>
 
   <div class="info-adicional">
-    <strong>Atención:</strong> Esta acción es irreversible. Se eliminarán:
+    <strong>Se eliminará todo lo asociado con este establecimiento, incluyendo : </strong>
     <ul style="margin: 0.75rem 0 0 1.5rem; padding: 0;">
-      <li>El establecimiento completo</li>
-      <li>Todas las canchas asociadas</li>
-      <li>Todos los horarios</li>
-      <li>Todas las reservas</li>
+      <li>Canchas</li>
+      <li>Horarios</li>
+      <li>Las reservas se cancelarán</li>
     </ul>
   </div>
 

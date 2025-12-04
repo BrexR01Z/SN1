@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+<<<<<<< HEAD
 {% block title %}Invitar a Reserva - SportsNet{% endblock %}
 
 {% block extra_css %}
@@ -84,3 +85,21 @@
     </div>
 </div>
 {% endblock %}
+=======
+{% block title %}Invitar a reserva{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Invitar a la reserva</h2>
+  <p><strong>Cancha:</strong> {{ reserva.cancha.nombre }} — <strong>Fecha:</strong> {{ reserva.fecha }} — <strong>Hora:</strong> {{ reserva.hora_inicio }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Enviar Invitación</button>
+  </form>
+
+  <p><a href="{% url 'cuentas:perfil_usuario' %}">Volver a Mi Perfil</a></p>
+</div>
+{% endblock %}
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58

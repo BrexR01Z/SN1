@@ -4,7 +4,7 @@
 {% block titulo %}Editar {{ establecimiento.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'editar_establecimiento.css' %}">
+  <link rel="stylesheet" href="{% static 'css/editar_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,62 +12,115 @@
 <div class="editar-container">
   <h1 class="titulo">Editar Establecimiento</h1>
 
-  <div class="info-establecimiento">
-    <div class="info-label">Establecimiento actual:</div>
-    <div class="info-valor">{{ establecimiento.nombre }}</div>
+  <div class="form-group">
+    <div class="section-titulo">Establecimiento -> {{ establecimiento.nombre }}</div>
   </div>
 
   <form method="POST" novalidate>
     {% csrf_token %}
 
-    <div class="form-group">
-      <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
-      {{ form.nombre }}
-      {% if form.nombre.errors %}<span class="error">{{ form.nombre.errors.0 }}</span>{% endif %}
+    <div class="form-wrapper">
+      
+      <div class="form-column">
+        <h2 class="section-titulo">Información General</h2>
+
+        <div class="form-group">
+          <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+          {{ form.nombre }}
+          {% if form.nombre.errors %}<span class="error">{{ form.nombre.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }} - Ej: Alemparte 943, Hualpen, Bio Bio, Chile</label>
+          {{ form.direccion }}
+          {% if form.direccion.errors %}<span class="error">{{ form.direccion.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.telefono_contacto.id_for_label }}">{{ form.telefono_contacto.label }}</label>
+          {{ form.telefono_contacto }}
+          {% if form.telefono_contacto.errors %}<span class="error">{{ form.telefono_contacto.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.correo_contacto.id_for_label }}">{{ form.correo_contacto.label }}</label>
+          {{ form.correo_contacto }}
+          {% if form.correo_contacto.errors %}<span class="error">{{ form.correo_contacto.errors.0 }}</span>{% endif %}
+        </div>
+
+        <div class="checkbox-group">
+          {{ form.estacionamiento_disponible }}
+          <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
+        </div>
+<!--
+        <div class="checkbox-group">
+          <input type="checkbox" 
+                id="{{ form.estacionamiento_disponible.id_for_label }}"
+                name="estacionamiento_disponible"
+                {% if form.estacionamiento_disponible.value %}checked{% endif %}>
+          <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
+        </div>
+-->
+        <div class="checkbox-group">
+          {{ form.camarines_disponible }}
+          <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }} </label>
+        </div>
+
+      </div>
+
+      <div class="form-column">
+        <h2 class="section-titulo">Horarios de Atención</h2>
+
+        <div class="horarios-container">
+          {% for horario_form in formset %}
+            <div class="horario-form">
+              
+              <div class="horario-grid">
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.dia.id_for_label }}">Día</label>
+                  {{ horario_form.dia }}
+                </div>
+
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.hora_apertura.id_for_label }}">Apertura</label>
+                  {{ horario_form.hora_apertura }}
+                </div>
+
+                <div class="form-group form-group-small">
+                  <label for="{{ horario_form.hora_cierre.id_for_label }}">Cierre</label>
+                  {{ horario_form.hora_cierre }}
+                </div>
+
+                <div class="horario-delete">
+                  {{ horario_form.DELETE }}
+                  <label for="{{ horario_form.DELETE.id_for_label }}">Eliminar</label>
+                </div>
+              </div>
+
+              <div class="formset-management">
+                {{ horario_form.id }}
+              </div>
+            </div>
+          {% endfor %}
+
+          {{ formset.management_form }}
+        </div>
+      </div>
+
     </div>
 
-    <div class="form-group">
-      <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
-      {{ form.direccion }}
-      {% if form.direccion.errors %}<span class="error">{{ form.direccion.errors.0 }}</span>{% endif %}
-    </div>
-
-    <div class="form-group">
-      <label for="{{ form.telefono_contacto.id_for_label }}">{{ form.telefono_contacto.label }}</label>
-      {{ form.telefono_contacto }}
-      {% if form.telefono_contacto.errors %}<span class="error">{{ form.telefono_contacto.errors.0 }}</span>{% endif %}
-    </div>
-
-    <div class="form-group">
-      <label for="{{ form.correo_contacto.id_for_label }}">{{ form.correo_contacto.label }}</label>
-      {{ form.correo_contacto }}
-      {% if form.correo_contacto.errors %}<span class="error">{{ form.correo_contacto.errors.0 }}</span>{% endif %}
-    </div>
-
-    <div class="checkbox-group">
-      <input type="checkbox" id="{{ form.estacionamiento_disponible.id_for_label }}" 
-             name="estacionamiento_disponible" 
-             {% if form.estacionamiento_disponible.value %}checked{% endif %}>
-      <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
-    </div>
-
-    <div class="checkbox-group">
-      <input type="checkbox" id="{{ form.camarines_disponible.id_for_label }}" 
-             name="camarines_disponible"
-             {% if form.camarines_disponible.value %}checked{% endif %}>
-      <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }}</label>
-    </div>
-
-    <div class="botones">
-      <button type="submit" class="btn btn-guardar">Guardar Cambios</button>
-      <a href="{% url 'establecimientos:ver_establecimiento' establecimiento.id %}" class="btn btn-volver">Volver</a>
+    <div class="botones-footer">
+      <button type="submit" class="boton-crear">Guardar Cambios</button>
+      <div class="volver">
+        <a href="{% url 'establecimientos:ver_establecimiento' establecimiento.id %}">Cancelar</a>
+      </div>
     </div>
   </form>
 
   <hr style="border: none; border-top: 2px solid #374151; margin: 2rem 0;">
 
   <div style="text-align: center; margin-top: 2rem;">
-    <a href="{% url 'establecimientos:eliminar_establecimiento' establecimiento.pk %}" 
+    <a href="{% url 'establecimientos:eliminar_establecimiento' establecimiento.id %}" 
        style="color: #ef4444; text-decoration: none; font-weight: 600;">
       Eliminar Establecimiento
     </a>

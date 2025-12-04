@@ -3,54 +3,33 @@
 
 {% block title %}SportsNet - Reservas Deportivas{% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'script.js' %}"></script>
-
-<script>
-// Esperar cargar la página
-document.addEventListener("DOMContentLoaded", function () {
-
-    // mapa centrado en Santiago
-    const map = L.map('map').setView([-33.45, -70.66], 12);
-
-    // Capa de mapa (OpenStreetMap)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Marcador de ejemplo
-    L.marker([-33.45, -70.66])
-        .addTo(map)
-        .bindPopup("¡Bienvenido a SportsNet!")
-        .openPopup();
-});
-</script>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
-
-{% block titulo %} Home {% endblock %}
 
 {% block contenido %}
-<div>
-    <h1>Bienvenido a SportsNet!</h1>
-    <h2>Tu plataforma de reservas deportivas</h2>
-     
-    <p>
-        Contamos con una gran variedad de recintos en los cuales podrás jugar tu deporte favorito.
-    </p>
 
-    <h3>¡Encuentra tu cancha ideal en segundos!</h3>
-</div>
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Bienvenido a SportsNet</h1>
+    <p class="hero-subtitle">Gestiona tus establecimientos o busca canchas y has reservas!</p>
+    
+    <div class="hero-buttons">
+      <a href="{% url 'establecimientos:buscar_canchas' %}" class="btn btn-secondary">Buscar Canchas</a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'cuentas:registro' %}" class="btn btn-secondary">Registrarse</a>
+        <a href="{% url 'cuentas:login_cuenta' %}" class="btn btn-secondary">Iniciar Sesion</a>
+      {% else %}
+        {% if user.perfil_dueno %}
+        <a href="{% url 'cuentas:SportsNet_dueno' %}" class="btn btn-secondary">Menu</a>
+        {% else %}
+        <a href="{% url 'cuentas:SportsNet_cliente' %}" class="btn btn-secondary">Menu</a>
+        {% endif %}
 
-
-
-<div class="cta-buttons">
-                <a href="{% url 'establecimientos:buscar' %}" class="cta-button">Buscar Canchas</a>
-                {% if not user.is_authenticated %}
-                    <a href="{% url 'cuentas:registro' %}" class="cta-button cta-secondary">Registrarse Gratis</a>
-                {% endif %}
-            </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
 
 
 {% endblock %}
-

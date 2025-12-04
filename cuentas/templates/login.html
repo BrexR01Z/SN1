@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 
 {% block title %}Iniciar Sesión - SportsNet{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="login-container">

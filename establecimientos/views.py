@@ -7,12 +7,15 @@ from django.contrib import messages
 from .forms import CrearEstablecimientoForm, CrearCanchaForm, HorarioEstablecimientoForm, HorarioFormSet
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from geopy.geocoders import Nominatim
+from django.core.exceptions import ValidationError
+from reservas.models import actualizar_reservas_por_cambio_horario
 
 
 # Create your views here.
 
-# ----------------- ESTABLECIMIENTO
-
+# ----------------- ESTABLECIMIENTO--------------------
+@login_required(login_url='cuentas:login_cuenta')
 def crear_establecimiento(request):
 
     try: 
@@ -45,14 +48,14 @@ def crear_establecimiento(request):
                 return redirect ("establecimientos:ver_establecimiento", establecimiento= establecimiento.id)
                     
             else:
-                messages.error(request, "Corriga los errores del formulario.")
-                establecimiento.delete()
+                messages.error(request, "Todos los campos deben estar llenos y el horario de apertura debe ser antes que el horario de cierre")
+                
 
             # messages.success(request, "Establecimiento creado")
 
             # return redirect ("cuentas:SportsNet_dueno")
-        else:
-            messages.error(request, "Corriga los errores del formulario.")
+        
+            
 
     else:
         form = CrearEstablecimientoForm()
@@ -68,45 +71,71 @@ def crear_establecimiento(request):
     return render (request,"crear_establecimiento.html",context)
 
 
+
 def ver_establecimiento(request, establecimiento):
-       
-    # establecimiento = get_object_or_404(Establecimiento, pk=establecimiento)
     establecimiento = Establecimiento.objects.get(id=establecimiento)
+    
+    horarios = HorarioEstablecimiento.objects.filter(
+        establecimiento=establecimiento
+    ).order_by("dia")
+    
+    dias_semana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    horarios_dict = {dia: None for dia in dias_semana}
+    
+    for horario in horarios:
+        horarios_dict[horario.dia] = horario
+
+    horarios_completos = []
+    for dia in dias_semana:
+        horarios_completos.append({
+            'dia': dia,
+            'horario': horarios_dict[dia]
+        })
+    
     context = {
-        'establecimiento': establecimiento,        
+        'establecimiento': establecimiento,
+        'horarios_completos': horarios_completos,
     }
 
     return render(request, 'ver_establecimiento.html', context)
 
 @login_required(login_url='cuentas:login_cuenta')
 def editar_establecimiento(request, establecimiento_id):
-
-    establecimiento = get_object_or_404(Establecimiento, id = establecimiento_id)
-
+    establecimiento = get_object_or_404(Establecimiento, id=establecimiento_id)
+    
     try:
         dueno = Dueno.objects.get(usuario=request.user)
     except Dueno.DoesNotExist:
-        return HttpResponseForbidden("Solo los usuarios dueno pueden acceder")
-
+        return HttpResponseForbidden("Solo los usuarios dueno pueden modificar sus establecimientos")
+    
     if establecimiento.dueno != dueno:
-        return HttpResponseForbidden("Solo los respectivos duenos tienen acceso a sus establecimientos")
+        return HttpResponseForbidden("Debes ser dueno del establecimiento para modificarlo")
     
     if request.method == "POST":
         form = CrearEstablecimientoForm(request.POST, instance=establecimiento)
+        formset = HorarioFormSet(request.POST, instance=establecimiento)
         
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
+
             form.save()
-            messages.success(request, f"Establecimiento actualizado exitosamente")
-            return redirect ("establecimientos:ver_establecimiento", establecimiento = establecimiento.id)
+            formset.save()
+            actualizar_reservas_por_cambio_horario(establecimiento)
+            messages.success(request, "Actualizado correctamente, todas las reservas asociadas con este establecimiento han vuelto a estado pendiente ")
+            return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento.id)
+        else:
+            messages.error(request,"Todos los campos deben estar llenos y el horario de apertura debe ser antes del horario de cierre")
+
     else:
-        form= CrearEstablecimientoForm(instance=establecimiento)
+        form = CrearEstablecimientoForm(instance=establecimiento)
+        formset = HorarioFormSet(instance=establecimiento)
 
-    context = {
-        "form":form,
-        "establecimiento":establecimiento,
-    }
 
-    return render (request, "editar_establecimiento.html", context)
+    return render(request, 'editar_establecimiento.html', {
+        'form': form,
+        'formset': formset,
+        'establecimiento': establecimiento,
+    })
+
 
 @login_required(login_url='cuentas:login_cuenta')
 @require_http_methods(["GET", "POST"])
@@ -181,48 +210,121 @@ def ver_cancha(request, cancha_id):
     cancha = get_object_or_404(Cancha, id=cancha_id)
     est = cancha.establecimiento
 
+    es_dueno = False
+    if request.user.is_authenticated:
+        try:
+            dueno = Dueno.objects.get(usuario=request.user)
+            es_dueno = (est.dueno == dueno)
+        except Dueno.DoesNotExist:
+            pass
+
     horarios = HorarioEstablecimiento.objects.filter(establecimiento=est).order_by("dia")
 
-    dias_semana = ["Lunes","Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-    horarios_est = {}
-
-    for x in dias_semana:
-        horarios_est[x] = None
-
-    for x in horarios:
-        horarios_est[x.dia] = x
-
-    context = {
-        "cancha" : cancha,
-        "horarios" : horarios,
-        # "horarios_est" : horarios_est,
-    }
-
-    return render(request, "ver_cancha.html",context)
-
-
-def buscar(request):
+    dias_semana = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    horarios_dict = {dia: None for dia in dias_semana}
     
-    DEPORTES = ["FUTBOL",
-                "BASQUETBALL",
-                "VOLEYBALL", 
-                "TENIS", 
-                "RUGBY", 
-                "HANDBALL", 
-                "BOWLING", 
-                "SQUASH", 
-                "PADEL", 
-                "OTRO"
-                ]
-        
-
-    canchas = Cancha.objects.all
-    #deportes = Deporte.objects.all
+    for horario in horarios:
+        horarios_dict[horario.dia] = horario
+    
+    horarios_completos = []
+    for dia in dias_semana:
+        horarios_completos.append({
+            'dia': dia,
+            'horario': horarios_dict[dia]
+        })
 
     context = {
-        "canchas" : canchas,
-        "deportes" : DEPORTES,
-        #"deportes" : deportes,
+        "cancha": cancha,
+        "horarios": horarios_completos,  
+        "es_dueno": es_dueno,
     }
 
-    return render (request,"buscar.html", context)
+    return render(request, "ver_cancha.html", context)
+
+
+def buscar_canchas(request):
+
+    DEPORTES = [
+        "Futbol",
+        "Basquetball",
+        "Voleyball",
+        "Tenis",
+        "Rugby",
+        "Handball",
+        "Bowling",
+        "Squash",
+        "Padel",
+        "Otro",
+    ]
+    
+    canchas = Cancha.objects.all()
+    deporte_seleccionado = request.GET.get('deporte', None)
+
+    establecimientos = Establecimiento.objects.all()
+    
+    if deporte_seleccionado:
+        canchas = canchas.filter(deporte=deporte_seleccionado)
+
+    for est in establecimientos:
+        est.deportes = est.canchas.values_list('deporte',flat=True).distinct()
+    
+    context = {
+        "canchas": canchas,
+        "deportes": DEPORTES,
+        "deporte_seleccionado": deporte_seleccionado,
+        "establecimientos" :establecimientos,
+    }
+    
+    return render(request, "buscar_cancha.html", context)
+
+
+@login_required(login_url='cuentas:login_cuenta')
+@require_http_methods(["GET", "POST"])
+def editar_cancha(request, cancha_id):
+    cancha = get_object_or_404(Cancha, id=cancha_id)
+    
+    try:
+        dueno = Dueno.objects.get(usuario=request.user)
+    except Dueno.DoesNotExist:
+        return HttpResponseForbidden('Solo los dueños pueden editar canchas.')
+    
+    if cancha.establecimiento.dueno != dueno:
+        return HttpResponseForbidden('Solo el dueño del establecimiento puede editar sus canchas')
+    
+    if request.method == 'POST':
+        form = CrearCanchaForm(request.POST, instance=cancha)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cancha actualizada correctamente')
+            return redirect('establecimientos:ver_establecimiento', establecimiento=cancha.establecimiento.id)
+        else:
+            messages.error(request, 'Revisa los errores del formulario')
+    else:
+        form = CrearCanchaForm(instance=cancha)
+    
+    return render(request, 'editar_cancha.html', {
+        'form': form,
+        'cancha': cancha,
+        'establecimiento': cancha.establecimiento,
+    })
+
+@login_required(login_url='cuentas:login_cuenta')
+@require_http_methods(["GET", "POST"])
+def eliminar_cancha(request, cancha_id):
+    cancha = get_object_or_404(Cancha, id=cancha_id)
+    
+    try:
+        dueno = Dueno.objects.get(usuario=request.user)
+    except Dueno.DoesNotExist:
+        return HttpResponseForbidden('Solo los dueños pueden eliminar canchas.')
+    
+    if cancha.establecimiento.dueno != dueno:
+        return HttpResponseForbidden('Solo el dueño puede eliminar sus canchas')
+    
+    if request.method == 'POST':
+        establecimiento_id = cancha.establecimiento.id
+        cancha.delete()
+        messages.success(request, 'Cancha eliminada correctamente')
+        return redirect('establecimientos:ver_establecimiento', establecimiento=establecimiento_id)
+    
+    return render(request, 'eliminar_cancha.html', {'cancha': cancha})

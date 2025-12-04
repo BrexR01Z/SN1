@@ -4,7 +4,7 @@
 {% block title %}{{ establecimiento.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'ver.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ver_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
   
 
   <div class="detalle-header">
-    <h1 class="detalle-titulo">{{ establecimiento.nombre }}</h1>
+    <h1 class="detalle-titulo">Establecimiento : {{ establecimiento.nombre }}</h1>
     <div class="detalle-botones">
 
       {% if request.user == establecimiento.dueno.usuario %}
@@ -74,39 +74,58 @@
   </div>
 
 
-  {% if establecimiento.horarios.all %}
-  <div class="seccion">
+  {% if horarios_completos %}
+    <div class="seccion">
     <h2 class="seccion-titulo">Horarios</h2>
     <table class="horarios-table">
-      <thead>
-        <tr>
-          <th>Día</th>
-          <th>Apertura</th>
-          <th>Cierre</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for horario in establecimiento.horarios.all %}
-        <tr>
-          <td>{{ horario.get_dia_display }}</td>
-          <td>{{ horario.hora_apertura|time:"H:i" }}</td>
-          <td>{{ horario.hora_cierre|time:"H:i" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+    <thead>
+    <tr>
+    <th>Día</th>
+    <th>Apertura</th>
+    <th>Cierre</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in horarios_completos %}
+    <tr>
+    <td>
+    <strong>{{ item.dia }}</strong>
+    {% if not item.horario %}
+    {% endif %}
+    </td>
+    <td>
+    {% if item.horario %}
+    {{ item.horario.hora_apertura|time:"H:i" }}
+    {% else %}
+    <span>Cerrado</span>
+    {% endif %}
+    </td>
+    <td>
+    {% if item.horario %}
+    {{ item.horario.hora_cierre|time:"H:i" }}
+    {% else %}
+    <span>Cerrado</span>
+    {% endif %}
+    </td>
+    </tr>
+    {% endfor %}
+    </tbody>
     </table>
-  </div>
-  {% else %}
-  <div class="seccion">
+    </div>
+    {% else %}
+    <div class="seccion">
     <h2 class="seccion-titulo">Horarios</h2>
     <p class="texto-vacio">No hay horarios configurados</p>
-  </div>
+    </div>
   {% endif %}
 
 
   <div class="seccion">
     <h2 class="seccion-titulo">Canchas Disponibles</h2>
-    <div class="detalle-botones"><a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="btn">Crear Cancha</a></div>
+    {% if request.user == establecimiento.dueno.usuario %}
+      <div class="detalle-botones"><a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="btn">Crear Cancha</a></div>
+    {% endif %}
+    
     
     {% if establecimiento.canchas.all %}
     <div class="canchas-grid">
@@ -145,18 +164,27 @@
 
 </div>
 
-<!-- mapa  -->
+<!-- mapa  
+ cdnjs
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+-->
 
-<script>
-  // Coordenadas por defecto (Talcahuano, BioBío, Chile)
+<!-- cdn -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script defer>
+  console.log("js cargado")
+  // valores por defecto
   const direccion = "{{ establecimiento.direccion }}";
-  const latitud = {{ establecimiento.latitud|default:"-36.7272" }};
-  const longitud = {{ establecimiento.longitud|default:"-72.5917" }};
+  const lat = parseFloat("{{ establecimiento.latitud|floatformat:7 }}".replace(",", "."));
+  const lon = parseFloat("{{ establecimiento.longitud|floatformat:7 }}".replace(",", "."));
+
+  const esUbicacionDefecto = (lat === 57.0092 && lon === -135.3208);
 
   // Inicializar mapa
-  const mapa = L.map('mapa').setView([latitud, longitud], 15);
+  const mapa = L.map('mapa').setView([lat, lon], 15);
 
   // Tiles OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -164,11 +192,34 @@
     maxZoom: 19
   }).addTo(mapa);
 
-  // Marcador
-  L.marker([latitud, longitud])
+  if (esUbicacionDefecto) {
+    L.marker([lat, lon], {
+      icon: L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      })
+    })
     .addTo(mapa)
-    .bindPopup("<strong>{{ establecimiento.nombre }}</strong><br>{{ establecimiento.direccion }}")
+    .bindPopup(
+      "<strong>{{ establecimiento.nombre }}</strong><br>" +
+      "{{ establecimiento.direccion }} <br>"+
+      "<small style='color: #9ca3af;'>Coordenadas no encontradas</small>"
+    )
     .openPopup();
+  } else {
+    L.marker([lat, lon])
+      .addTo(mapa)
+      .bindPopup(
+        "<strong>{{ establecimiento.nombre }}</strong><br>" +
+        "{{ establecimiento.direccion }}"
+      )
+      .openPopup();
+  }
+    
 </script>
 
 

@@ -5,7 +5,7 @@
 
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/registro.css' %}">
 {% endblock %}
 
 
@@ -21,7 +21,7 @@
         <a href="{% url 'cuentas:home' %}" class="signup-title">Menu principal</a>
     {% else %}
         <h2 class="signup-title">Crear Cuenta en SportsNet</h2>
-        <h5 class="signup-subtitle">Su Username es unico y NO se puede cambiar.</h3>
+        <h5 class="signup-subtitle">Su nombre de usuario es unico y NO se puede cambiar.</h3>
         <form method="POST" class="signup-form" novalidate>
         {% csrf_token %}
 
@@ -115,7 +115,7 @@
 </div>
 
 {% block extra_js %}
-<script src="{% static 'script.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
 {% endblock %}

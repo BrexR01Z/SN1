@@ -39,6 +39,20 @@
             </div>
 
             <div class="reserva-info">
+<<<<<<< HEAD
+=======
+                <span class="info-label">Telefono</span>
+                <span class="info-valor">{{ reserva.usuario.telefono }}</span>
+            </div>
+
+            <div class="reserva-info">
+                <span class="info-label">Correo</span>
+                <span class="info-valor">{{ reserva.usuario.email }}</span>
+            </div>
+
+
+            <div class="reserva-info">
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
                 <span class="info-label">Fecha</span>
                 <span class="info-valor">{{ reserva.fecha|date:"d/m/Y" }}</span>
             </div>
@@ -50,13 +64,19 @@
 
             <div class="reserva-info">
                 <span class="info-label">Estado</span>
+<<<<<<< HEAD
                 <span class="estado-badge estado-{{ reserva.get_estado_display|lower }}">
                 {{ reserva.get_estado_display }}
+=======
+                <span class="estado-badge {% if reserva.estado == 'PENDIENTE' %}estado-pendiente{% elif reserva.estado == 'CONFIRMADA' %}estado-confirmada{% elif reserva.estado == 'EN_CURSO' %}estado-en-curso{% elif reserva.estado == 'TERMINADA' %}estado-terminada{% else %}estado-cancelada{% endif %}">
+                    {{ reserva.get_estado_display }}
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
                 </span>
             </div>
 
             <div class="reserva-info">
                 <span class="info-label">Comentario</span>
+<<<<<<< HEAD
                 <span class="info-valor">{{ reserva.comentario }}</span>
             </div>
             {% if reserva.estado != 'CANCELADA' %}
@@ -70,6 +90,23 @@
 
 
             </div>
+=======
+                <span class="info-valor">{{ reserva.comentario|default:"No hay comentario" }}</span>
+            </div>
+
+            {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
+              <div class="botones-acciones">
+                  <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                  <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
+              </div>
+            {% else %}
+              <div class="botones-acciones" style="opacity: 0.5;">
+                <span style="color: #9ca3af; font-size: 0.75rem;">No se puede editar/cancelar reservas ya terminadas/canceladas</span>
+              </div>
+            {% endif %}
+
+        </div>
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
       {% endfor %}
     </div>
   {% else %}
