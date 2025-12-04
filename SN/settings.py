@@ -151,6 +151,6 @@ EMAIL_BACKEND = EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" # 
 EMAIL_HOST = "smtp.gmail.com" 
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 
-EMAIL_HOST_USER = "antonioconstanzovicens@gmail.com" # Reemplaza con tu dirección de correo electrónico de Gmail
-EMAIL_HOST_PASSWORD = "cxtj ftnd cevk goif" # Reemplaza con tu contraseña de aplicación de Gmail
+EMAIL_HOST_USER = "sportsnet.contacto@gmail.com" # Reemplaza con tu dirección de correo electrónico de Gmail
+EMAIL_HOST_PASSWORD = "uvjw xfwb wkyx rida" # Reemplaza con tu contraseña de aplicación de Gmail
 DEFAULT_FROM_EMAIL = "notificaciones@sportsnet.cl" # Dirección de correo electrónico predeterminada para los correos salientes

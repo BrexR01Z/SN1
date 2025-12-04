@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory
 from .models import Establecimiento, Cancha, HorarioEstablecimiento
 from django.contrib import messages
-from geopy.geocoders import Nominatim
+#from geopy.geocoders import Nominatim
 from django.core.exceptions import ValidationError
 
 class CrearEstablecimientoForm(forms.ModelForm):

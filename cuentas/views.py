@@ -219,6 +219,7 @@ def invitar_usuario(request):
 User = get_user_model()
 
 @login_required(login_url='cuentas:login_cuenta')
+@login_required(login_url='cuentas:login_cuenta')
 def invitar_a_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
 
@@ -262,13 +263,34 @@ def invitar_a_reserva(request, reserva_id):
             )
 
             # (Opcional) enviar correo similar al flujo actual — omito el envío para mantenerlo simple
+            send_mail(
+                subject="¡Tienes una nueva invitación en SportsNet!",
+                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
+                        f"Para aceptarla o rechazarla, ingresa al siguiente enlace con la sesión iniciada:\n"
+                        f"Ver Invitaciones: {request.build_absolute_uri(reverse('cuentas:perfil_usuario'))}\n\n"
+                        f"¡Gracias por usar SportsNet!",
+
+                from_email="noreply@sportsnet.cl",
+                recipient_list=[receiver.email],
+                fail_silently=False,
+            )
+            
             messages.success(request, f"Invitación enviada a {receiver.username} para la reserva.")
             return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
     else:
         form = InvitationForm()
 
-    return render(request, "invitar_a_reserva.html", {"form": form, "reserva": reserva})
+    # Obtener todas las invitaciones de esta reserva
+    invitaciones = Invitation.objects.filter(
+        reserva=reserva,
+        sender=request.user
+    ).select_related('receiver').order_by('-created_at')
 
+    return render(request, "invitar_a_reserva.html", {
+        "form": form, 
+        "reserva": reserva,
+        "invitaciones": invitaciones
+    })
 @login_required
 def aceptar_invitacion(request, id):
     try:

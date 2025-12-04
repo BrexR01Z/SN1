@@ -39,7 +39,7 @@
             </div>
 
             <div class="reserva-info">
-                <span class="info-label">Telefono</span>
+                <span class="info-label">Teléfono</span>
                 <span class="info-valor">{{ reserva.usuario.telefono }}</span>
             </div>
 
@@ -47,7 +47,6 @@
                 <span class="info-label">Correo</span>
                 <span class="info-valor">{{ reserva.usuario.email }}</span>
             </div>
-
 
             <div class="reserva-info">
                 <span class="info-label">Fecha</span>
@@ -74,6 +73,7 @@
             {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
               <div class="botones-acciones">
                   <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                  <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
                   <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
               </div>
             {% else %}
@@ -88,7 +88,7 @@
   {% else %}
     <div class="sin-reservas">
       <p>No tienes reservas</p>
-      <a href="{% url 'establecimientos:buscar_canchas' %}" style="background-color: #60a5fa ;color:rgb(255, 255, 255);" class="btn-pequeño">Buscar canchas</a>
+      <a href="{% url 'establecimientos:buscar_canchas' %}" style="background-color: #60a5fa; color: rgb(255, 255, 255);" class="btn-pequeño">Buscar canchas</a>
     </div>
   {% endif %}
 
