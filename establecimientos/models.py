@@ -2,6 +2,7 @@ from django.db import models
 from cuentas.models import Dueno
 from geopy.geocoders import Nominatim
 from django.core.exceptions import ValidationError
+
 # Create your models here.
 
 
@@ -138,6 +139,12 @@ class Cancha (models.Model):
     iluminacion = models.CharField(max_length=20, choices=TIPOS_ILUMINACION,blank=False, null=False)
     interior = models.BooleanField(default=False)
     valor_por_bloque = models.DecimalField(max_digits=10, decimal_places=0,blank=False, null=False)
+
+    def delete(self, *args, **kwargs):
+        from reservas.models import Reserva
+        #al eliminar, las reservas se cancelan, no se eliminan fisicamente 
+        Reserva.objects.filter(cancha=self).update(estado='CANCELADA')
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Cancha = {self.nombre}, Deporte = {self.deporte}, Establecimiento {self.establecimiento} "
