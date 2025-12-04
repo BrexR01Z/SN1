@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Iniciar Sesión - SportsNet{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        {% if user.is_authenticated %}
+            <h2 class="login-title">Usted ya ha iniciado sesion</h2>
+            <a href="{% url 'cuentas:cerrar_sesion' %}" class="login-text">Cerrar Sesión</a>
+            <hr>
+            <a href="{% url 'cuentas:home' %}" class="login-text">Menu principal</a>
+        {% else %}
+            <h2 class="login-title">Iniciar Sesión</h2>
+
+            
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                
+                <label for="id_username">Usuario</label>
+                <input type="text" name="username" id="id_username" placeholder="Ingresa tu usuario" required >
+
+                <label for="id_password">Contraseña</label>
+                <input type="password" name="password" id="id_password" placeholder="Ingresa tu contraseña" required>
+
+                <button type="submit" class="login-button">Ingresar</button>
+            </form>
+
+            <p class="login-text">¿No tienes cuenta?
+                <a href="{% url 'cuentas:registro' %}">Regístrate aquí</a>
+            </p>
+
+        {% endif %}
+        
+    </div>
+</div>
+{% endblock %}

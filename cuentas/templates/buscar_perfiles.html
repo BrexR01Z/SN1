@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block titulo %}Buscar Perfiles{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-container {
+        width: 80%;
+        margin: 2rem auto;
+        background: #1f2937;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 10px #0005;
+    }
+    .search-title {
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: bold;
+    }
+    .search-form input {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 0.5rem;
+        background: #111827;
+        color: #fff;
+        border: 1px solid #374151;
+        outline: none;
+    }
+    .search-form button {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 0.7rem;
+        border: none;
+        background: #2563eb;
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .results-table {
+        width: 100%;
+        margin-top: 2rem;
+        border-collapse: collapse;
+    }
+    .results-table th,
+    .results-table td {
+        padding: 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid #374151;
+        color: #e5e7eb;
+    }
+    .results-table th {
+        background: #111827;
+        font-size: 1rem;
+    }
+    .results-table tr:hover {
+        background: #37415170;
+    }
+    .profile-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="search-container">
+
+    <h2 class="search-title">Buscar perfiles</h2>
+
+    <form method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Buscar por nombre, apellido o nombre de usuario..." value="{{ query }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if resultados %}
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th>Nombre completo</th>
+                <th>Usuario</th>
+                <th>Ver perfil</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in resultados %}
+            <tr>
+                <td>{{ u.first_name }} {{ u.last_name }}</td>
+                <td>{{ u.username }}</td>
+                <td>
+                    <a href="{% url 'cuentas:ver_perfil_publico' u.id %}" class="profile-link">
+                        Ver perfil
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif query %}
+    <p style="color: #9ca3af; text-align:center; margin-top:1rem;">
+        No se encontraron usuarios con esa búsqueda.
+    </p>
+    {% endif %}
+
+</div>
+{% endblock %}

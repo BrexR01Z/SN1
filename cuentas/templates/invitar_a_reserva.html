@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Invitar a Reserva - SportsNet{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/bienvenida.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="invite-wrapper">
+        <div class="invite-card">
+            <h2 class="invite-title">Invitar Jugadores</h2>
+            
+            <div class="reserva-info-block">
+                <div class="info-row">
+                    <span class="info-label">Cancha:</span>
+                    <span class="info-value">{{ reserva.cancha.nombre }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Fecha:</span>
+                    <span class="info-value">{{ reserva.fecha }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Hora:</span>
+                    <span class="info-value">{{ reserva.hora_inicio }}</span>
+                </div>
+            </div>
+
+            <!-- Lista de invitados -->
+            {% if invitaciones %}
+            <div class="invitados-section">
+                <h3 class="invitados-title">Jugadores Invitados ({{ invitaciones.count }})</h3>
+                <div class="invitados-list">
+                    {% for invitacion in invitaciones %}
+                    <div class="invitado-item">
+                        <div class="invitado-info">
+                            <span class="invitado-name">
+                                {{ invitacion.receiver.get_full_name|default:invitacion.receiver.username }}
+                            </span>
+                            <span class="invitado-status {% if invitacion.accepted %}status-aceptada{% else %}status-pendiente{% endif %}">
+                                {% if invitacion.accepted %}
+                                    Confirmado
+                                {% else %}
+                                    Pendiente
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" class="invite-form">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <span class="error-message">{{ field.errors }}</span>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <span class="field-help">{{ field.help_text }}</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="nav-button">
+                    Enviar Invitación
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button edit-button">← Volver a Menu</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

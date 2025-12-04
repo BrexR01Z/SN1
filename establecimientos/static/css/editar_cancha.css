@@ -1,0 +1,209 @@
+.editar-cancha-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1f2937;
+  border-radius: 1rem;
+  border: 1px solid #374151;
+}
+
+.titulo {
+  color: #60a5fa;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.info-establecimiento {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #3b82f6;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.info-valor {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #d1d5db;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+  padding: 0.75rem;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border: 1px solid #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-grid-2 .form-group {
+  margin-bottom: 0;
+}
+
+.caracteristicas-section {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: #3b82f6;
+  margin: 0;
+}
+
+.checkbox-group label {
+  margin: 0;
+  cursor: pointer;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+.helptext {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.errorlist li {
+  padding: 0.25rem 0;
+}
+
+.botones-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.boton-guardar,
+.boton-volver {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s;
+  display: block;
+}
+
+.boton-guardar {
+  background: #3b82f6;
+  color: white;
+}
+
+.boton-guardar:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.boton-volver {
+  background: #4b5563;
+  color: white;
+}
+
+.boton-volver:hover {
+  background: #5a6675;
+}
+
+.zona-peligro {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #374151;
+}
+
+.enlace-eliminar {
+  color: #ef4444;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.enlace-eliminar:hover {
+  color: #dc2626;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .editar-cancha-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .botones-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .titulo {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar {{ cancha.nombre }} - SportsNet{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/eliminar_cancha.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="eliminar-container">
+  <h1 class="titulo">Eliminar esta cancha</h1>
+
+  <div class="advertencia">
+    <p>Eliminar</p>
+    <p class="cancha-nombre">{{ cancha.nombre }}</p>
+  </div>
+
+  <div class="info-adicional">
+    <strong>Se eliminara</strong>
+    <ul>
+      <li>Nombre: <strong>{{ cancha.nombre }}</strong></li>
+      <li>Deporte: <strong>{{ cancha.get_deporte_display }}</strong></li>
+      <li>Establecimiento: <strong>{{ cancha.establecimiento.nombre }}</strong></li>
+<<<<<<< HEAD
+      <li>Todas las reservas asociadas a esta cancha</li>
+=======
+      <li>Todas las reservas asociadas se cancelarán</li>
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
+    </ul>
+  </div>
+
+  <form method="POST" class="botones">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-eliminar">
+      Eliminar Cancha Permanentemente
+    </button>
+    <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}" class="btn btn-cancelar">
+      Cancelar
+    </a>
+  </form>
+</div>
+
+{% endblock %}

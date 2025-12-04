@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}SportsNet{% endblock %}</title>
+
+    {% load static %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}
+    
+    {% endblock %}
+
+</head>
+<body>
+
+    {% block extra_js %}{% endblock %}
+
+    <header class="header">
+        <div class="sn-container">
+            <a href="{% url 'cuentas:home' %}">
+                <span class="sn-text">SportsNet</span>
+            </a>
+        </div>
+
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+
+        <nav class="nav">
+        {% if user.is_authenticated %}
+                <div class="user-badge">
+                    <span class="user-name">Usuario : {{ user.get_username }} </span>
+                    <hr>
+                    {% if user.perfil_dueno %}                   
+                    <span class="user-name">Tipo : Dueno </span>
+                    {% elif user.perfil_cliente %}
+                    <span class="user-name">Tipo : Cliente</span>       
+                    {% endif %}
+                </div>
+        {% endif %}
+            <a href="{% url 'establecimientos:buscar_canchas' %}" class="nav-button">Buscar Canchas</a>
+            
+            {% if user.is_authenticated %}
+                {% if user.perfil_dueno %}
+                    
+                    <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Menu</a>
+                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
+                {% elif user.perfil_cliente %}
+                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
+                    <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Menu</a>
+                    
+                {% endif %}
+
+                <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
+                <a href="{% url 'cuentas:cerrar_sesion' %}" class="nav-button">Cerrar Sesión</a>
+            {% else %}
+                <a href="{% url 'cuentas:login_cuenta' %}" class="nav-button">Iniciar Sesión</a>
+                <a href="{% url 'cuentas:registro' %}" class="nav-button">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+
+   
+
+    {% block content %}
+    {% endblock %}
+
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
+</body>
+</html>

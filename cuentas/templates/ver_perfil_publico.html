@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block titulo %}Perfil de {{ usuario.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        width: 80%;
+        margin: 2rem auto;
+        background: #1f2937;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 10px #0005;
+        color: #e5e7eb;
+    }
+
+    .profile-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+
+    .profile-section p {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .profile-label {
+        font-weight: bold;
+        color: #93c5fd;
+    }
+
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="profile-container">
+
+    <h1 class="profile-title">Perfil de {{ usuario.first_name }} {{ usuario.last_name }}</h1>
+
+    <div class="profile-section">
+
+        <p>
+            <span class="profile-label">Usuario:</span>
+            {{ usuario.username }}
+        </p>
+        <p>
+            <span class="profile-label">Nombre:</span>
+            {{ usuario.first_name }} {{ usuario.last_name }}
+        </p>
+
+        <p>
+            <span class="profile-label">Fecha de nacimiento:</span>
+            {{ usuario.fecha_nacimiento|date:"d/m/Y" }}
+        </p>
+        <p>
+            <span class="profile-label">Edad:</span>
+            {{ usuario.edad}}
+
+    </div>
+
+</div>
+{% endblock %}

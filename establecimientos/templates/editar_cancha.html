@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar {{ cancha.nombre }} - SportsNet{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/editar_cancha.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="editar-cancha-container">
+  <h1 class="titulo">Editar Cancha</h1>
+
+  <div class="info-establecimiento">
+    <span class="info-label">Establecimiento:</span>
+    <span class="info-valor">{{ establecimiento.nombre }}</span>
+  </div>
+
+  <form method="POST" class="formulario" novalidate>
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+      {{ form.nombre }}
+      {% if form.nombre.help_text %}
+        <span class="helptext">{{ form.nombre.help_text }}</span>
+      {% endif %}
+      {% if form.nombre.errors %}
+        <ul class="errorlist">
+          {% for error in form.nombre.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label for="{{ form.deporte.id_for_label }}">{{ form.deporte.label }}</label>
+        {{ form.deporte }}
+        {% if form.deporte.errors %}
+          <ul class="errorlist">
+            {% for error in form.deporte.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.superficie.id_for_label }}">{{ form.superficie.label }}</label>
+        {{ form.superficie }}
+        {% if form.superficie.errors %}
+          <ul class="errorlist">
+            {% for error in form.superficie.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.iluminacion.id_for_label }}">{{ form.iluminacion.label }}</label>
+      {{ form.iluminacion }}
+      {% if form.iluminacion.errors %}
+        <ul class="errorlist">
+          {% for error in form.iluminacion.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.valor_por_bloque.id_for_label }}">{{ form.valor_por_bloque.label }}</label>
+      {{ form.valor_por_bloque }}
+      {% if form.valor_por_bloque.help_text %}
+        <span class="helptext">{{ form.valor_por_bloque.help_text }}</span>
+      {% endif %}
+      {% if form.valor_por_bloque.errors %}
+        <ul class="errorlist">
+          {% for error in form.valor_por_bloque.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="caracteristicas-section">
+      <div class="checkbox-group">
+        <input 
+          type="checkbox" 
+          id="{{ form.interior.id_for_label }}" 
+          name="interior"
+          {% if form.interior.value %}checked{% endif %}
+        >
+        <label for="{{ form.interior.id_for_label }}">{{ form.interior.label }}</label>
+        {% if form.interior.errors %}
+          <ul class="errorlist">
+            {% for error in form.interior.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="botones-footer">
+      <button type="submit" class="boton-guardar">Guardar Cambios</button>
+      <a href="{% url 'establecimientos:ver_establecimiento' establecimiento.id %}" class="boton-volver">Cancelar</a>
+    </div>
+  </form>
+
+  <div class="zona-peligro">
+    <a href="{% url 'establecimientos:eliminar_cancha' cancha.id %}" class="enlace-eliminar">
+      Eliminar esta cancha
+    </a>
+  </div>
+</div>
+
+{% endblock %}
