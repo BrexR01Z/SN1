@@ -375,7 +375,6 @@ html, body {
     .establecimientos-header h2 {
         width: 100%;
     }
-<<<<<<< HEAD
 }
 
 /* ============ INVITADOS SECTION ============ */
@@ -457,6 +456,4 @@ html, body {
         flex-direction: column;
         align-items: flex-start;
     }
-=======
->>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
 }

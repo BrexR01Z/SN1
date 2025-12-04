@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-<<<<<<< HEAD
 {% block title %}Invitar a Reserva - SportsNet{% endblock %}
 
 {% block extra_css %}
@@ -29,28 +28,10 @@
                 </div>
             </div>
 
-            
-
-            <form method="post" class="invite-form">
-                {% csrf_token %}
-                
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <span class="error-message">{{ field.errors }}</span>
-                        {% endif %}
-                        {% if field.help_text %}
-                            <span class="field-help">{{ field.help_text }}</span>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-                
-                <!-- Lista de invitados -->
+            <!-- Lista de invitados -->
             {% if invitaciones %}
             <div class="invitados-section">
-                <h3 class="invitados-title">👥 Jugadores Invitados ({{ invitaciones.count }})</h3>
+                <h3 class="invitados-title">Jugadores Invitados ({{ invitaciones.count }})</h3>
                 <div class="invitados-list">
                     {% for invitacion in invitaciones %}
                     <div class="invitado-item">
@@ -72,34 +53,31 @@
             </div>
             {% endif %}
 
+            <form method="post" class="invite-form">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <span class="error-message">{{ field.errors }}</span>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <span class="field-help">{{ field.help_text }}</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
                 <button type="submit" class="nav-button">
                     Enviar Invitación
                 </button>
             </form>
 
             <div class="back-link">
-                <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button edit-button">← Volver a Mi Perfil</a>
+                <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button edit-button">← Volver a Menu</a>
             </div>
-            
         </div>
     </div>
 </div>
 {% endblock %}
-=======
-{% block title %}Invitar a reserva{% endblock %}
-
-{% block content %}
-<div class="container">
-  <h2>Invitar a la reserva</h2>
-  <p><strong>Cancha:</strong> {{ reserva.cancha.nombre }} — <strong>Fecha:</strong> {{ reserva.fecha }} — <strong>Hora:</strong> {{ reserva.hora_inicio }}</p>
-
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn" type="submit">Enviar Invitación</button>
-  </form>
-
-  <p><a href="{% url 'cuentas:perfil_usuario' %}">Volver a Mi Perfil</a></p>
-</div>
-{% endblock %}
->>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
