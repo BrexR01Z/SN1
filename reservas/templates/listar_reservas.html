@@ -25,23 +25,33 @@
 
             <div class="reserva-info">
                 <span class="info-label">Establecimiento</span>
-                <span class="cancha-nombre">{{ reserva.cancha.establecimiento.nombre }}</span>
+                {% if reserva.cancha %}
+                    <span class="cancha-nombre">{{ reserva.cancha.establecimiento.nombre }}</span>
+                    <a href="{% url 'establecimientos:ver_establecimiento' reserva.cancha.establecimiento.id %}" class="btn-pequeño btn-editar">Ver establecimiento</a>
+                {% else %}
+                    <span class="cancha-nombre" style="color: #9ca3af;">Cancha eliminada</span>
+                {% endif %}
             </div>
   
             <div class="reserva-info">
                 <span class="info-label">Cancha</span>
-                <span class="cancha-nombre">{{ reserva.cancha.nombre }}</span>
+                {% if reserva.cancha %}
+                    <span class="cancha-nombre">{{ reserva.cancha.nombre }}</span>
+                {% else %}
+                    <span style="color: #9ca3af;">Cancha eliminada</span>
+                {% endif %}
             </div>
 
             <div class="reserva-info">
-            <span class="info-label">Anfitrión</span>
-            <span class="info-valor">
-              {{ reserva.usuario.username }}
-              {% if reserva.usuario != request.user %}
-                <span class="badge-invitado">Te ha invitado</span>
-              {% endif %}
-            </span>
+                <span class="info-label">Anfitrión</span>
+                <span class="info-valor">
+                    {{ reserva.usuario.username }}
+                    {% if reserva.usuario != request.user %}
+                        <span class="badge-invitado">Te ha invitado</span>
+                    {% endif %}
+                </span>
             </div>
+
             <div class="reserva-info">
                 <span class="info-label">Teléfono</span>
                 <span class="info-valor">{{ reserva.usuario.telefono }}</span>
@@ -75,14 +85,22 @@
             </div>
 
             {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
+            
                 {% if reserva.usuario == request.user or es_dueno %}
                     <!-- Solo el anfitrión o dueño pueden editar/cancelar -->
                     <div class="botones-acciones">
+                        {% if reserva.cancha %}
+                            <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                            {% if reserva.usuario == request.user %}
+                                <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
+                            {% endif %}
+                            <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
+                        {% else %}
+                            <span style="color: #9ca3af; font-size: 0.75rem;">Cancha eliminada - no se puede editar</span>
                         <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
                         {% if reserva.usuario == request.user %}
                             <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados ({{ reserva.invitaciones.count }})</a>
                         {% endif %}
-                        <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
                     </div>
                 {% else %}
                     <!-- Los invitados solo ven que están invitados -->
