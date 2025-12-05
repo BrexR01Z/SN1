@@ -80,12 +80,16 @@
                     <div class="botones-acciones">
                         <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
                         {% if reserva.usuario == request.user %}
-                            <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
+                            <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados ({{ reserva.invitaciones.count }})</a>
                         {% endif %}
                         <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
                     </div>
                 {% else %}
                     <!-- Los invitados solo ven que están invitados -->
+                    <div class="reserva-info">
+                        <span class="info-label">Jugadores Invitados</span>
+                        <h5 class="reserva-info">{{ reserva.invitaciones.count }}</h5>
+                    </div>
                     <div class="botones-acciones" style="opacity: 0.7;">
                         <span style="color: #60a5fa; font-size: 0.85rem;">No se puede editar/cancelar reservas en las que no eres el anfitrion</span>
                     </div>

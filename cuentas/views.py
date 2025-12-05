@@ -302,7 +302,7 @@ def aceptar_invitacion(request, id):
     invitacion.accepted = True
     invitacion.save()
 
-    messages.success(request, "¡Invitación aceptada! Ahora puedes ver la reserva en 'Mis Reservas'.")
+    messages.success(request, f"¡Invitación aceptada! La reserva de {invitacion.reserva.cancha.nombre} ya está en 'Mis Reservas'.")
     return redirect("cuentas:perfil_usuario")
 
 
