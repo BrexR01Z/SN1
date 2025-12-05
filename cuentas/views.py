@@ -195,13 +195,13 @@ def test_email(request): # PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!]
 #           )
 
             #  ENVIAR CORREO AQUÍ MISMO
-            send_mail(
-                subject="¡Tienes una nueva invitación en SportsNet!",
-                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
-                        f"Para aceptarla o rechazarla, ingresa a alguno de los siguientes enlaces con la sesión iniciada:\n"
-                        f"Aceptar: {request.build_absolute_uri(reverse('cuentas:aceptar_invitacion', args=[invitacion.id]))}\n"
-                        f"Rechazar: {request.build_absolute_uri(reverse('cuentas:rechazar_invitacion', args=[invitacion.id]))}\n\n"
-                        f"¡Gracias por usar LifeSportsNet!",
+#            send_mail(
+#                subject="¡Tienes una nueva invitación en SportsNet!",
+#                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
+#                        f"Para aceptarla o rechazarla, ingresa a alguno de los siguientes enlaces con la sesión iniciada:\n"
+#                        f"Aceptar: {request.build_absolute_uri(reverse('cuentas:aceptar_invitacion', args=[invitacion.id]))}\n"
+#                        f"Rechazar: {request.build_absolute_uri(reverse('cuentas:rechazar_invitacion', args=[invitacion.id]))}\n\n"
+#                        f"¡Gracias por usar SportsNet!",
 
 #                from_email="noreply@sportsnet.cl",
 #                recipient_list=[receiver.email],

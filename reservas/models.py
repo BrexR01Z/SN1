@@ -19,12 +19,9 @@ class Reserva (models.Model):
     # al borrar cancha, que quede cancelada
     cancha = models.ForeignKey(Cancha, on_delete=models.SET_NULL, related_name="reservas",null=True,default="---")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="reservas")
-    #correo_usuario = models.ForeignKey(Usuario.email, on_delete=models.CASCADE, related_name="reservas")
-    #telefono_usuario = models.ForeignKey(Usuario.telefono, on_delete=models.CASCADE, related_name="reservas")
     fecha = models.DateField(default=timezone.now,blank=False, null=False)
     hora_inicio = models.TimeField(blank=False, null=False)
     # prueba 
-    # hora_y_fecha = models.DateTimeField()
     duracion_bloques = models.PositiveIntegerField(default=1,blank=False, null=False )
     estado = models.CharField(max_length=20, choices=ESTADOS, default="PENDIENTE")
     precio_total = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank = True)
@@ -113,8 +110,5 @@ def actualizar_estados_reservas_activas():
 
 @receiver(pre_delete, sender=Cancha)
 def cancelar_reservas_al_eliminar_cancha(sender, instance, **kwargs):
-    print("1")
     reservas = Reserva.objects.filter(cancha=instance)
-    print("2")
     reservas.update(estado='CANCELADA')
-    print("3")
