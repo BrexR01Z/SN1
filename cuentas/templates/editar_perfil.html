@@ -21,20 +21,16 @@
                 {% csrf_token %}
                 {{ form.first_name.label }}
                 {{ form.first_name }}
-                <br>
-                
-                {{ form.last_name.label }}
-                
+                <br>               
+                {{ form.last_name.label }}             
                 {{ form.last_name }}
                 <br>
-                {{ form.telefono.label }}
-                
+                {{ form.telefono.label }}               
                 {{ form.telefono }}
                 <br>
                 {{ form.email.label }}
                 {{ form.email }}
                 <br>
-
                 <button type="submit" class="nav-button" style="margin-top: 1rem;">
                     Guardar cambios
                 </button>
