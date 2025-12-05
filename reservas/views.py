@@ -40,7 +40,7 @@ def crear_reserva(request, cancha_id):
     
     reservas_cancha = Reserva.objects.filter(
         cancha=cancha,
-        estado__in=["PENDIENTE", "CONFIRMADA", "EN_CURSO"]
+        estado__in=["PENDIENTE", "CONFIRMADA","EN_CURSO"]
     ).select_related("usuario").order_by("fecha", "hora_inicio")
     
     horarios = HorarioEstablecimiento.objects.filter(
@@ -50,24 +50,10 @@ def crear_reserva(request, cancha_id):
     if request.method == "POST":
         form = CrearReservaForm(request.POST, cancha=cancha)
         if form.is_valid():
-            fecha = form.cleaned_data['fecha']
-            hora_inicio = form.cleaned_data['hora_inicio']
-            duracion_bloques = form.cleaned_data['duracion_bloques']
-
-            es_valida, error = validar_reserva(None, cancha, fecha, hora_inicio, duracion_bloques)
-            if not es_valida:
-                messages.error(request, error)
-                return render(request, "crear_reserva.html", {
-                    "form": form,
-                    "cancha": cancha,
-                    "reservas_cancha": reservas_cancha,
-                    "horarios": horarios,
-                })
-            
             reserva = form.save(commit=False)
             reserva.cancha = cancha
             reserva.usuario = request.user
-            
+
             if conflicto_hora(reserva):
                 messages.error(request, "Ya existe una reserva en ese horario")
                 return render(request, "crear_reserva.html", {

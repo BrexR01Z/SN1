@@ -62,7 +62,7 @@ class CrearReservaForm(forms.ModelForm):
             raise forms.ValidationError("La reserva debe terminar antes del cierre del establecimiento")
 
         if duracion_bloques > max_bloques:
-            raise forms.ValidationError(f"La reserva no puede exceder {max_bloques} bloques")
+            raise forms.ValidationError(f"La reserva debe terminar antes del cierre del establecimiento, menos de {max_bloques} bloques")
 
         return cleaned_data
 
