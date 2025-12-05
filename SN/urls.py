@@ -27,6 +27,5 @@ urlpatterns = [
     path("",include("reservas.urls"))
 ]
 
-path("establecimientos/", include("establecimientos.urls")),
 
 
