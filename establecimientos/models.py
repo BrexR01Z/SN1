@@ -1,6 +1,6 @@
 from django.db import models
 from cuentas.models import Dueno
-#from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim
 from django.core.exceptions import ValidationError
 
 # Create your models here.

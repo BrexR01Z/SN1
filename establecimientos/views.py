@@ -7,7 +7,7 @@ from django.contrib import messages
 from .forms import CrearEstablecimientoForm, CrearCanchaForm, HorarioEstablecimientoForm, HorarioFormSet
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-#from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim
 from django.core.exceptions import ValidationError
 from reservas.models import actualizar_reservas_por_cambio_horario
 
