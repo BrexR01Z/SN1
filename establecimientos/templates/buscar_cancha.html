@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buscar - SportsNet{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/buscar_canchas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="search-title">Buscar Canchas Deportivas</h1>
+    
+    <div class="search-filters">
+        <h3>Filtrar por deporte:</h3>
+        <div class="search-filters-buttons">
+            <a href="{% url 'establecimientos:buscar_canchas' %}" class="nav-button {% if not deporte_seleccionado %}active{% endif %}">
+                Todos
+            </a>
+            {% for deporte in deportes %}
+                <a href="{% url 'establecimientos:buscar_canchas' %}?deporte={{ deporte }}" 
+                   class="nav-button {% if deporte_seleccionado == deporte %}active{% endif %}">
+                    {{ deporte }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="canchas-grid">
+        {% for cancha in canchas %}
+            <div class="cancha-card">
+                <h3>{{ cancha.nombre }}</h3>
+              
+                <p class="cancha-card-sports">
+                    <strong>Deporte : </strong> 
+                    {{ cancha.deporte }}
+                    <br>
+                    <strong>Establecimiento : </strong>
+                    {{ cancha.establecimiento.nombre }}
+                    <br>
+                    <strong>Direccion : </strong>
+                    {{cancha.establecimiento.direccion}}
+                </p>
+                <p class="cancha-card-price">
+                    ${{ cancha.valor_por_bloque }} / 30 min
+                </p>
+
+                <a href="{% url 'establecimientos:ver_cancha' cancha.id %}" class="nav-button reserve-button">
+                        Ver detalles
+                    </a>
+                
+                
+            </div>
+        {% empty %}
+            <p class="empty-message">No hay canchas disponibles.</p>
+        {% endfor %}
+    </div>
+
+    <div class="canchas-grid">
+        {% for est in establecimientos %}
+            <div class="cancha-card">
+                <h3>{{ est.nombre }}</h3>
+
+                <p class="cancha-card-subtitle">
+                    Deporte(s): {{ est.deportes|join:", " }}
+                </p>
+                <a href="{% url 'establecimientos:ver_establecimiento' est.id %}" class="nav-button reserve-button">
+                    Ver canchas
+                </a>
+
+            </div>
+        {% empty %}
+            <p class="empty-message">No existen establecimientos</p>
+        {% endfor %}
+    </div>
+ 
+</div>
+
+
+
+{% endblock %}

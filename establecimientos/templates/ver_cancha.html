@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
+
 {% load static %}
+
 
 {% block title %}{{ cancha.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'ver_cancha.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ver_cancha.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,11 +16,8 @@
   <div class="cancha-header">
     <div class="cancha-info">
       <h1 class="cancha-titulo">{{ cancha.nombre }}</h1>
-      <a href="{% url 'establecimientos:ver_establecimiento' cancha.establecimiento.id %}" class="establecimiento-link">
-        {{ cancha.establecimiento.nombre }}
-      </a>
-
-      
+      <p class="cancha-subtitulo">Pertenece al establecimiento : {{ cancha.establecimiento.nombre }}</p>
+             
       <div class="info-grid">
         <div class="info-item">
           <div class="info-label">Deporte</div>
@@ -39,12 +38,13 @@
           <div class="info-label">Tipo</div>
           <div class="info-valor">
             {% if cancha.interior %}
-              Interior (Cubierta)
+              Interior 
             {% else %}
-              Exterior
+              Exterior - Aire libre
             {% endif %}
           </div>
         </div>
+
       </div>
 
       
@@ -52,13 +52,22 @@
         <div class="info-label">Precio por bloque (30 min)</div>
         <div class="precio-destaque">${{ cancha.valor_por_bloque }}</div>
       </div>
+<br>
+      
+        {% if es_dueno %}
+          <div class="botones-dueno">
+            <a href="{% url 'establecimientos:editar_cancha' cancha.id %}" class="btn-editar-cancha">Editar</a>
+            <a href="{% url 'establecimientos:eliminar_cancha' cancha.id %}" class="btn-eliminar-cancha">Eliminar</a>
+          </div>
+        {% endif %}
     </div>
 
     
     <div class="comodidades">
       <div class="comodidades-titulo">Información del establecimiento</div>
+      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #374151; font-size: 0.9rem; color: #9ca3af;"></div>
       
-      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #374151; font-size: 0.9rem; color: #9ca3af;" class="comodidad-item">
+      <div class="comodidad-item">
         <span class="comodidad-icon">
           {% if cancha.establecimiento.estacionamiento_disponible %}Estacionamiento disponible{% else %}Sin estacionamiento{% endif %}
         </span>
@@ -89,33 +98,29 @@
     </div>
   </div>
 
-  
   <div class="horarios-section">
-    <h2 class="seccion-titulo">Dias Disponibles</h2>
-  
-    <!--
+    <h2 class="seccion-titulo">Horario del establecimiento</h2>
+
     {% if horarios %}
       <div class="horarios-grid">
-        {% for dia, x in horarios_est.items %}
-          {% if x %}
+        {% for item in horarios %}
+          {% if item.horario %}
             <div class="dia-horario">
-              <div class="dia-nombre">{{ x.get_dia_display }}</div>
+              <div class="dia-nombre">{{ item.horario.get_dia_display }}</div>
               <div class="horario-item">
                 <span class="horario-label">Apertura:</span>
-                <span class="horario-valor">{{ x.hora_apertura|time:"H:i" }}</span>
+                <span class="horario-valor">{{ item.horario.hora_apertura|time:"H:i" }}</span>
               </div>
               <div class="horario-item">
                 <span class="horario-label">Cierre:</span>
-                <span class="horario-valor">{{ x.hora_cierre|time:"H:i" }}</span>
+                <span class="horario-valor">{{ item.horario.hora_cierre|time:"H:i" }}</span>
               </div>
             </div>
           {% else %}
-          
-            <div class="dia-horario sin-horario">
-            <div class="dia-nombre">{{ dia }}</div>
-            <div class="sin-horario-texto">Cerrado</div>
+            <div class="dia-horario">
+              <div class="dia-nombre">{{ item.dia }}</div>
+              <div class="sin-horario-texto">Cerrado</div>
             </div>
-            
           {% endif %}
         {% endfor %}
       </div>
@@ -124,28 +129,6 @@
         El establecimiento no ha añadido horarios
       </div>
     {% endif %}
-      -->
-        {% if horarios %}
-            <div class="horarios-grid">
-                {% for horario in horarios %}
-                <div class="dia-horario">
-                    <div class="dia-nombre">{{ horario.get_dia_display }}</div>
-                    <div class="horario-item">
-                    <span class="horario-label">Apertura:</span>
-                    <span class="horario-valor">{{ horario.hora_apertura|time:"H:i" }}</span>
-                    </div>
-                    <div class="horario-item">
-                    <span class="horario-label">Cierre:</span>
-                    <span class="horario-valor">{{ horario.hora_cierre|time:"H:i" }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="advertencia">
-                El establecimiento no ha añadido horarios
-            </div>
-        {% endif %}
 
   </div>
 

@@ -4,7 +4,7 @@
 {% block title %}SportsNet - Reservas Deportivas{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
 {% block contenido %}
@@ -15,7 +15,7 @@
     <p class="hero-subtitle">Gestiona tus establecimientos o busca canchas y has reservas!</p>
     
     <div class="hero-buttons">
-      <a href="{% url 'establecimientos:buscar' %}" class="btn btn-secondary">Buscar Canchas</a>
+      <a href="{% url 'establecimientos:buscar_canchas' %}" class="btn btn-secondary">Buscar Canchas</a>
       {% if not user.is_authenticated %}
         <a href="{% url 'cuentas:registro' %}" class="btn btn-secondary">Registrarse</a>
         <a href="{% url 'cuentas:login_cuenta' %}" class="btn btn-secondary">Iniciar Sesion</a>

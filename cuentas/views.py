@@ -30,50 +30,16 @@ def registro(request):
             tipo_usuario = form.cleaned_data["tipo_usuario"]
 
             if tipo_usuario == "dueno":
-
                 Dueno.objects.create(usuario = usuario, rut = form.cleaned_data["rut"])
+                login(request, usuario)
+                return redirect ("cuentas:SportsNet_dueno")
                 
                 
             else:                        
                 Cliente.objects.create(usuario=usuario)
-                #c.save()
-
-            """   
-            try:
-                with transaction.atomic():
-
-                    usuario = form.save()
-                    tipo_usuario = form.cleaned_data["tipo_usuario"]
-
-                    if tipo_usuario == "dueno":
-                        
-                        Dueno.objects.create(
-                            usuario=usuario,
-                            rut=form.cleaned_data["rut"]
-                        )
-                        
-
-                        d = Dueno(usuario = usuario, rut = form.cleaned_data["rut"])
-                        d.save()
-                        
-                        
-                    else:
-                        
-                        Cliente.objects.create(
-                            usuario=usuario,               
-                        )
-                        
-                        c = Cliente(usuario=usuario)
-                        c.save()
-
-                        
-
-                    messages.success(request, f"Cuenta creada exitosamente, Bienvenido {usuario.username}!")
-            except Exception as e :
-                messages.error(request, f"Hubo un errror {str(e)} ")
-            """
-
-            return redirect("cuentas:home")
+                login(request, usuario)
+                return redirect ("cuentas:SportsNet_cliente")
+   
 
     else:
         form = RegistroForm()
@@ -82,8 +48,6 @@ def registro(request):
         "form" : form
     }
 
-    #return HttpResponse(template.render(context,request))
-    #return HttpResponseRedirect(reverse("cuentas:home"))
     return render (request, "registro.html", context)
 
 def login_cuenta(request):
@@ -121,13 +85,13 @@ def login_cuenta(request):
 def home (request):
     return render(request,"home.html")
 
-@login_required
+@login_required(login_url='cuentas:login_cuenta')
 def cerrar_sesion(request):
     logout(request)
     messages.info(request, 'Has cerrado sesión correctamente')
     return redirect("cuentas:home")
 
-# @login_required
+@login_required(login_url='cuentas:login_cuenta')
 def bienvenida_dueno(request):
     try:
         dueno = request.user.perfil_dueno
@@ -146,6 +110,7 @@ def bienvenida_dueno(request):
 
     return render(request,"bienvenida_dueno.html", context)
 
+@login_required(login_url='cuentas:login_cuenta')
 def bienvenida_cliente(request):
     try:
         cliente = request.user.perfil_cliente
@@ -254,6 +219,7 @@ def invitar_usuario(request):
 User = get_user_model()
 
 @login_required(login_url='cuentas:login_cuenta')
+@login_required(login_url='cuentas:login_cuenta')
 def invitar_a_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
 
@@ -297,13 +263,34 @@ def invitar_a_reserva(request, reserva_id):
             )
 
             # (Opcional) enviar correo similar al flujo actual — omito el envío para mantenerlo simple
+            send_mail(
+                subject="¡Tienes una nueva invitación en SportsNet!",
+                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
+                        f"Para aceptarla o rechazarla, ingresa al siguiente enlace con la sesión iniciada:\n"
+                        f"Ver Invitaciones: {request.build_absolute_uri(reverse('cuentas:perfil_usuario'))}\n\n"
+                        f"¡Gracias por usar SportsNet!",
+
+                from_email="noreply@sportsnet.cl",
+                recipient_list=[receiver.email],
+                fail_silently=False,
+            )
+            
             messages.success(request, f"Invitación enviada a {receiver.username} para la reserva.")
             return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
     else:
         form = InvitationForm()
 
-    return render(request, "invitar_a_reserva.html", {"form": form, "reserva": reserva})
+    # Obtener todas las invitaciones de esta reserva
+    invitaciones = Invitation.objects.filter(
+        reserva=reserva,
+        sender=request.user
+    ).select_related('receiver').order_by('-created_at')
 
+    return render(request, "invitar_a_reserva.html", {
+        "form": form, 
+        "reserva": reserva,
+        "invitaciones": invitaciones
+    })
 @login_required
 def aceptar_invitacion(request, id):
     try:

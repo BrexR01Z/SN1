@@ -4,7 +4,7 @@
 {% block title %}Crear Establecimiento - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'crear.css' %}">
+  <link rel="stylesheet" href="{% static 'css/crear_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group">
-          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
+          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }} - Ej: Alemparte 943, Hualpen, Bio Bio, Chile</label>
           {{ form.direccion }}
           {% if form.direccion.errors %}<span class="error">{{ form.direccion.errors.0 }}</span>{% endif %}
         </div>
@@ -49,14 +49,13 @@
         <div class="checkbox-group">
           <input type="checkbox" id="{{ form.estacionamiento_disponible.id_for_label }}" 
                  name="estacionamiento_disponible" 
-                 {% if form.estacionamiento_disponible.value %}checked{% endif %}>
+                 >
           <label for="{{ form.estacionamiento_disponible.id_for_label }}">{{ form.estacionamiento_disponible.label }}</label>
         </div>
 
         <div class="checkbox-group">
           <input type="checkbox" id="{{ form.camarines_disponible.id_for_label }}" 
-                 name="camarines_disponible"
-                 {% if form.camarines_disponible.value %}checked{% endif %}>
+                 name="camarines_disponible">
           <label for="{{ form.camarines_disponible.id_for_label }}">{{ form.camarines_disponible.label }}</label>
         </div>
       </div>
@@ -92,10 +91,7 @@
                   {% if horario_form.hora_cierre.errors %}<span class="error">{{ horario_form.hora_cierre.errors.0 }}</span>{% endif %}
                 </div>
 
-                <div class="horario-delete">
-                  {{ horario_form.DELETE }}
-                  <label for="{{ horario_form.DELETE.id_for_label }}">X</label>
-                </div>
+
               </div>
 
               <div class="formset-management">

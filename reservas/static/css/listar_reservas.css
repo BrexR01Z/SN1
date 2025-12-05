@@ -1,0 +1,221 @@
+/* reservas/static/reservas/listar_reservas.css */
+
+.listar-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.titulo-principal {
+  color: #60a5fa;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.filtro-info {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  color: #d1d5db;
+}
+
+.reservas-tabla {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.reserva-fila {
+  padding: 1.25rem;
+  border-bottom: 1px solid #374151;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.reserva-fila:last-child {
+  border-bottom: none;
+}
+
+.reserva-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.info-label {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.info-valor {
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.cancha-nombre {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.estado-badge {
+  display: inline-block;
+<<<<<<< HEAD
+  padding: 0.25rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.estado-pendiente { background: #fef3c7; color: #92400e; }
+.estado-confirmada { background: #d1fae5; color: #065f46; }
+.estado-cancelada { background: #fee2e2; color: #991b1b; }
+.estado-completada { background: #dbeafe; color: #1e40af; }
+=======
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.estado-pendiente {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.estado-confirmada {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.estado-en-curso {
+  background: #bfdbfe;
+  color: #1e40af;
+  border: 1px solid #60a5fa;
+}
+
+.estado-terminada {
+  background: #dbeafe;
+  color: #0c4a6e;
+  border: 1px solid #0284c7;
+}
+
+.estado-cancelada {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.btn-pequeño:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.botones-acciones-deshabilitados {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.botones-acciones-deshabilitados .btn-pequeño {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.estado-bloqueado {
+  background: #2c1f1f;
+  border: 1px solid #ef4444;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #ef4444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.estado-bloqueado::before {
+  font-size: 1.5rem;
+}
+
+
+.estado-bloqueado {
+  background: #2c1f1f;
+  border: 1px solid #ef4444;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #ef4444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.estado-bloqueado::before {
+  font-size: 1.5rem;
+}
+>>>>>>> 2ca317d40cb668240c8e00ab69324e592bd03b58
+
+.botones-acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-pequeño {
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+
+
+.btn-editar {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-editar:hover {
+  background: #2563eb;
+}
+
+.btn-eliminar {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #dc2626;
+}
+
+.sin-reservas {
+  text-align: center;
+  padding: 3rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 968px) {
+  .reserva-fila {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .botones-acciones {
+    flex-direction: column;
+  }
+}

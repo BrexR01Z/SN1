@@ -1,0 +1,332 @@
+/* establecimientos/static/establecimientos/detalle_cancha.css */
+
+.detalle-cancha-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.cancha-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.cancha-info {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.cancha-titulo {
+  color: #60a5fa;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.cancha-subtitulo {
+  color: #60a5fa;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.establecimiento-link {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.establecimiento-link:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  padding: 1rem;
+  background: #111827;
+  border-radius: 0.5rem;
+  border-left: 3px solid #3b82f6;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.info-valor {
+  font-size: 1.1rem;
+  color: #d1d5db;
+  font-weight: 600;
+}
+
+.precio-destaque {
+  color: #10b981;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.deporte-badge {
+  display: inline-block;
+  background: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.comodidades {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid #10b981;
+}
+
+.comodidades-titulo {
+  font-weight: 600;
+  color: #d1d5db;
+  margin-bottom: 0.75rem;
+}
+
+.comodidad-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: #9ca3af;
+}
+
+.comodidad-item.disponible {
+  color: #10b981;
+}
+
+.comodidad-item.no-disponible {
+  color: #ef4444;
+}
+
+.comodidad-icon {
+  margin-right: 0.75rem;
+  font-weight: 700;
+}
+
+/* HORARIOS */
+.horarios-section {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.seccion-titulo {
+  color: #60a5fa;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #374151;
+}
+
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.dia-horario {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #374151;
+  transition: all 0.3s;
+}
+
+.dia-horario:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.1);
+}
+
+.dia-nombre {
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.horario-item {
+  color: #d1d5db;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #374151;
+}
+
+.horario-item:last-child {
+  border-bottom: none;
+}
+
+.horario-label {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.horario-valor {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.sin-horario {
+  background: #2c1f1f;
+  border-color: #ef4444;
+}
+
+.sin-horario .dia-nombre {
+  color: #ef4444;
+}
+
+.sin-horario-texto {
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* BOTONES */
+.botones-reserva {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-reservar {
+  background: #3b82f6;
+  color: white;
+  flex: 1;
+}
+
+.btn-reservar:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-reservar:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-volver {
+  background: #4b5563;
+  color: white;
+  flex: 1;
+}
+
+.btn-volver:hover {
+  background: #5a6675;
+}
+
+.cancha-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.btn-editar-cancha {
+  background: #3b82f6;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-editar-cancha:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-eliminar-cancha {
+  background: #ef4444;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.btn-eliminar-cancha:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.botones-dueno {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.advertencia {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #f59e0b;
+  margin-bottom: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .cancha-header {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .horarios-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .botones-reserva {
+    flex-direction: column;
+  }
+
+  .cancha-titulo {
+    font-size: 1.5rem;
+  }
+
+  .detalle-cancha-container {
+    padding: 1rem;
+  }
+}

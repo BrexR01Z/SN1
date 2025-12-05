@@ -4,12 +4,12 @@
 {% block title %}SportsNet{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'bienvenida.css' %}">
+<link rel="stylesheet" href="{% static 'css/bienvenida.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <!-- Sección de Bienvenida -->
+
     <section class="welcome-card">
         <h1>
             Bienvenido, <span class="welcome-name">{{ dueno.usuario.get_full_name|default:dueno.usuario.username }}</span>!
@@ -73,12 +73,8 @@
                                 </p>
                             </div>
                             <div class="establecimiento-actions">
-                                <!-- <a href="#" class="nav-button">Ver Canchas</a> -->
-                                <!-- mover crear dentro de ver -->
                                 <a href="{% url 'establecimientos:crear_cancha' establecimiento.id %}" class="nav-button">Crear Cancha</a>
-                            <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button">Ver detalles</a>
-
-                              <!--  <a href="ver/{{establecimiento.id}}" class="nav-button">Ver detalles</a>-->
+                                <a href="{% url 'establecimientos:ver_establecimiento' establecimiento=establecimiento.id %}" class="nav-button">Ver detalles</a>
                             </div>
                         </div>
                     </div>

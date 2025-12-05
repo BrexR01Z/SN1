@@ -4,7 +4,7 @@
 {% block titulo %}Editar {{ establecimiento.nombre }} - SportsNet{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'editar_establecimiento.css' %}">
+  <link rel="stylesheet" href="{% static 'css/editar_establecimiento.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-group">
-          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }}</label>
+          <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }} - Ej: Alemparte 943, Hualpen, Bio Bio, Chile</label>
           {{ form.direccion }}
           {% if form.direccion.errors %}<span class="error">{{ form.direccion.errors.0 }}</span>{% endif %}
         </div>
