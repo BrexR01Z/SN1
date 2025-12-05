@@ -42,6 +42,7 @@
                 <div class="user-badge">
                     <span class="user-name">Usuario : {{ user.get_username }} </span>
                     <hr>
+                    
                     {% if user.perfil_dueno %}                   
                     <span class="user-name">Tipo : Dueno </span>
                     {% elif user.perfil_cliente %}
@@ -56,10 +57,9 @@
                     
                     <a href="{% url 'cuentas:SportsNet_dueno' %}" class="nav-button">Menu</a>
                     <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
-                {% elif user.perfil_cliente %}
-                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
+                {% elif user.perfil_cliente %}                   
                     <a href="{% url 'cuentas:SportsNet_cliente' %}" class="nav-button">Menu</a>
-                    
+                    <a href="{% url 'cuentas:buscar_perfiles' %}" class="nav-button">Buscar Perfiles</a>
                 {% endif %}
 
                 <a href="{% url 'cuentas:perfil_usuario' %}" class="nav-button">Mi Perfil</a>
