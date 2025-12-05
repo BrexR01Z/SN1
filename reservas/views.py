@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.core.exceptions import ValidationError
 from establecimientos.models import HorarioEstablecimiento
 from django.contrib import messages
-
+from cuentas.models import Usuario, Dueno, Invitation 
 
 # Create your views here.
 
@@ -90,20 +90,28 @@ def listar_reservas(request):
     except Dueno.DoesNotExist:
         es_dueno = False
     
+    #  Obtener IDs de reservas donde fui invitado y acepté
+    reservas_aceptadas_ids = Invitation.objects.filter(
+        receiver=request.user,
+        accepted=True,
+        reserva__isnull=False  # Solo invitaciones con reserva asociada
+    ).values_list('reserva_id', flat=True)
+    
     if es_dueno:
-
         canchas_propias = Cancha.objects.filter(
             establecimiento__dueno=dueno
         ).values_list("id", flat=True)
         
         reservas = Reserva.objects.filter(
-            Q(usuario=request.user) | Q(cancha_id__in=canchas_propias)
-        ).select_related("usuario", "cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio")
+            Q(usuario=request.user) | 
+            Q(cancha_id__in=canchas_propias) |
+            Q(id__in=reservas_aceptadas_ids)  #  Agregado
+        ).select_related("usuario", "cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio").distinct()
     else:
-
         reservas = Reserva.objects.filter(
-            usuario=request.user
-        ).select_related("cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio")
+            Q(usuario=request.user) |
+            Q(id__in=reservas_aceptadas_ids)  #  Agregado
+        ).select_related("cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio").distinct()
     
     return render(request, "listar_reservas.html", {
         "reservas": reservas,
@@ -143,6 +151,7 @@ def validar_reserva(reserva, cancha, fecha, hora_inicio, duracion_bloques):
 @login_required(login_url='cuentas:login_cuenta')
 def editar_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
+
     reserva.actualizar_estado()
     
     es_propietario = reserva.usuario == request.user
@@ -155,49 +164,23 @@ def editar_reserva(request, reserva_id):
         pass
     
     if not (es_propietario or es_dueno_cancha):
-        return HttpResponseForbidden('No tienes permiso')
+        messages.error(request, "No tienes permiso para editar esta reserva")  # ✅ Mejorado
+        return redirect('reservas:listar_reservas')  # ✅ Cambiado de HttpResponseForbidden
     
     if not reserva.puede_ser_editada():
         messages.error(request, "No puedes editar reservas canceladas o terminadas")
         return redirect('reservas:listar_reservas')
     
     if request.method == 'POST':
-        form = CrearReservaForm(request.POST, instance=reserva, cancha=reserva.cancha)
+        form = CrearReservaForm(request.POST, instance=reserva)
         if form.is_valid():
-            fecha = form.cleaned_data['fecha']
-            hora_inicio = form.cleaned_data['hora_inicio']
-            duracion_bloques = form.cleaned_data['duracion_bloques']
-            
-            es_valida, error = validar_reserva(reserva, reserva.cancha, fecha, hora_inicio, duracion_bloques)
-            if not es_valida:
-                messages.error(request, error)
-                return render(request, 'editar_reserva.html', {
-                    'form': form,
-                    'reserva': reserva,
-                    'es_dueno_cancha': es_dueno_cancha,
-                })
-
-            reserva_temp = Reserva(
-                cancha=reserva.cancha,
-                fecha=fecha,
-                hora_inicio=hora_inicio,
-                duracion_bloques=duracion_bloques,
-                id=reserva.id
-            )
-            if conflicto_hora(reserva_temp):
-                messages.error(request, "Ya existe una reserva en ese horario")
-                return render(request, 'editar_reserva.html', {
-                    'form': form,
-                    'reserva': reserva,
-                    'es_dueno_cancha': es_dueno_cancha,
-                })
-            
             form.save()
             
             if es_propietario and not es_dueno_cancha:
                 reserva.estado = 'PENDIENTE'
                 reserva.save()
-                messages.success(request, 'Reserva actualizada, ha vuelto a pendiente')
+                messages.success(request, 'Reserva actualizada, espera confirmación')
+
             elif es_dueno_cancha and 'estado' in request.POST:
                 reserva.estado = request.POST['estado']
                 reserva.save()
@@ -207,7 +190,7 @@ def editar_reserva(request, reserva_id):
             
             return redirect('reservas:listar_reservas')
     else:
-        form = CrearReservaForm(instance=reserva, cancha=reserva.cancha)
+        form = CrearReservaForm(instance=reserva)
     
     return render(request, 'editar_reserva.html', {
         'form': form,
@@ -233,7 +216,8 @@ def eliminar_reserva(request, reserva_id):
         pass
     
     if not (es_propietario or es_dueno_cancha):
-        return HttpResponseForbidden("Solamente el dueno del establecimiento o reserva puede cancelarla")
+        messages.error(request, "Solo el anfitrión o dueño del establecimiento puede cancelar esta reserva")  # ✅ Mejorado
+        return redirect('reservas:listar_reservas')  # ✅ Cambiado de HttpResponseForbidden
     
     if not reserva.puede_ser_cancelada():
         messages.error(request,"No puedes cancelar una reserva ya terminada o cancelada")

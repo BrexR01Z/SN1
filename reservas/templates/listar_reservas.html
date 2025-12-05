@@ -34,10 +34,14 @@
             </div>
 
             <div class="reserva-info">
-                <span class="info-label">Usuario</span>
-                <span class="info-valor">{{ reserva.usuario.username }}</span>
+            <span class="info-label">Anfitrión</span>
+            <span class="info-valor">
+              {{ reserva.usuario.username }}
+              {% if reserva.usuario != request.user %}
+                <span class="badge-invitado">Te ha invitado</span>
+              {% endif %}
+            </span>
             </div>
-
             <div class="reserva-info">
                 <span class="info-label">Teléfono</span>
                 <span class="info-valor">{{ reserva.usuario.telefono }}</span>
@@ -71,15 +75,25 @@
             </div>
 
             {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
-              <div class="botones-acciones">
-                  <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
-                  <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
-                  <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
-              </div>
+                {% if reserva.usuario == request.user or es_dueno %}
+                    <!-- Solo el anfitrión o dueño pueden editar/cancelar -->
+                    <div class="botones-acciones">
+                        <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
+                        {% if reserva.usuario == request.user %}
+                            <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
+                        {% endif %}
+                        <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
+                    </div>
+                {% else %}
+                    <!-- Los invitados solo ven que están invitados -->
+                    <div class="botones-acciones" style="opacity: 0.7;">
+                        <span style="color: #60a5fa; font-size: 0.85rem;">No se puede editar/cancelar reservas en las que no eres el anfitrion</span>
+                    </div>
+                {% endif %}
             {% else %}
-              <div class="botones-acciones" style="opacity: 0.5;">
-                <span style="color: #9ca3af; font-size: 0.75rem;">No se puede editar/cancelar reservas ya terminadas/canceladas</span>
-              </div>
+                <div class="botones-acciones" style="opacity: 0.5;">
+                    <span style="color: #9ca3af; font-size: 0.75rem;">No se puede editar/cancelar reservas ya terminadas/canceladas</span>
+                </div>
             {% endif %}
 
         </div>
