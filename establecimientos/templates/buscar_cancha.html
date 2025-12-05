@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="search-title">Buscar Canchas Deportivas</h1>
+    <h1 class="search-title">Canchas Deportivas</h1>
     
     <div class="search-filters">
         <h3>Filtrar por deporte:</h3>
@@ -56,14 +56,19 @@
         {% endfor %}
     </div>
 
+    <br>
+    <h1 class="search-title">Todos los establecimientos</h1>
+    <br>
+
     <div class="canchas-grid">
         {% for est in establecimientos %}
             <div class="cancha-card">
                 <h3>{{ est.nombre }}</h3>
-
-                <p class="cancha-card-subtitle">
-                    Deporte(s): {{ est.deportes|join:", " }}
+                <p class="cancha-card-sports">
+                    <strong>Deporte(s): {{ est.deportes|join:", " }}</strong>
+                    <strong>Direccion: {{ est.direccion }}</strong>
                 </p>
+
                 <a href="{% url 'establecimientos:ver_establecimiento' est.id %}" class="nav-button reserve-button">
                     Ver canchas
                 </a>
