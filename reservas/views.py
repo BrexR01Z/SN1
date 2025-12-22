@@ -107,12 +107,12 @@ def listar_reservas(request):
         reservas = Reserva.objects.filter(
             Q(usuario=request.user) | 
             Q(cancha_id__in=canchas_propias) |
-            Q(id__in=reservas_aceptadas_ids)  #  Agregado
+            Q(id__in=reservas_aceptadas_ids) 
         ).select_related("usuario", "cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio").distinct()
     else:
         reservas = Reserva.objects.filter(
             Q(usuario=request.user) |
-            Q(id__in=reservas_aceptadas_ids)  #  Agregado
+            Q(id__in=reservas_aceptadas_ids)  
         ).select_related("cancha", "cancha__establecimiento").order_by("-fecha", "-hora_inicio").distinct()
     
     return render(request, "listar_reservas.html", {
@@ -153,7 +153,6 @@ def validar_reserva(reserva, cancha, fecha, hora_inicio, duracion_bloques):
 @login_required(login_url='cuentas:login_cuenta')
 def editar_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
-
     reserva.actualizar_estado()
     
     es_propietario = reserva.usuario == request.user
@@ -161,7 +160,7 @@ def editar_reserva(request, reserva_id):
     
     try:
         dueno = Dueno.objects.get(usuario=request.user)
-        es_dueno_cancha = reserva.cancha.establecimiento.dueno == dueno
+        es_dueno_cancha = reserva.cancha.establecimiento.dueno == dueno if reserva.cancha else False
     except Dueno.DoesNotExist:
         pass
     
@@ -174,15 +173,34 @@ def editar_reserva(request, reserva_id):
         return redirect('reservas:listar_reservas')
     
     if request.method == 'POST':
-        form = CrearReservaForm(request.POST, instance=reserva)
+        form = CrearReservaForm(request.POST, instance=reserva, cancha=reserva.cancha) 
         if form.is_valid():
+            fecha = form.cleaned_data['fecha']
+            hora_inicio = form.cleaned_data['hora_inicio']
+            duracion_bloques = form.cleaned_data['duracion_bloques']
+            
+            reserva_temp = Reserva(
+                cancha=reserva.cancha,
+                fecha=fecha,
+                hora_inicio=hora_inicio,
+                duracion_bloques=duracion_bloques,
+                id=reserva.id 
+            )
+            
+            if conflicto_hora(reserva_temp):
+                messages.error(request, "Ya existe una reserva en ese horario")
+                return render(request, 'editar_reserva.html', {
+                    'form': form,
+                    'reserva': reserva,
+                    'es_dueno_cancha': es_dueno_cancha,
+                })
+            
             form.save()
             
             if es_propietario and not es_dueno_cancha:
                 reserva.estado = 'PENDIENTE'
                 reserva.save()
                 messages.success(request, 'Reserva actualizada, espera confirmación')
-
             elif es_dueno_cancha and 'estado' in request.POST:
                 reserva.estado = request.POST['estado']
                 reserva.save()
@@ -192,7 +210,7 @@ def editar_reserva(request, reserva_id):
             
             return redirect('reservas:listar_reservas')
     else:
-        form = CrearReservaForm(instance=reserva)
+        form = CrearReservaForm(instance=reserva, cancha=reserva.cancha)  
     
     return render(request, 'editar_reserva.html', {
         'form': form,

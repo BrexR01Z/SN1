@@ -37,7 +37,7 @@
 {% block contenido %}
 <div class="profile-container">
 
-    <h1 class="profile-title">Perfil de {{ usuario.first_name }} {{ usuario.last_name }}</h1>
+    <h1 class="profile-title">Perfil de {{ usuario.username }} </h1>
 
     <div class="profile-section">
 
@@ -46,17 +46,11 @@
             {{ usuario.username }}
         </p>
         <p>
-            <span class="profile-label">Nombre:</span>
-            {{ usuario.first_name }} {{ usuario.last_name }}
+            
+            <a class="profile-label" href="{% url 'reservas:listar_reservas' %}">Invitar a reservas</a>
         </p>
 
-        <p>
-            <span class="profile-label">Fecha de nacimiento:</span>
-            {{ usuario.fecha_nacimiento|date:"d/m/Y" }}
-        </p>
-        <p>
-            <span class="profile-label">Edad:</span>
-            {{ usuario.edad}}
+        
 
     </div>
 

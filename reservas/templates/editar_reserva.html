@@ -15,13 +15,29 @@
   <div class="info-reserva">
     <div class="info-item">
       <span class="label">Cancha:</span>
-      <span class="valor">{{ reserva.cancha.nombre }}</span>
+      {% if reserva.cancha %}
+        <span class="valor">{{ reserva.cancha.nombre }}</span>
+      {% else %}
+        <span class="valor" style="color: #9ca3af;">Cancha eliminada</span>
+      {% endif %}
     </div>
     <div class="info-item">
       <span class="label">Establecimiento:</span>
-      <span class="valor">{{ reserva.cancha.establecimiento.nombre }}</span>
+      {% if reserva.cancha %}
+        <span class="valor">{{ reserva.cancha.establecimiento.nombre }}</span>
+      {% else %}
+        <span class="valor" style="color: #9ca3af;">Establecimiento no disponible</span>
+      {% endif %}
     </div>
   </div>
+
+  {% if form.non_field_errors %}
+    <div style="background: #2c1f1f; border: 2px solid #ef4444; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
+      {% for error in form.non_field_errors %}
+        <p style="color: #ef4444; margin: 0.5rem 0; font-weight: 600;">{{ error }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
 
   <form method="POST" novalidate>
     {% csrf_token %}
@@ -29,25 +45,42 @@
     <div class="form-group">
       <label for="{{ form.fecha.id_for_label }}">{{ form.fecha.label }}</label>
       {{ form.fecha }}
-      {% if form.fecha.errors %}<span class="error">{{ form.fecha.errors.0 }}</span>{% endif %}
+      {% if form.fecha.errors %}
+        <div style="background: #2c1f1f; border-left: 3px solid #ef4444; padding: 0.5rem; margin-top: 0.25rem; border-radius: 0.25rem;">
+          {% for error in form.fecha.errors %}
+            <span class="error" style="color: #ef4444; display: block;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 
     <div class="form-group">
       <label for="{{ form.hora_inicio.id_for_label }}">{{ form.hora_inicio.label }}</label>
       {{ form.hora_inicio }}
-      {% if form.hora_inicio.errors %}<span class="error">{{ form.hora_inicio.errors.0 }}</span>{% endif %}
+      {% if form.hora_inicio.errors %}
+        <div style="background: #2c1f1f; border-left: 3px solid #ef4444; padding: 0.5rem; margin-top: 0.25rem; border-radius: 0.25rem;">
+          {% for error in form.hora_inicio.errors %}
+            <span class="error" style="color: #ef4444; display: block;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 
     <div class="form-group">
       <label for="{{ form.duracion_bloques.id_for_label }}">{{ form.duracion_bloques.label }}</label>
       {{ form.duracion_bloques }}
-      {% if form.duracion_bloques.errors %}<span class="error">{{ form.duracion_bloques.errors.0 }}</span>{% endif %}
+      {% if form.duracion_bloques.errors %}
+        <div style="background: #2c1f1f; border-left: 3px solid #ef4444; padding: 0.5rem; margin-top: 0.25rem; border-radius: 0.25rem;">
+          {% for error in form.duracion_bloques.errors %}
+            <span class="error" style="color: #ef4444; display: block;"> {{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
 
     <div class="form-group">
       <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
       {{ form.comentario }}
-      {% if form.comentario.errors %}<span class="error">{{ form.comentario.errors.0 }}</span>{% endif %}
     </div>
 
     {% if es_dueno_cancha %}
@@ -56,8 +89,8 @@
         <select name="estado" id="estado">
           <option value="PENDIENTE" {% if reserva.estado == 'PENDIENTE' %}selected{% endif %}>Pendiente</option>
           <option value="CONFIRMADA" {% if reserva.estado == 'CONFIRMADA' %}selected{% endif %}>Confirmada</option>
-          <option value="COMPLETADA" {% if reserva.estado == 'COMPLETADA' %}selected{% endif %}>Completada</option>
-          <option value="CANCELADA" {% if reserva.estado == 'CANCELADA' %}selected{% endif %}>Cancelada</option>
+          <option value="EN_CURSO" {% if reserva.estado == 'EN_CURSO' %}selected{% endif %}>En Curso</option>
+          <option value="TERMINADA" {% if reserva.estado == 'TERMINADA' %}selected{% endif %}>Terminada</option>
         </select>
       </div>
     {% endif %}
