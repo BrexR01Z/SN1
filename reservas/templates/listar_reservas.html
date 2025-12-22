@@ -85,22 +85,19 @@
             </div>
 
             {% if reserva.estado not in 'CANCELADA' and reserva.estado not in 'TERMINADA' %}
-            
+    
                 {% if reserva.usuario == request.user or es_dueno %}
-                    <!-- Solo el anfitrión o dueño pueden editar/cancelar -->
+                <!-- Solo el anfitrión o dueño pueden editar/cancelar -->
                     <div class="botones-acciones">
                         {% if reserva.cancha %}
                             <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
                             {% if reserva.usuario == request.user %}
-                                <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados</a>
+                                <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados ({{ reserva.invitaciones.count }})</a>
                             {% endif %}
                             <a href="{% url 'reservas:eliminar_reserva' reserva.id %}" class="btn-pequeño btn-eliminar">Cancelar</a>
                         {% else %}
                             <span style="color: #9ca3af; font-size: 0.75rem;">Cancha eliminada - no se puede editar</span>
-                        <a href="{% url 'reservas:editar_reserva' reserva.id %}" class="btn-pequeño btn-editar">Editar</a>
-                        {% if reserva.usuario == request.user %}
-                            <a href="{% url 'cuentas:invitar_a_reserva' reserva.id %}" class="btn-pequeño btn-editar">Invitados ({{ reserva.invitaciones.count }})</a>
-                        {% endif %}
+                        {% endif %}  <!-- ✅ ESTE FALTABA -->
                     </div>
                 {% else %}
                     <!-- Los invitados solo ven que están invitados -->
