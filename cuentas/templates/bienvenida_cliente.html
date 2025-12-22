@@ -180,66 +180,7 @@
 
 {% block content %}
 
-<!-- Modal de Invitación - DEBE ESTAR DENTRO DEL BLOCK -->
-{% if invitacion_pendiente %}
-  <div class="invitation-overlay">
-    <div class="invitation-modal">
-      <div class="invitation-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      </div>
 
-      <h2 class="invitation-title">¡Invitación a Partida!</h2>
-
-      <div class="invitation-info">
-        <div class="invitation-info-row">
-          <span class="invitation-label">Anfitrión:</span>
-          <span class="invitation-value">{{ invitacion_pendiente.sender.get_full_name|default:invitacion_pendiente.sender.username }}</span>
-        </div>
-        <div class="invitation-info-row">
-          <span class="invitation-label">Cancha:</span>
-          <span class="invitation-value">{{ invitacion_pendiente.reserva.cancha.nombre }}</span>
-        </div>
-        <div class="invitation-info-row">
-          <span class="invitation-label">Fecha:</span>
-          <span class="invitation-value">{{ invitacion_pendiente.reserva.fecha|date:"d/m/Y" }}</span>
-        </div>
-        <div class="invitation-info-row">
-          <span class="invitation-label">Hora:</span>
-          <span class="invitation-value">{{ invitacion_pendiente.reserva.hora_inicio|time:"H:i" }} - {{ invitacion_pendiente.reserva.hora_fin|time:"H:i" }}</span>
-        </div>
-      </div>
-
-      <p class="invitation-message">
-        <strong>{{ invitacion_pendiente.sender.get_full_name|default:invitacion_pendiente.sender.username }}</strong> te ha invitado a jugar una partida.
-        {% if invitacion_pendiente.message %}
-          <br><br><em>"{{ invitacion_pendiente.message }}"</em>
-        {% endif %}
-      </p>
-
-      <div class="invitation-buttons">
-        <a href="{% url 'cuentas:rechazar_invitacion' invitacion_pendiente.id %}" class="invitation-btn invitation-btn-reject">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-          Rechazar
-        </a>
-        <a href="{% url 'cuentas:aceptar_invitacion' invitacion_pendiente.id %}" class="invitation-btn invitation-btn-accept">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          Aceptar
-        </a>
-      </div>
-
-      <p class="invitation-expiry">
-        Recibida hace {{ invitacion_pendiente.created_at|timesince }}
-      </p>
-    </div>
-  </div>
-{% endif %}
 
 <div class="container">
     <section class="welcome-card">
