@@ -5,9 +5,245 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <style>
+    /* Estilos para el modal de invitación - Matching SportsNet Theme */
+    .invitation-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background-color: rgba(0, 0, 0, 0.9) !important;
+      backdrop-filter: blur(10px);
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 999999 !important;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .invitation-modal {
+      position: relative !important;
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+      border-radius: 1rem;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px #374151;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 90%;
+      animation: slideIn 0.4s ease-out;
+      z-index: 1000000 !important;
+      border: 2px solid #374151;
+    }
+
+    .invitation-icon {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+    }
+
+    .invitation-icon svg {
+      width: 45px;
+      height: 45px;
+      color: white;
+    }
+
+    .invitation-title {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      color: #60a5fa;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
+    }
+
+    .invitation-info {
+      background: #1f2937;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #374151;
+    }
+
+    .invitation-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #374151;
+    }
+
+    .invitation-info-row:last-child {
+      border-bottom: none;
+    }
+
+    .invitation-label {
+      color: #9ca3af;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .invitation-value {
+      color: #d1d5db;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .invitation-message {
+      text-align: center;
+      color: #d1d5db;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .invitation-message strong {
+      color: #60a5fa;
+    }
+
+    .invitation-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .invitation-btn {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .invitation-btn-reject {
+      background: transparent;
+      color: #60a5fa;
+      border: 2px solid #3b82f6;
+    }
+
+    .invitation-btn-reject:hover {
+      background: rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .invitation-btn-accept {
+      background: #3b82f6;
+      color: white;
+      border: 2px solid #3b82f6;
+      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .invitation-btn-accept:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .invitation-expiry {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.85rem;
+      margin-top: 1.25rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-30px) scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
 {% endblock %}
 
 {% block contenido %}
+
+<!-- Modal de Invitación -->
+{% if invitacion_pendiente %}
+  <div class="invitation-overlay">
+    <div class="invitation-modal">
+
+      <!-- Título -->
+      <h2 class="invitation-title">¡Recibiste una Invitación!</h2>
+
+      <!-- Información de la invitación -->
+      <div class="invitation-info">
+        <div class="invitation-info-row">
+          <span class="invitation-label">Anfitrión:</span>
+          <span class="invitation-value">{{ invitacion_pendiente.sender.get_full_name|default:invitacion_pendiente.sender.username }}</span>
+        </div>
+        <div class="invitation-info-row">
+          <span class="invitation-label">Cancha:</span>
+          <span class="invitation-value">{{ invitacion_pendiente.reserva.cancha.nombre }}</span>
+        </div>
+        <div class="invitation-info-row">
+          <span class="invitation-label">Fecha:</span>
+          <span class="invitation-value">{{ invitacion_pendiente.reserva.fecha|date:"d/m/Y" }}</span>
+        </div>
+        <div class="invitation-info-row">
+          <span class="invitation-label">Hora:</span>
+          <span class="invitation-value">{{ invitacion_pendiente.reserva.hora_inicio|time:"H:i" }} - {{ invitacion_pendiente.reserva.hora_fin|time:"H:i" }}</span>
+        </div>
+      </div>
+
+      <!-- Mensaje -->
+      <p class="invitation-message">
+        <strong>{{ invitacion_pendiente.sender.get_full_name|default:invitacion_pendiente.sender.username }}</strong> te ha invitado a jugar una partida.
+        {% if invitacion_pendiente.message %}
+          <br><br><em>"{{ invitacion_pendiente.message }}"</em>
+        {% endif %}
+      </p>
+
+      <!-- Botones -->
+      <div class="invitation-buttons">
+        <a href="{% url 'cuentas:rechazar_invitacion' invitacion_pendiente.id %}" class="invitation-btn invitation-btn-reject">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          Rechazar
+        </a>
+        <a href="{% url 'cuentas:aceptar_invitacion' invitacion_pendiente.id %}" class="invitation-btn invitation-btn-accept">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Aceptar
+        </a>
+      </div>
+
+      <!-- Nota de expiración -->
+      <p class="invitation-expiry">
+        Recibida hace {{ invitacion_pendiente.created_at|timesince }}
+      </p>
+    </div>
+  </div>
+{% endif %}
 
 <section class="hero">
   <div class="hero-content">
@@ -25,11 +261,9 @@
         {% else %}
         <a href="{% url 'cuentas:SportsNet_cliente' %}" class="btn btn-secondary">Menu</a>
         {% endif %}
-
       {% endif %}
     </div>
   </div>
 </section>
-
 
 {% endblock %}

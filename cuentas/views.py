@@ -82,8 +82,34 @@ def login_cuenta(request):
 
     return render (request, "login.html")
 
-def home (request):
-    return render(request,"home.html")
+def home(request):
+    context = {}
+    
+    if request.user.is_authenticated:
+        # Buscar invitaciones pendientes (con el nuevo campo status)
+        invitacion_pendiente = request.user.received_invitations.filter(
+            status='pending'  # ← CAMBIO AQUÍ
+        ).order_by('-created_at').first()
+        
+        context['invitacion_pendiente'] = invitacion_pendiente
+    
+    return render(request, 'home.html', context)
+
+@login_required
+def SportsNet_cliente(request):
+    cliente = request.user.perfil_cliente
+    
+    # Buscar invitación pendiente
+    invitacion_pendiente = request.user.received_invitations.filter(
+        status='pending'  # ← CAMBIO AQUÍ
+    ).order_by('-created_at').first()
+    
+    context = {
+        'cliente': cliente,
+        'invitacion_pendiente': invitacion_pendiente
+    }
+    
+    return render(request, 'cuentas/bienvenida_cliente.html', context)
 
 @login_required(login_url='cuentas:login_cuenta')
 def cerrar_sesion(request):
@@ -130,17 +156,6 @@ def bienvenida_cliente(request):
 
 #===============================INVITACIONES DE USUARIOS==================================
 
-# VISTA PARA INVITAR A UN USUARIO A UNA PARTIDA. 
-
-def invitar_usuario(request):
-    return HttpResponse("Página de invitar usuario — aún en construcción")
-
-def aceptar_invitacion(request, id):
-    return HttpResponse(f"Aceptar invitación #{id} — en construcción")
-
-def rechazar_invitacion(request, id):
-    return HttpResponse(f"Rechazar invitación #{id} — en construcción")
-
 # VISTA DE PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!!!!]
 
 def test_email(request): # PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!]
@@ -153,77 +168,244 @@ def test_email(request): # PRUEBA PARA ENVÍO DE CORREOS [SOLO PARA TESTEO!!!!]
     return HttpResponse("Correo enviado (revisar consola)")
 
 
-#User = get_user_model()
-
-#@login_required
-#def invitar_usuario(request):
-#    if request.method == "POST":
-#        form = InvitationForm(request.POST)
-#        if form.is_valid():
-#            username = form.cleaned_data["username"]
-#
-#            # ¿Existe el usuario?
-#            try:
-#                receiver = User.objects.get(username=username)
-#            except User.DoesNotExist:
-#                messages.error(request, "Ese usuario no existe.")
-#                return redirect("cuentas:invitar_usuario")
-
-
-            # ¿Es él mismo?
-#            if receiver == request.user:
-#                messages.error(request, "No puedes invitarte a ti mismo.")
-#                return redirect("cuentas:invitar_usuario")
-
-
-            # ¿Ya existe una invitación pendiente?
-#            existing = Invitation.objects.filter(
-#                sender=request.user,
-#                receiver=receiver,
-#                accepted=False,
-#            ).exists()
-
-#            if existing:
-#                messages.warning(request, "Ya enviaste una invitación pendiente a este usuario.")
-#                return redirect("cuentas:invitar_usuario")
-
-
-           # Crear invitación
-#            invitacion = Invitation.objects.create(
-#                sender=request.user,
-#                receiver=receiver
-#           )
-
-            #  ENVIAR CORREO AQUÍ MISMO
-            send_mail(
-                subject="¡Tienes una nueva invitación en SportsNet!",
-                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
-                        f"Para aceptarla o rechazarla, ingresa a alguno de los siguientes enlaces con la sesión iniciada:\n"
-                        f"Aceptar: {request.build_absolute_uri(reverse('cuentas:aceptar_invitacion', args=[invitacion.id]))}\n"
-                        f"Rechazar: {request.build_absolute_uri(reverse('cuentas:rechazar_invitacion', args=[invitacion.id]))}\n\n"
-                        f"¡Gracias por usar LifeSportsNet!",
-
-#                from_email="noreply@sportsnet.cl",
-#                recipient_list=[receiver.email],
-#                fail_silently=False,
-#           )
-
-#            messages.success(request, "Invitación enviada y correo enviado correctamente.")
-#            return redirect("cuentas:invitar_usuario")
-
-#    else:
-#        form = InvitationForm()
-
-#    return render(request, "invitar_usuario.html", {"form": form})
+def enviar_email_invitacion(receiver_email, sender_username, reserva, url_invitaciones):
+    """Envía email de invitación a reserva con diseño moderno"""
+    
+    # Preparar información de la reserva
+    info_reserva = {
+        'cancha': reserva.cancha.nombre if reserva.cancha else 'Cancha no disponible',
+        'establecimiento': reserva.cancha.establecimiento.nombre if reserva.cancha else 'Establecimiento no disponible',
+        'deporte': reserva.cancha.get_deporte_display() if reserva.cancha else '---',
+        'fecha': reserva.fecha.strftime('%d/%m/%Y'),
+        'hora_inicio': reserva.hora_inicio.strftime('%H:%M'),
+        'hora_fin': reserva.hora_fin().strftime('%H:%M'),
+        'precio_total': f"${int(reserva.precio_total):,}" if reserva.precio_total else "N/A",
+    }
+    
+    subject = f"[INVITACIÓN] Nueva invitación a reserva - {info_reserva['cancha']}"
+    
+    # Email en HTML
+    html_message = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background-color: #000000;
+                margin: 0;
+                padding: 0;
+                color: #d1d5db;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 20px auto;
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                border: 2px solid #374151;
+            }}
+            .header {{
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                padding: 40px 30px;
+                text-align: center;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 28px;
+                font-weight: 800;
+            }}
+            .header p {{
+                margin: 10px 0 0 0;
+                opacity: 0.9;
+            }}
+            .content {{
+                padding: 40px 30px;
+            }}
+            .invitation-box {{
+                background: #064e3b;
+                border-left: 4px solid #10b981;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }}
+            .invitation-box strong {{
+                color: #6ee7b7;
+                font-size: 16px;
+            }}
+            .info-box {{
+                background: #1f2937;
+                border-radius: 12px;
+                padding: 20px;
+                margin: 25px 0;
+                border: 1px solid #374151;
+            }}
+            .info-row {{
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 0;
+                border-bottom: 1px solid #374151;
+            }}
+            .info-row:last-child {{
+                border-bottom: none;
+            }}
+            .label {{
+                color: #9ca3af;
+                font-weight: 500;
+            }}
+            .value {{
+                color: #34d399;
+                font-weight: 700;
+            }}
+            .message {{
+                color: #d1d5db;
+                line-height: 1.7;
+                margin: 20px 0;
+            }}
+            .cta-button {{
+                display: inline-block;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                padding: 16px 32px;
+                text-decoration: none;
+                border-radius: 10px;
+                font-weight: 700;
+                font-size: 16px;
+                margin: 20px 0;
+                box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                transition: transform 0.2s;
+            }}
+            .cta-button:hover {{
+                transform: translateY(-2px);
+            }}
+            .button-container {{
+                text-align: center;
+                margin: 30px 0;
+            }}
+            .footer {{
+                background: #0f172a;
+                padding: 25px;
+                text-align: center;
+                color: #6b7280;
+                font-size: 14px;
+                border-top: 1px solid #374151;
+            }}
+            .footer p {{
+                margin: 5px 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>¡Nueva Invitación!</h1>
+                <p>Te han invitado a una reserva deportiva</p>
+            </div>
+            
+            <div class="content">
+                <div class="invitation-box">
+                    <strong>{sender_username}</strong> te ha invitado a unirte a su reserva
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-row">
+                        <span class="label">Deporte:</span>
+                        <span class="value">{info_reserva['deporte']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cancha:</span>
+                        <span class="value">{info_reserva['cancha']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Establecimiento:</span>
+                        <span class="value">{info_reserva['establecimiento']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Fecha:</span>
+                        <span class="value">{info_reserva['fecha']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Horario:</span>
+                        <span class="value">{info_reserva['hora_inicio']} - {info_reserva['hora_fin']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Precio Total:</span>
+                        <span class="value">{info_reserva['precio_total']}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Invitado por:</span>
+                        <span class="value">{sender_username}</span>
+                    </div>
+                </div>
+                
+                <p class="message">
+                    Para aceptar o rechazar esta invitación, haz clic en el botón de abajo. 
+                    Recuerda que debes tener la sesión iniciada en SportsNet.
+                </p>
+                
+                <div class="button-container">
+                    <a href="{url_invitaciones}" class="cta-button">
+                        Ver Mis Invitaciones
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p><strong>SportsNet</strong> - Sistema de Reservas Deportivas</p>
+                <p>Este es un email automático, por favor no respondas a este correo</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    # Email en texto plano (fallback)
+    plain_message = f"""
+    ¡NUEVA INVITACIÓN! - SPORTSNET
+    
+    {sender_username} te ha invitado a unirte a su reserva:
+    
+    Deporte: {info_reserva['deporte']}
+    Cancha: {info_reserva['cancha']}
+    Establecimiento: {info_reserva['establecimiento']}
+    Fecha: {info_reserva['fecha']}
+    Horario: {info_reserva['hora_inicio']} - {info_reserva['hora_fin']}
+    Precio Total: {info_reserva['precio_total']}
+    
+    Para aceptar o rechazar esta invitación, ingresa al siguiente enlace:
+    {url_invitaciones}
+    
+    (Recuerda tener la sesión iniciada en SportsNet)
+    
+    ---
+    SportsNet - Sistema de Reservas Deportivas
+    Este es un email automático, por favor no respondas a este correo.
+    """
+    
+    # Enviar email
+    try:
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[receiver_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        print(f"Email de invitación enviado exitosamente a {receiver_email}")
+        return True
+    except Exception as e:
+        print(f"Error enviando email de invitación a {receiver_email}: {str(e)}")
+        return False
 
 User = get_user_model()
 
 @login_required(login_url='cuentas:login_cuenta')
-@login_required(login_url='cuentas:login_cuenta')
 def invitar_a_reserva(request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
 
-    # Sólo el creador de la reserva puede invitar (mínimo check de seguridad)
     if reserva.usuario != request.user:
         messages.error(request, "No puedes invitar a esta reserva (no eres el creador).")
         return redirect("cuentas:perfil_usuario")
@@ -232,7 +414,6 @@ def invitar_a_reserva(request, reserva_id):
         form = InvitationForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data["username"]
-            # buscar receptor
             try:
                 receiver = User.objects.get(username=username)
             except User.DoesNotExist:
@@ -243,36 +424,35 @@ def invitar_a_reserva(request, reserva_id):
                 messages.error(request, "No puedes invitarte a ti mismo.")
                 return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
 
-            # chequeo duplicado (misma reserva, misma invitación pendiente)
             existing = Invitation.objects.filter(
                 sender=request.user,
                 receiver=receiver,
                 reserva=reserva,
-                accepted=False
+                status='pending'
             ).exists()
 
             if existing:
                 messages.warning(request, "Ya enviaste una invitación pendiente a este usuario para esta reserva.")
                 return redirect("cuentas:invitar_a_reserva", reserva_id=reserva.id)
 
-            # crear invitación vinculada a reserva
+            # Crear invitación
             Invitation.objects.create(
                 sender=request.user,
                 receiver=receiver,
                 reserva=reserva
             )
 
-            # (Opcional) enviar correo similar al flujo actual — omito el envío para mantenerlo simple
-            send_mail(
-                subject="¡Tienes una nueva invitación en SportsNet!",
-                message=f"El usuario {request.user.username} te ha enviado una invitación.\n\n"
-                        f"Para aceptarla o rechazarla, ingresa al siguiente enlace con la sesión iniciada:\n"
-                        f"Ver Invitaciones: {request.build_absolute_uri(reverse('cuentas:perfil_usuario'))}\n\n"
-                        f"¡Gracias por usar SportsNet!",
+            # URL para ver invitaciones
+            url_invitaciones = request.build_absolute_uri(
+                reverse('cuentas:SportsNet_cliente')
+            )
 
-                from_email="noreply@sportsnet.cl",
-                recipient_list=[receiver.email],
-                fail_silently=False,
+            # Enviar email con el nuevo diseño
+            enviar_email_invitacion(
+                receiver_email=receiver.email,
+                sender_username=request.user.username,
+                reserva=reserva,  # Ahora pasamos el objeto reserva completo
+                url_invitaciones=url_invitaciones
             )
             
             messages.success(request, f"Invitación enviada a {receiver.username} para la reserva.")
@@ -280,7 +460,6 @@ def invitar_a_reserva(request, reserva_id):
     else:
         form = InvitationForm()
 
-    # Obtener todas las invitaciones de esta reserva
     invitaciones = Invitation.objects.filter(
         reserva=reserva,
         sender=request.user
@@ -291,30 +470,41 @@ def invitar_a_reserva(request, reserva_id):
         "reserva": reserva,
         "invitaciones": invitaciones
     })
+
 @login_required
 def aceptar_invitacion(request, id):
     try:
-        invitacion = Invitation.objects.get(id=id, receiver=request.user)
+        invitacion = Invitation.objects.get(
+            id=id, 
+            receiver=request.user,
+            status='pending'  # ← AGREGAR ESTE FILTRO
+        )
     except Invitation.DoesNotExist:
         messages.error(request, "Invitación no encontrada.")
         return redirect("cuentas:perfil_usuario")
 
-    invitacion.accepted = True
+    invitacion.status = 'accepted'  # ← CAMBIO AQUÍ
+    invitacion.accepted = True  # Mantener por compatibilidad
     invitacion.save()
 
     messages.success(request, f"¡Invitación aceptada! La reserva de {invitacion.reserva.cancha.nombre} ya está en 'Mis Reservas'.")
     return redirect("cuentas:perfil_usuario")
 
 
+
 @login_required
 def rechazar_invitacion(request, id):
     try:
-        invitacion = Invitation.objects.get(id=id, receiver=request.user)
+        invitacion = Invitation.objects.get(
+            id=id, 
+            receiver=request.user,
+            status='pending'  # ← AGREGAR ESTE FILTRO
+        )
     except Invitation.DoesNotExist:
         messages.error(request, "Invitación no encontrada.")
         return redirect("cuentas:perfil_usuario")
 
-    invitacion.accepted = False
+    invitacion.status = 'rejected'  # ← CAMBIO AQUÍ (esto era el problema principal)
     invitacion.save()
 
     messages.success(request, "¡Invitación rechazada!")
@@ -352,7 +542,10 @@ def perfil_usuario(request):
     usuario = request.user
     
     # Invitaciones recibidas (pendientes)
-    invitaciones = Invitation.objects.filter(receiver=usuario, accepted=False)
+    invitaciones = Invitation.objects.filter(
+        receiver=usuario, 
+        status='pending'  # ← CAMBIO AQUÍ
+    )
 
     return render(request, "perfil_usuario.html", {
         "usuario": usuario,

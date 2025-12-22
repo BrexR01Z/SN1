@@ -443,6 +443,11 @@ html, body {
     color: #10b981;
 }
 
+.status-rechazada {
+    background: #7f1d1d;
+    color: #ef4444;
+}
+
 .field-help {
     color: #9ca3af;
     font-size: 0.85rem;

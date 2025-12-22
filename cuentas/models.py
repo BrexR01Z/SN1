@@ -57,13 +57,19 @@ class Cliente (models.Model):
     
 # Modelo para gestionar invitaciones entre usuarios
 class Invitation(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pendiente'),
+        ('accepted', 'Aceptada'),
+        ('rejected', 'Rechazada'),
+    ]
+    
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_invitations')
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_invitations')
     reserva = models.ForeignKey("reservas.Reserva", on_delete=models.CASCADE, null=True, blank=True, related_name='invitaciones')
     message = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    accepted = models.BooleanField(default=False)
-
+    accepted = models.BooleanField(default=False)  # Mantener por compatibilidad
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')  # NUEVO CAMPO
 
     def __str__(self):
-        return f"{self.sender} -> {self.receiver}"
+        return f"{self.sender} -> {self.receiver} ({self.get_status_display()})"

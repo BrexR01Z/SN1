@@ -39,9 +39,15 @@
                             <span class="invitado-name">
                                 {{ invitacion.receiver.get_full_name|default:invitacion.receiver.username }}
                             </span>
-                            <span class="invitado-status {% if invitacion.accepted %}status-aceptada{% else %}status-pendiente{% endif %}">
-                                {% if invitacion.accepted %}
+                            <span class="invitado-status 
+                                {% if invitacion.status == 'accepted' %}status-aceptada
+                                {% elif invitacion.status == 'rejected' %}status-rechazada
+                                {% else %}status-pendiente{% endif %}">
+    
+                                {% if invitacion.status == 'accepted' %}
                                     Confirmado
+                                {% elif invitacion.status == 'rejected' %}
+                                    Rechazado
                                 {% else %}
                                     Pendiente
                                 {% endif %}
